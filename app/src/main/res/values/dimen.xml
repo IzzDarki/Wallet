@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="card_padding">16dp</dimen>
+    <dimen name="small_card_item_margin">4dp</dimen>
+    <dimen name="horizontal_divider_padding">8dp</dimen>
+</resources>

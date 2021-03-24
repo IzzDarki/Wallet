@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/card_property_edit_view_text_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+        android:hint="@string/new_card_property_default_name"
+        android:paddingBottom="8dp"
+
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/delete_icon_30dp"
+        app:startIconDrawable="@drawable/edit_icon_30dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/card_property_edit_view_text_input_layout_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
+            android:inputType="text"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+</FrameLayout>

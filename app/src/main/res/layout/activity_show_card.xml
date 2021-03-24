@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/show_card_scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:id="@+id/show_card_linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="@dimen/card_padding"
+                android:layout_marginEnd="@dimen/card_padding">
+
+                <ImageView
+                    android:id="@+id/show_card_code_image_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:contentDescription="@string/show_card_code_image_view_content_description"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/show_card_code_plain_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:textColor="@color/material_on_background_emphasis_medium"
+                    android:textIsSelectable="true"/>
+
+                <!-- divider with no bottom padding, because adapter does it -->
+                <View
+                    android:id="@+id/show_card_divider_card_properties"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:background="?android:attr/listDivider"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/show_card_property_list_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:clipToPadding="false"/>
+
+                <Space
+                    android:id="@+id/show_card_extra_space_card_images"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"/>
+
+                <!-- divider with no top padding, because adapter does it -->
+                <View
+                    android:id="@+id/show_card_divider_card_images"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="?android:attr/listDivider"/>
+
+                <!-- card (space) is displayed at the bottom, programmatically -->
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <!-- animated card view is in here -->
+        <FrameLayout
+            android:id="@+id/show_card_card_view_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/card_padding"
+            android:layout_marginEnd="@dimen/card_padding"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

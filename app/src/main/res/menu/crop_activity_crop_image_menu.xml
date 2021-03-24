@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- copy paste from crop_image_menu.xml -->
+    <item
+        android:id="@+id/crop_image_menu_rotate_right"
+        android:icon="@drawable/rotate_right_icon"
+        android:title="@string/crop_image_menu_rotate_right"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/crop_image_menu_flip"
+        android:icon="@drawable/flip_icon"
+        android:title="@string/crop_image_menu_flip"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/crop_image_menu_flip_horizontally"
+                android:title="@string/crop_image_menu_flip_horizontally"/>
+            <item
+                android:id="@+id/crop_image_menu_flip_vertically"
+                android:title="@string/crop_image_menu_flip_vertically"/>
+        </menu>
+    </item>
+
+    <!-- new item -->
+    <item
+        android:id="@+id/crop_image_menu_lock_card_ration"
+        android:title="@string/crop_image_menu_lock_card_ratio"
+        android:icon="@drawable/aspect_ratio_icon"
+        app:showAsAction="always"/>
+
+    <!-- copy paste from crop_image_menu.xml, but added icon -->
+    <item
+        android:id="@+id/crop_image_menu_crop"
+        android:title="@string/crop_image_menu_crop"
+        android:icon="@drawable/done_icon"
+        app:showAsAction="always"/>
+
+</menu>

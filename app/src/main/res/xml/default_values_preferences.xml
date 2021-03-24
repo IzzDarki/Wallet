@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/preferences_default_values_title"
+    android:summary="@string/preferences_default_values_summary">
+
+    <ListPreference
+        android:key="@string/preferences_default_values_barcode_key"
+        android:title="@string/preferences_default_values_barcode_title"
+        android:summary="@string/preference_default_values_barcode_summary"
+        android:defaultValue="@string/preferences_default_values_barcode_default"
+        android:entries="@array/preferences_default_values_barcode_entries"
+        android:entryValues="@array/preferences_default_values_barcode_entries"/>
+
+    <ListPreference
+        android:key="@string/preferences_default_values_code_text_key"
+        android:title="@string/preferences_default_values_code_text_title"
+        android:summary="@string/preferences_default_values_code_text_summary"
+        android:defaultValue="@string/preferences_default_values_code_text_default"
+        android:entries="@array/preferences_default_values_code_text_entries"
+        android:entryValues="@array/preferences_default_values_code_text_entry_values"/>
+
+</PreferenceScreen>

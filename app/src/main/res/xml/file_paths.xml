@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <cache-path name="img" path="Cards_images/"/>
+</paths>
+
+<!--    <files-path/>           Context.getFilesDir()
+        <cache-path/>           Context.getCacheDir()
+        <external-path/>        Environment.getExternalStorageDirectory()
+        <external-files-path/>  Context.getExternalFilesDir(String)
+        <external-cache-path/>  Context.getExternalCacheDir()
+        <external-media-path/>  Context.getExternalMediaDirs() -->

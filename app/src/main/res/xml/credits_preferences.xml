@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/images_and_icons">
+
+        <Preference
+            android:title="@string/app_icon_title"
+            android:summary="@string/app_icon_summary"
+            android:icon="@drawable/ic_launcher_foreground">
+
+            <intent android:action="android.intent.action.VIEW"
+                android:data="https://www.flaticon.com/authors/freepik" />
+
+        </Preference>
+
+        <Preference
+            android:title="@string/mahler_image_title"
+            android:summary="@string/mahler_image_summary">
+
+            <intent android:action="android.intent.action.VIEW"
+                android:data="https://upload.wikimedia.org/wikipedia/commons/8/81/Gustav_Mahler_Emil_Orlik_1902.jpg" />
+
+        </Preference>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/components_title">
+
+        <Preference
+            android:title="@string/barcode_library_title"
+            android:summary="@string/barcode_library_summary">
+
+            <intent android:action="android.intent.action.VIEW"
+            android:data="https://github.com/dm77/barcodescanner" />
+
+        </Preference>
+
+        <Preference
+            android:title="@string/image_crop_library_title"
+            android:summary="@string/image_crop_library_summary">
+
+            <intent android:action="android.intent.action.VIEW"
+                android:data="https://github.com/ArthurHub/Android-Image-Cropper" />
+
+        </Preference>
+
+        <Preference
+            android:title="@string/color_picker_library_title"
+            android:summary="@string/color_picker_library_summary">
+
+            <intent android:action="android.intent.action.VIEW"
+                android:data="https://github.com/danielnilsson9/color-picker-view/tree/master/color-picker-view/src/main" />
+
+        </Preference>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -1,0 +1,20 @@
+<!--?xml version="1.0" encoding="UTF-8"?-->
+<resources>
+  <color name="primaryColor">#0776ec</color>
+  <color name="primaryLightColor">#66a4ff</color>
+  <color name="primaryDarkColor">#004bb9</color>
+  <color name="secondaryColor">#546e7a</color>
+  <color name="secondaryLightColor">#819ca9</color>
+  <color name="secondaryDarkColor">#29434e</color>
+  <color name="primaryTextColor">#000000</color>
+  <color name="secondaryTextColor">#ffffff</color>
+  <color name="accentColor">#ec7607</color>
+  
+  <color name="onDarkTextColor">#ffffff</color>
+  <color name="onLightTextColor">#000000</color>
+
+  <color name="barcodeForegroundColor">#000000</color>
+  <color name="barcodeBackgroundColor">#ffffff</color>
+  <color name="cardDefaultColor">#07ec76</color>
+  <color name="exampleCardColor">#ffcf00</color>
+</resources>

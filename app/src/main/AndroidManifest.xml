@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.bennet.wallet">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission
+        android:name="android.permission.WAKE_LOCK"
+        android:maxSdkVersion="25"/>
+
+    <application
+        android:name=".Application"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <!-- main activities -->
+        <activity android:name=".HomeActivity"
+            android:launchMode="singleTop">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ShowCardActivity"
+            android:configChanges="orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".EditCardActivity"
+            android:configChanges="orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ShowCardActivity"/>
+        </activity>
+
+        <activity android:name=".SettingsActivity"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <!-- Intent filter Settings -->
+                <action android:name="android.intent.action.APPLICATION_PREFERENCES" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!-- other activities -->
+        <activity android:name=".GetImageContent"/>
+        <activity android:name=".ImageCaptureActivity"/>
+        <activity android:name=".CodeScannerActivity"/>
+        <activity android:name=".CropActivity"/>
+
+        <!-- services -->
+        <service
+            android:name=".ClearDirectoryService"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
+        <service
+            android:name=".CreateExampleCardService"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
+        <service
+            android:name=".DeleteCardService"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="@string/fileprovider_authority"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
+
+    </application>
+
+</manifest>

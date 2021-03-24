@@ -1,0 +1,183 @@
+<resources>
+
+    <!-- strings -->
+    <string name="fileprovider_authority" translatable="false">com.bennet.wallpaper.fileprovider</string>
+    <string name="cards_images_folder_name" translatable="false">Cards_images/</string>
+
+
+    <!-- settings preferences -->
+    <string name="preferences_theme_key" translatable="false">preferences.theme_key</string>
+    <string name="preferences_theme_entry_values_follow_system" translatable="false">0</string>
+    <string name="preferences_theme_entry_values_dark" translatable="false">1</string>
+    <string name="preferences_theme_entry_values_light" translatable="false">2</string>
+    <string-array name="preferences_theme_entry_values">
+        <item>@string/preferences_theme_entry_values_follow_system</item>
+        <item>@string/preferences_theme_entry_values_dark</item>
+        <item>@string/preferences_theme_entry_values_light</item>
+    </string-array>
+    <string name="preferences_theme_title">Theme</string>
+    <string name="preferences_theme_summary">Choose an app theme</string>
+    <string name="preferences_theme_entries_follow_system">Follow system</string>
+    <string name="preferences_theme_entries_dark">Dark theme</string>
+    <string name="preferences_theme_entries_light">Light theme</string>
+    <string-array name="preferences_theme_entries">
+        <item>@string/preferences_theme_entries_follow_system</item>
+        <item>@string/preferences_theme_entries_dark</item>
+        <item>@string/preferences_theme_entries_light</item>
+    </string-array>
+
+    <string name="preferences_advanced_title">Advanced</string>
+    
+    <string name="preferences_back_confirm_key" translatable="false">preferences.confirm_back_key</string>
+    <string name="preferences_back_confirm_entry_values_new_card" translatable="false">1</string>
+    <string name="preferences_back_confirm_entry_values_crop" translatable="false">2</string>
+    <string-array name="preferences_back_confirm_default">
+        <item>@string/preferences_back_confirm_entry_values_new_card</item>
+        <item>@string/preferences_back_confirm_entry_values_crop</item>
+    </string-array>
+    <string-array name="preferences_back_confirm_entry_values">
+        <item>@string/preferences_back_confirm_entry_values_new_card</item>
+        <item>@string/preferences_back_confirm_entry_values_crop</item>
+    </string-array>
+    <string name="preferences_back_confirm_title">Confirm to cancel</string>
+    <string name="preferences_back_confirm_summary">Select where you want the be asked for confirmation to cancel</string>
+    <string name="preferences_back_confirm_entries_new_card">When creating a new card</string>
+    <string name="preferences_back_confirm_entries_crop">When cropping an image for a card</string>
+    <string-array name="preferences_back_confirm_entries">
+        <item>@string/preferences_back_confirm_entries_new_card</item>
+        <item>@string/preferences_back_confirm_entries_crop</item>
+    </string-array>
+
+
+    <string name="preferences_default_values_title">Default card values</string>
+    <string name="preferences_default_values_summary">Edit the default values when creating a new card</string>
+
+    <string name="preferences_default_values_barcode_key" translatable="false">default_values_preferences.barcode_key</string>
+    <string name="preferences_default_values_barcode_default" translatable="false">@string/card_code_type_value_qr</string>
+    <string-array name="preferences_default_values_barcode_entries">
+         <item>@string/card_code_type_value_aztec</item>
+         <item>@string/card_code_type_value_data_matrix</item>
+         <item>@string/card_code_type_value_pdf_417</item>
+         <item>@string/card_code_type_value_qr</item>
+         <item>@string/card_code_type_value_codabar</item>
+         <item>@string/card_code_type_value_code_39</item>
+         <item>@string/card_code_type_value_code_93</item>
+         <item>@string/card_code_type_value_code_128</item>
+         <item>@string/card_code_type_value_ean_8</item>
+         <item>@string/card_code_type_value_ean_13</item>
+         <item>@string/card_code_type_value_itf</item>
+         <item>@string/card_code_type_value_upc_a</item>
+         <item>@string/card_code_type_value_upc_e</item>
+    </string-array>
+    <string name="preferences_default_values_barcode_title">Barcode</string>
+    <string name="preference_default_values_barcode_summary">Choose which type of barcode should be used by default</string>
+
+    <string name="preferences_default_values_code_text_key" translatable="false">default_values_preferences.code_text_key</string>
+    <string name="preferences_default_values_code_text_entry_values_with_text" translatable="false">1</string>
+    <string name="preferences_default_values_code_text_entry_values_without_text" translatable="false">0</string>
+    <string name="preferences_default_values_code_text_default" translatable="false">@string/preferences_default_values_code_text_entry_values_without_text</string>
+    <string-array name="preferences_default_values_code_text_entry_values">
+        <item>@string/preferences_default_values_code_text_entry_values_with_text</item>
+        <item>@string/preferences_default_values_code_text_entry_values_without_text</item>
+    </string-array>
+    <string name="preferences_default_values_code_text_title">Card code as text</string>
+    <string name="preferences_default_values_code_text_summary">Choose whether the card code should be displayed additionally as text by default or not</string>
+    <string-array name="preferences_default_values_code_text_entries">
+        <item>@string/card_code_type_text_value_show_text</item>
+        <item>@string/card_code_type_text_value_dont_show_text</item>
+    </string-array>
+
+
+    <!-- language -->
+    <string name="app_name">Wallet</string>
+    <string name="error_occurred">An error occurred</string>
+    <string name="cancelled">Cancelled</string>
+    <string name="edit">Edit</string>
+    <string name="done">Done</string>
+    <string name="go_ahead">go ahead</string>
+    <string name="choose_image_app">Select image source</string>
+    <string name="choose_image_app_camera">Capture image</string>
+    <string name="choose_image_app_storage">Select from storage</string>
+    <string name="no_image_capture_intent">No apps available for image capture</string>
+    <string name="no_get_content_intent">No apps available to select image from storage</string>
+    <string name="card_name">Card name</string>
+    <string name="card_name_empty_error">Card name is required</string>
+    <string name="card_code">Card code</string>
+    <string name="card_code_type">Card code</string>
+    <string name="card_code_type_text">Card code</string>
+    <string name="card_id">Card ID</string>
+    <string name="front_image">Front image</string>
+    <string name="back_image">Back image</string>
+    <string name="camera_permission_dialogue_title">Allow camera permission</string>
+    <string name="camera_permission_dialogue_qr_code_message">To scan QR code the app needs camera permission</string>
+    <string name="camera_permission_dialogue_image_capture_message">To capture an image the app needs camera permission</string>
+    <string name="card_code_type_value_aztec" translatable="false">Aztec Code</string>
+    <string name="card_code_type_value_data_matrix" translatable="false">Data Matrix</string>
+    <string name="card_code_type_value_pdf_417" translatable="false">PDF417</string>
+    <string name="card_code_type_value_qr" translatable="false">QR code</string>
+    <string name="card_code_type_value_codabar" translatable="false">Codabar</string>
+    <string name="card_code_type_value_code_39" translatable="false">Code 39</string>
+    <string name="card_code_type_value_code_93" translatable="false">Code 93</string>
+    <string name="card_code_type_value_code_128" translatable="false">Code 128</string>
+    <string name="card_code_type_value_ean_8" translatable="false">EAN-8</string>
+    <string name="card_code_type_value_ean_13" translatable="false">EAN-13</string>
+    <string name="card_code_type_value_itf" translatable="false">ITF</string>
+    <string name="card_code_type_value_upc_a" translatable="false">UPC-A</string>
+    <string name="card_code_type_value_upc_e" translatable="false">UPC-E</string>
+    <string name="card_code_type_text_value_show_text">With text</string>
+    <string name="card_code_type_text_value_dont_show_text">Without text</string>
+    <string name="show_card_code_image_view_content_description">Barcode representation of the card code</string>
+    <string name="show_card_visual_code_cannot_be_displayed">The card code can\'t be displayed as %s</string>
+    <string name="unsupported_type_barcode">Unsupported type of barcode</string>
+    <string name="there_are_still_errors">There are still errors</string>
+    <string name="new_card_name">New card</string>
+    <string name="delete">Delete</string>
+    <string name="edit_card_color_button_text">Color</string>
+    <string name="edit_card_auto_color_button_text">Auto</string>
+    <string name="crop_image_menu_lock_card_ratio">Lock Aspect ratio to card format</string>
+    <string name="press_again_cancel_image_selection">Press again to cancel image selection</string>
+    <string name="press_again_cancel_create_new_card">Press again to cancel the new card</string>
+    <string name="example_card_name">Example card</string>
+    <string name="example_card_code">https://www.instagram.com/mahlermemes/</string>
+    <string name="example_card_card_id">Example ID</string>
+    <string name="new_card_property_default_name">New card property</string>
+    <string name="create_new_card_property">Create new card property</string>
+    <string name="new_card_property_default_value">Value</string>
+    <string name="text_input_dialog_property_name">Property name</string>
+    <string name="file_too_big">The selected file is too big</string>
+    <string name="open_navigation_drawer">Open navigation drawer</string>
+    <string name="close_navigation_drawer">Close navigation drawer</string>
+    <string name="home">Home</string>
+    <string name="settings">Settings</string>
+    <string name="delete_card">Delete card</string>
+    <string name="delete_card_message">Are you sure you want to delete the card?</string>
+    <string name="cancel">Cancel</string>
+    <string name="image_capture_camera_permission_denied">Camera permission denied</string>
+    <string name="code_scanner_camera_permission_denied">Camera permission denied</string>
+    <string name="author" translatable="false">Bennet</string>
+    <string name="version_name_format">Version %s</string>
+    <string name="version_name" translatable="false">1.3</string> <!-- TODO keep this updated -->
+    <string name="important">Important</string>
+    <string name="info">Info</string>
+    <string name="mahler_is_cool">Mahler is cool!</string>
+    <string name="listen_to_mahler_9">Listen to Mahler 9!</string>
+    <string name="credits">Credits</string>
+    <string name="images_and_icons">Images and icons</string>
+    <string name="app_icon_title">App icon</string>
+    <string name="app_icon_summary">Icon made by Freepik from www.flaticon.com</string>
+    <string name="mahler_image_title">Image of Gustav Mahler</string>
+    <string name="mahler_image_summary">Emil Orlik, 1902</string>
+    <string name="components_title">Components</string>
+    <string name="color_picker_library_title">Color picker</string>
+    <string name="color_picker_library_summary">Library made by danielnilsson9\nCopied from Github under Apache License 2.0\nModification in ColorPickerDialogFragment.java and corresponding layout file for an extra custom button in the view</string>
+    <string name="image_crop_library_title">Image Cropping</string>
+    <string name="image_crop_library_summary">Library made by ArthurHub\nFrom Github under Apache License 2.0</string>
+    <string name="barcode_library_title">Barcode</string>
+    <string name="barcode_library_summary">ZXing ("Zebra Crossing")\nFrom Github under Apache License 2.0</string>
+    <string name="no_images_to_calc_color">No images available to calculate color</string>
+    <string name="crop_image_menu_rotate_right">Rotate right</string>
+    <string name="crop_image_menu_flip">Flip</string>
+    <string name="crop_image_menu_flip_horizontally">Flip horizontally</string>
+    <string name="crop_image_menu_flip_vertically">Flip vertically</string>
+    <string name="crop_image_menu_crop">Crop</string>
+</resources>

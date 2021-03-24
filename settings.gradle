@@ -1,0 +1,3 @@
+include ':colorpickerview'
+include ':app'
+rootProject.name = "Wallet"

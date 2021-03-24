@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ListPreference
+        android:key="@string/preferences_theme_key"
+        android:title="@string/preferences_theme_title"
+        android:summary="@string/preferences_theme_summary"
+        android:defaultValue=""
+        android:entries="@array/preferences_theme_entries"
+        android:entryValues="@array/preferences_theme_entry_values"/>
+
+    <PreferenceCategory
+        android:title="@string/preferences_advanced_title">
+
+        <MultiSelectListPreference
+            android:key="@string/preferences_back_confirm_key"
+            android:title="@string/preferences_back_confirm_title"
+            android:summary="@string/preferences_back_confirm_summary"
+            android:defaultValue="@array/preferences_back_confirm_default"
+            android:entries="@array/preferences_back_confirm_entries"
+            android:entryValues="@array/preferences_back_confirm_entry_values"/>
+
+        <Preference
+            android:title="@string/preferences_default_values_title"
+            android:summary="@string/preferences_default_values_summary"
+            app:fragment="com.bennet.wallet.SettingsActivity$DefaultValuesSettingsFragment"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/credits">
+
+        <Preference
+            android:title="@string/credits"
+            android:fragment="com.bennet.wallet.SettingsActivity$CreditsSettingsFragment"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
