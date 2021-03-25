@@ -6,16 +6,21 @@ import android.util.Log;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKey;
 
 import java.io.File;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.Locale;
+import java.util.Map;
 
 import com.bennet.wallet.Utility.PreferenceArrayInt;
 
 public class CardPreferenceManager {
     // preferences
-    static public final String CARDS_PREFERENCES_NAME = "com.bennet.wallet.cards"; // String
-
+    static public final String CARDS_PREFERENCES_NAME_OLD = "com.bennet.wallet.cards";
+    static public final String CARDS_PREFERENCES_NAME_ENCRYPTED = "cards_encrypted";
     static protected final String PREFERENCE_ALL_CARD_IDS = "com.bennet.wallet.home_activity.card_ids"; // PreferenceArrayInt
 
     static protected final String PREFERENCE_CARD_NAME = "com.bennet.wallet.cards.%d.name"; // String
@@ -62,9 +67,55 @@ public class CardPreferenceManager {
      */
     static private void init(Context context) {
         if (preferences == null) {
-            preferences = context.getSharedPreferences(CARDS_PREFERENCES_NAME, Context.MODE_PRIVATE);
+            try {
+                MasterKey mainKey = new MasterKey.Builder(context)
+                        .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                        .build();
+                preferences = EncryptedSharedPreferences.create(context, CARDS_PREFERENCES_NAME_ENCRYPTED, mainKey,
+                        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV, EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM);
+
+            } catch (GeneralSecurityException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            encryptOldPreferences(context); // Migrates old preferences (if present) to new encrypted preferences
+
             cardDefaultColor = context.getResources().getColor(R.color.cardDefaultColor);
         }
+    }
+
+    /**
+     * If old unencrypted preferences are there, this copies all old preferences to new encrypted ones and deletes old preferences afterwards.
+     * CardPreferenceManager::preferences needs to be already set to the new encrypted preferences.
+     */
+    static private void encryptOldPreferences(Context context) {
+        SharedPreferences oldPreferences = context.getSharedPreferences(CARDS_PREFERENCES_NAME_OLD, Context.MODE_PRIVATE);
+        Map<String, ?> prefContent = oldPreferences.getAll();
+        if (prefContent.size() > 0) {
+
+            SharedPreferences.Editor editor = preferences.edit();
+
+            for (Map.Entry<String, ?> entry : prefContent.entrySet()) {
+                if (entry.getValue().getClass() == String.class)
+                    editor.putString(entry.getKey(), (String) entry.getValue());
+
+                else if (entry.getValue().getClass() == Integer.class)
+                    editor.putInt(entry.getKey(), (Integer) entry.getValue());
+
+                else if (entry.getValue().getClass() == Boolean.class)
+                    editor.putBoolean(entry.getKey(), (Boolean) entry.getValue());
+
+                else { // TODO remove or comment debug log
+                    if (BuildConfig.DEBUG) {
+                        Log.e("encryptOldPref", "Could not encrypt " + entry.getKey() + " (" + entry.getValue().getClass().getName() + ")" + ": " + entry.getValue().toString());
+                    }
+                }
+            }
+            editor.apply();
+
+            oldPreferences.edit().clear().apply();
+        }
+
+        // deleting the preferences file doesn't really work that well
     }
 
 
@@ -602,8 +653,8 @@ public class CardPreferenceManager {
      */
     static public void addToAllCardIDs(Context context, int ID) {
         PreferenceArrayInt cardIDs = readAllCardIDs(context);
-        if (!cardIDs.contains((Integer) ID))
-            cardIDs.add((Integer) ID);
+        if (!cardIDs.contains(ID))
+            cardIDs.add(ID);
         writeAllCardIDs(context, cardIDs);
     }
 
