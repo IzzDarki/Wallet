@@ -38,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import com.bennet.wallet.Utility.PreferenceArrayInt;
@@ -421,7 +422,7 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
     public void finishAndShowCard() {
         hideKeyboard(); // TODO remove this, if it didn't fix the "random" weird sizing issue
         finish();
-        Intent intent = NavUtils.getParentActivityIntent(this);
+        Intent intent = new Intent(this, ShowCardActivity.class);
         if (intent != null) {
             intent.putExtra(EXTRA_CARD_ID, ID);
             startActivity(intent);
@@ -742,7 +743,7 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
         if (currentFrontImage != null) {
             cardView.removeFrontImage();
             CardPreferenceManager.removeCardFrontImage(this, ID);
-            deleteFrontImage();;
+            deleteFrontImage();
         }
     }
 
@@ -829,7 +830,7 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
     // helper functions
     protected String createImageName(boolean isFront) {
         String frontOrBack = (isFront ? "front" : "back");
-        return "JPEG_" + ID + "_" + frontOrBack + "_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        return "JPEG_" + ID + "_" + frontOrBack + "_" + new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(new Date());
     }
 
     protected int generateNewCardID() {
