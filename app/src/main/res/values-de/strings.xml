@@ -92,4 +92,6 @@
     <string name="crop_image_menu_flip_horizontally">Horizontal spiegeln</string>
     <string name="crop_image_menu_flip_vertically">Vertikal spiegeln</string>
     <string name="crop_image_menu_crop">Zuschneiden</string>
+    <string name="preferences_detailed_errors_title">Detaillierte Fehlermeldungen</string>
+    <string name="preferences_detailed_errors_summary">Detaillierte, aber manchmal kryptische Fehlermeldungen anzeigen</string>
 </resources>

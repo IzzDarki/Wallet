@@ -27,6 +27,11 @@
             android:summary="@string/preferences_default_values_summary"
             app:fragment="com.bennet.wallet.SettingsActivity$DefaultValuesSettingsFragment"/>
 
+        <SwitchPreference
+            android:key="@string/preferences_detailed_errors_key"
+            android:title="@string/preferences_detailed_errors_title"
+            android:summary="@string/preferences_detailed_errors_summary" />
+
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -34,7 +39,8 @@
 
         <Preference
             android:title="@string/credits"
-            android:fragment="com.bennet.wallet.SettingsActivity$CreditsSettingsFragment"/>
+            android:fragment="com.bennet.wallet.SettingsActivity$CreditsSettingsFragment"
+            android:defaultValue="@bool/preferences_detailed_errors_default" />
 
     </PreferenceCategory>
 

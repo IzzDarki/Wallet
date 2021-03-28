@@ -87,6 +87,10 @@
         <item>@string/card_code_type_text_value_dont_show_text</item>
     </string-array>
 
+    <string name="preferences_detailed_errors_key" translatable="false">preferences.detailed_errors_key</string>
+    <string name="preferences_detailed_errors_title">Detailed error messages</string>
+    <string name="preferences_detailed_errors_summary">Display detailed but sometimes cryptic error messages</string>
+
 
     <!-- language -->
     <string name="app_name">Wallet</string>
