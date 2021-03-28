@@ -97,7 +97,12 @@ public class ShowCardActivity extends CardActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        scrollView.setScrollY(0);
+
+        scrollView.setScrollY(0); // refreshes scroll position
+
+        cardView.removeFrontImage(); // hides old image, new image will be loaded later
+        cardView.removeBackImage(); // hides old image, new image will be loaded later
+
         initFromPreferences();
         updateProperties();
 
@@ -195,7 +200,12 @@ public class ShowCardActivity extends CardActivity {
                 else
                     codeBitmap = createCodeDefault();
             } catch (IllegalArgumentException | WriterException | ArrayIndexOutOfBoundsException e) {
-                Toast.makeText(this, String.format(getString(R.string.show_card_visual_code_cannot_be_displayed), codeTypeIntToString(this, cardCodeType)) + System.getProperty("line.separator") + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+
+                String detailedErrorMessage = ""; // TODO test this
+                if (AppPreferenceManager.isDetailedErrors(this))
+                    detailedErrorMessage = System.getProperty("line.separator") + e.getLocalizedMessage();
+
+                Toast.makeText(this, String.format(getString(R.string.show_card_visual_code_cannot_be_displayed), codeTypeIntToString(this, cardCodeType)) + detailedErrorMessage, Toast.LENGTH_LONG).show();
                 cardCodeImageView.setVisibility(View.GONE);
                 return;
             }

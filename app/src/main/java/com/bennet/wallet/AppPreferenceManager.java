@@ -38,4 +38,13 @@ public class AppPreferenceManager {
         String defaultTextString = PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.preferences_default_values_code_text_key), context.getString(R.string.preferences_default_values_code_text_default));
         return defaultTextString.equals(context.getString(R.string.preferences_default_values_code_text_entry_values_with_text));
     }
+
+    /**
+     * Checks in the user preferences, whether the user wants to receive detailed error messages or not
+     * @param context Context
+     * @return Returns true when detailed error messages are turned on, otherwise false
+     */
+    static public boolean isDetailedErrors(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.preferences_detailed_errors_key), context.getResources().getBoolean(R.bool.preferences_detailed_errors_default));
+    }
 }
