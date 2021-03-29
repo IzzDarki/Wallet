@@ -37,17 +37,6 @@ import com.google.android.material.textview.MaterialTextView;
 import java.util.ArrayList;
 import java.util.List;
 
-
-/*
- * TODO list
- *
- * TODO Optional list (future releases)
- *  - Alert dialogs verschönern (Eigene Dialog-Klasse mit RecyclerView)
- *  - selectable items in RecyclerView in HomeActivity (to delete) ((maybe drag and drop position))
- *  - animations</p>
- *  - consider using glide library for bitmaps https://developer.android.com/topic/performance/graphics (if there's a significant performance issue)
- */
-
 public class HomeActivity extends AppCompatActivity implements SmallCardAdapter.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     static public class SmallCard {
@@ -99,12 +88,7 @@ public class HomeActivity extends AppCompatActivity implements SmallCardAdapter.
         adapter.setOnItemClickListener(this);
         cardGridRecyclerView.setAdapter(adapter);
 
-        plusButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createNewCard();
-            }
-        });
+        plusButton.setOnClickListener(v -> createNewCard());
 
         // toolbar
         setSupportActionBar(toolbar);
@@ -149,17 +133,13 @@ public class HomeActivity extends AppCompatActivity implements SmallCardAdapter.
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.nav_home:
-                break;
-
-            case R.id.nav_settings:
-                Intent intent = new Intent(this, SettingsActivity.class);
-                startActivity(intent);
-                break;
-
-            default:
-                return false;
+        int itemId = item.getItemId();
+        if (itemId == R.id.nav_home) {
+        } else if (itemId == R.id.nav_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+        } else {
+            return false;
         }
         drawerLayout.closeDrawer(navigationView);
         return true;
