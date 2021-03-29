@@ -10,11 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.theartofdev.edmodo.cropper.CropImageView;
-
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 /**
  * <h><b>Intent extras (parameters)</b></h>

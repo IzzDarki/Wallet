@@ -121,8 +121,15 @@ public class HomeActivity extends AppCompatActivity implements SmallCardAdapter.
     protected void onResume() {
         super.onResume();
         navigationView.setCheckedItem(R.id.nav_home);
-        clearCachedCardImages();
         updateCards();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        // Since onStop is probably(?) guaranteed to be called, this is a good place to clear cached card images
+        clearCachedCardImages();
     }
 
     @Override
