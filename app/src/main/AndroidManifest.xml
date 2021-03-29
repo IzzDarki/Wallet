@@ -55,7 +55,7 @@
         </activity>
 
         <!-- other activities -->
-        <activity android:name=".GetImageContent"/>
+        <activity android:name=".GetContentImageActivity"/>
         <activity android:name=".ImageCaptureActivity"/>
         <activity android:name=".CodeScannerActivity"/>
         <activity android:name=".CropActivity"/>

@@ -3,16 +3,13 @@ package com.bennet.wallet;
 import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.NavUtils;
 
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -288,10 +285,10 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
     protected void onGetContentResult(int resultCode, @Nullable Intent data, boolean isFront) {
         switch (resultCode) {
             case RESULT_OK:
-                setCardImage(isFront, (File)data.getSerializableExtra(GetImageContent.EXTRA_RESULT_FILE));
+                setCardImage(isFront, (File)data.getSerializableExtra(GetContentImageActivity.EXTRA_RESULT_FILE));
                 break;
 
-            case GetImageContent.RESULT_NO_GET_CONTENT_INTENT:
+            case GetContentImageActivity.RESULT_NO_GET_CONTENT_INTENT:
                 Toast.makeText(this, R.string.no_get_content_intent, Toast.LENGTH_SHORT).show();
                 break;
 
@@ -469,13 +466,13 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
     }
 
     protected void selectImage(boolean isFront) {
-        Intent getContent = new Intent(this, GetImageContent.class);
+        Intent getContent = new Intent(this, GetContentImageActivity.class);
         getContent.putExtra(GetImageActivity.EXTRA_FILE_PROVIDER_AUTHORITY, getString(R.string.fileprovider_authority));
         getContent.putExtra(GetImageActivity.EXTRA_FOLDER_PATH, getCacheDir() + "/" + getString(R.string.cards_images_folder_name));
         getContent.putExtra(GetImageActivity.EXTRA_FILE_NAME, createImageName(isFront));
         getContent.putExtra(GetImageActivity.EXTRA_IMAGE_MAX_NEEDED_SHORT_SIDE, getCalculatedLayoutWidth());
         getContent.putExtra(GetImageActivity.EXTRA_IMAGE_MAX_NEEDED_LONG_SIDE, getCalculatedLayoutHeight());
-        getContent.putExtra(GetImageContent.EXTRA_TYPE, "image/*");
+        getContent.putExtra(GetContentImageActivity.EXTRA_TYPE, "image/*");
         if (isFront)
             startActivityForResult(getContent, REQUEST_GET_CONTENT_FRONT);
         else
