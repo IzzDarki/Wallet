@@ -113,7 +113,7 @@ public class CardActivity extends AppCompatActivity {
                 }
             }
         }
-    };
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -125,12 +125,9 @@ public class CardActivity extends AppCompatActivity {
         cardViewLayout.addView(cardView, 0);
         cardView.addToScrollView(scrollView);
 
-        cardView.post(new Runnable() {
-            @Override
-            public void run() { // call when UI is ready
-                    updateFrontImage();
-                    updateBackImage();
-            }
+        cardView.post(() -> { // call when UI is ready
+                updateFrontImage();
+                updateBackImage();
         });
     }
 
@@ -372,5 +369,9 @@ public class CardActivity extends AppCompatActivity {
 
     protected float getCalculatedLayoutWidth() {
         return getResources().getDisplayMetrics().widthPixels - 2 * getResources().getDimension(R.dimen.card_padding);
+    }
+
+    protected float getCalculatedLayoutHeight() {
+        return getResources().getDisplayMetrics().heightPixels - 2 * getResources().getDimension(R.dimen.card_padding);
     }
 }

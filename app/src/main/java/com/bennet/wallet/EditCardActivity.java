@@ -58,21 +58,18 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
     static protected final int PICK_COLOR_ID = 0;
 
     // final variables
-    protected final CardPropertyView.OnSetPropertyDeletedListener onSetPropertyDeletedListener = new CardPropertyView.OnSetPropertyDeletedListener() {
-        @Override
-        public void onSetPropertyDeleted(CardPropertyView view, boolean isDeleted) {
-            if (isDeleted) {
-                cardPropertyIDs.remove((Integer) view.getPropertyID());
-                linearLayout.removeView(view);
+    protected final CardPropertyView.OnSetPropertyDeletedListener onSetPropertyDeletedListener = (view, isDeleted) -> {
+        if (isDeleted) {
+            cardPropertyIDs.remove((Integer) view.getPropertyID());
+            linearLayout.removeView(view);
 
-                if (view.getImeOptions() == EditorInfo.IME_ACTION_DONE) { // if the property that gets removed was the last visible one
-                    // set the property view at the end of the visible list to IME done
-                    CardPropertyView lastPropertyView = getLastVisiblePropertyView();
-                    if (lastPropertyView != null)
-                        lastPropertyView.setImeDone();
-                    else
-                        cardIDInputSetImeOptions(EditorInfo.IME_ACTION_DONE);
-                }
+            if (view.getImeOptions() == EditorInfo.IME_ACTION_DONE) { // if the property that gets removed was the last visible one
+                // set the property view at the end of the visible list to IME done
+                CardPropertyView lastPropertyView = getLastVisiblePropertyView();
+                if (lastPropertyView != null)
+                    lastPropertyView.setImeDone();
+                else
+                    cardIDInputSetImeOptions(EditorInfo.IME_ACTION_DONE);
             }
         }
     };
@@ -150,25 +147,19 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
 
         // card name
         cardNameInput.setText(cardName);
-        cardNameInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    readNameInput();
-                    cardNameInput.setText(cardName);
-                }
+        cardNameInput.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                readNameInput();
+                cardNameInput.setText(cardName);
             }
         });
 
         // card code
         cardCodeInput.setText(cardCode);
-        cardCodeInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    readCodeInput();
-                    cardCodeInput.setText(cardCode);
-                }
+        cardCodeInput.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                readCodeInput();
+                cardCodeInput.setText(cardCode);
             }
         });
         cardCodeInput.addTextChangedListener(new TextWatcher() { // hide or show text fields for card code type and card code text type
@@ -185,12 +176,7 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
                     showCardCodeTypeAndShowLayout();
             }
         });
-        cardCodeInputLayout.setEndIconOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                scanQRCode();
-            }
-        });
+        cardCodeInputLayout.setEndIconOnClickListener(v -> scanQRCode());
 
 
         // card code type
@@ -198,69 +184,40 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
             hideCardCodeTypeAndShowLayout();
         cardCodeTypeInput.setText(codeTypeIntToString(this, cardCodeType));
         cardCodeTypeInput.setAdapter(getNewCardCodeTypeAdapter());
-        cardCodeTypeInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus)
-                    readCodeTypeInput();
-            }
+        cardCodeTypeInput.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus)
+                readCodeTypeInput();
         });
         cardCodeTypeInput.setWidth((int) ((getCalculatedLayoutWidth() - Utility.DPtoPX(getResources().getDisplayMetrics(), 8)) / 2));
 
         // card code text type
         cardCodeTypeTextInput.setText(codeTypeTextBoolToString(cardCodeTypeText));
         cardCodeTypeTextInput.setAdapter(new ArrayAdapter<>(this, R.layout.dropdown_meu_popup_item, new String[]{getString(R.string.card_code_type_text_value_show_text), getString(R.string.card_code_type_text_value_dont_show_text)}));
-        cardCodeTypeTextInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus)
-                    readCodeTypeTextInput();
-            }
+        cardCodeTypeTextInput.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus)
+                readCodeTypeTextInput();
         });
         cardCodeTypeTextInput.setWidth((int) ((getCalculatedLayoutWidth() - Utility.DPtoPX(getResources().getDisplayMetrics(), 8)) / 2));
 
         // card ID
         cardIDInput.setText(cardID);
-        cardIDInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    readIDInput();
-                    cardIDInput.setText(cardID);
-                }
+        cardIDInput.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                readIDInput();
+                cardIDInput.setText(cardID);
             }
         });
 
         // create new card property button
-        createNewCardPropertyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createNewCardProperty();
-            }
-        });
+        createNewCardPropertyButton.setOnClickListener(v -> createNewCardProperty());
 
         // card color
-        cardColorButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pickColor();
-            }
-        });
+        cardColorButton.setOnClickListener(v -> pickColor());
         updateColorButtonColor();
 
         // card images
-        cardFrontImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chooseImage(true);
-            }
-        });
-        cardBackImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chooseImage(false);
-            }
-        });
+        cardFrontImageButton.setOnClickListener(v -> chooseImage(true));
+        cardBackImageButton.setOnClickListener(v -> chooseImage(false));
 
         // card properties
         for (int property_ID : cardPropertyIDs) {
@@ -377,31 +334,22 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.edit_card_action_bar_done:  // finish if input can be saved (no input errors)
-                save();
-                return true;
-
-            case R.id.edit_card_action_bar_delete:
-                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.RoundedCornersDialog));
-                builder.setTitle(R.string.delete_card);
-                builder.setMessage(R.string.delete_card_message);
-                builder.setCancelable(true);
-                builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        deleteCardAndFinish();
-                        dialog.dismiss();
-                    }
-                });
-                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                builder.show();
-                return true;
+        int itemId = item.getItemId();
+        if (itemId == R.id.edit_card_action_bar_done) {  // finish if input can be saved (no input errors)
+            save();
+            return true;
+        } else if (itemId == R.id.edit_card_action_bar_delete) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.RoundedCornersDialog));
+            builder.setTitle(R.string.delete_card);
+            builder.setMessage(R.string.delete_card_message);
+            builder.setCancelable(true);
+            builder.setPositiveButton(R.string.delete, (dialog, which) -> {
+                deleteCardAndFinish();
+                dialog.dismiss();
+            });
+            builder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.cancel());
+            builder.show();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -486,31 +434,22 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
         builder.setView(dialogLayout);
         dialog = builder.create();
 
-        deleteImageGroup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                if (isFront)
-                    removeFrontImage();
-                else
-                    removeBackImage();
-            }
+        deleteImageGroup.setOnClickListener(v -> {
+            dialog.dismiss();
+            if (isFront)
+                removeFrontImage();
+            else
+                removeBackImage();
         });
 
-        selectImageGroup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                selectImage(isFront);
-            }
+        selectImageGroup.setOnClickListener(v -> {
+            dialog.dismiss();
+            selectImage(isFront);
         });
 
-        imageCaptureGroup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                takeImage(isFront);
-            }
+        imageCaptureGroup.setOnClickListener(v -> {
+            dialog.dismiss();
+            takeImage(isFront);
         });
 
         dialog.show();
@@ -521,8 +460,8 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
         imageCapture.putExtra(GetImageActivity.EXTRA_FILE_PROVIDER_AUTHORITY, getString(R.string.fileprovider_authority));
         imageCapture.putExtra(GetImageActivity.EXTRA_FOLDER_PATH, getCacheDir() + "/" + getString(R.string.cards_images_folder_name));
         imageCapture.putExtra(GetImageActivity.EXTRA_FILE_NAME, createImageName(isFront));
-        imageCapture.putExtra(GetImageActivity.EXTRA_IMAGE_MAX_NEEDED_SHORT_SIDE, cardView.getWidth());
-        imageCapture.putExtra(GetImageActivity.EXTRA_IMAGE_MAX_NEEDED_LONG_SIDE, (int) (cardView.getHeight() - 2 * getResources().getDimension(R.dimen.card_padding)));
+        imageCapture.putExtra(GetImageActivity.EXTRA_IMAGE_MAX_NEEDED_SHORT_SIDE, getCalculatedLayoutWidth());
+        imageCapture.putExtra(GetImageActivity.EXTRA_IMAGE_MAX_NEEDED_LONG_SIDE, getCalculatedLayoutHeight());
         if (isFront)
             startActivityForResult(imageCapture, REQUEST_IMAGE_CAPTURE_FRONT);
         else
@@ -534,8 +473,8 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
         getContent.putExtra(GetImageActivity.EXTRA_FILE_PROVIDER_AUTHORITY, getString(R.string.fileprovider_authority));
         getContent.putExtra(GetImageActivity.EXTRA_FOLDER_PATH, getCacheDir() + "/" + getString(R.string.cards_images_folder_name));
         getContent.putExtra(GetImageActivity.EXTRA_FILE_NAME, createImageName(isFront));
-        getContent.putExtra(GetImageActivity.EXTRA_IMAGE_MAX_NEEDED_SHORT_SIDE, cardView.getWidth());
-        getContent.putExtra(GetImageActivity.EXTRA_IMAGE_MAX_NEEDED_LONG_SIDE, (int) (cardView.getHeight() - 2 * getResources().getDimension(R.dimen.card_padding)));
+        getContent.putExtra(GetImageActivity.EXTRA_IMAGE_MAX_NEEDED_SHORT_SIDE, getCalculatedLayoutWidth());
+        getContent.putExtra(GetImageActivity.EXTRA_IMAGE_MAX_NEEDED_LONG_SIDE, getCalculatedLayoutHeight());
         getContent.putExtra(GetImageContent.EXTRA_TYPE, "image/*");
         if (isFront)
             startActivityForResult(getContent, REQUEST_GET_CONTENT_FRONT);
@@ -576,12 +515,9 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
     public void pickColor() {
         final ColorPickerDialogFragment dialogFragment = ColorPickerDialogFragment.newInstance(PICK_COLOR_ID, null, null, cardColor, false);
 
-        dialogFragment.setCustomButton(getResources().getString(R.string.edit_card_auto_color_button_text), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                autoSelectColor();
-                dialogFragment.dismiss();
-            }
+        dialogFragment.setCustomButton(getResources().getString(R.string.edit_card_auto_color_button_text), v -> {
+            autoSelectColor();
+            dialogFragment.dismiss();
         });
 
         dialogFragment.setStyle(DialogFragment.STYLE_NORMAL, 0);
