@@ -19,6 +19,13 @@ public class AppPreferenceManager {
         return PreferenceManager.getDefaultSharedPreferences(context).getStringSet(context.getString(R.string.preferences_back_confirm_key), defaultValue);
     }
 
+    static protected Set<String> getAppFunctionsStringSet(Context context) {
+        String[] defaultValueArray = context.getResources().getStringArray(R.array.preferences_app_functions_entry_values);
+        Set<String> defaultValue = new HashSet<>(Arrays.asList(defaultValueArray));
+        return PreferenceManager.getDefaultSharedPreferences(context).getStringSet(context.getString(R.string.preferences_app_functions_key), defaultValue);
+    }
+
+
     static public boolean isBackConfirmNewCard(Context context) {
         Set<String> stringSet = getBackConfirmStringSet(context);
         return stringSet.contains(context.getString(R.string.preferences_back_confirm_entry_values_new_card));
@@ -37,6 +44,16 @@ public class AppPreferenceManager {
     static public boolean getDefaultWithText(Context context) {
         String defaultTextString = PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.preferences_default_values_code_text_key), context.getString(R.string.preferences_default_values_code_text_default));
         return defaultTextString.equals(context.getString(R.string.preferences_default_values_code_text_entry_values_with_text));
+    }
+
+    static public boolean isAppFunctionCards(Context context) {
+        Set<String> stringSet = getAppFunctionsStringSet(context);
+        return stringSet.contains(context.getString(R.string.preferences_app_functions_entry_values_cards));
+    }
+
+    static public boolean isAppFunctionPasswords(Context context) {
+        Set<String> stringSet = getAppFunctionsStringSet(context);
+        return stringSet.contains(context.getString(R.string.preferences_app_functions_entry_values_passwords));
     }
 
     /**

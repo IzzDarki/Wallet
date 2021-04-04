@@ -11,6 +11,14 @@
         android:entries="@array/preferences_theme_entries"
         android:entryValues="@array/preferences_theme_entry_values"/>
 
+    <MultiSelectListPreference
+        android:key="@string/preferences_app_functions_key"
+        android:title="@string/preferences_app_functions_title"
+        android:summary="@string/preferences_app_functions_summary"
+        android:defaultValue="@array/preferences_app_functions_entry_values"
+        android:entries="@array/preferences_app_functions_entries"
+        android:entryValues="@array/preferences_app_functions_entry_values" />
+
     <PreferenceCategory
         android:title="@string/preferences_advanced_title">
 

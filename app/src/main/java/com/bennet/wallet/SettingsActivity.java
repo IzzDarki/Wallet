@@ -3,27 +3,33 @@ package com.bennet.wallet;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.preference.ListPreference;
+import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.google.android.material.appbar.MaterialToolbar;
+
+import java.util.Set;
 
 public class SettingsActivity extends AppCompatActivity implements PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
 
     static public class SettingsFragment extends PreferenceFragmentCompat {
 
         protected ListPreference themePreference;
+        protected MultiSelectListPreference appFunctionsPreference;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.preferences, rootKey);
 
             themePreference = findPreference(getString(R.string.preferences_theme_key));
+            appFunctionsPreference = findPreference(getString(R.string.preferences_app_functions_key));
 
             // if value not set, set the value to what the night mode actually is (AppCompatDelegate)
             if (themePreference.getValue().equals("")) {
@@ -31,12 +37,17 @@ public class SettingsActivity extends AppCompatActivity implements PreferenceFra
                 if (value != null)
                     themePreference.setValue(value);
             }
-            themePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    AppCompatDelegate.setDefaultNightMode(themePreferenceEntryValueToInt(requireContext(), newValue));
-                    return true;
+            themePreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                AppCompatDelegate.setDefaultNightMode(themePreferenceEntryValueToInt(requireContext(), newValue));
+                return true;
+            });
+
+            appFunctionsPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                if (((Set<String>)(newValue)).size() == 0) {
+                    Toast.makeText(requireContext(), R.string.preferences_app_functions_error_too_few_items, Toast.LENGTH_LONG).show();
+                    return false;
                 }
+                return true;
             });
         }
 

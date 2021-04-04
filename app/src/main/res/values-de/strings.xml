@@ -35,7 +35,7 @@
     <string name="press_again_cancel_image_selection">Erneut drücken um Bildauswahl abzubrechen</string>
     <string name="press_again_cancel_create_new_card">Erneut drücken um Erstellen der neuen Karte abzubrechen</string>
     <string name="example_card_name">Bespielkarte</string>
-    <string name="example_card_card_id">Bespiel-ID</string>
+    <string name="example_card_card_id">Beispiel-ID</string>
     <string name="new_card_property_default_name">Neue Karten Eigenschaft</string>
     <string name="create_new_card_property">Neue Karten-Eigenschaft erstellen</string>
     <string name="new_card_property_default_value">Wert</string>
@@ -84,7 +84,7 @@
     <string name="image_crop_library_summary">Library von ArthurHub\nVon Github unter Apache License 2.0</string>
     <string name="credits">Quellenangabe</string>
     <string name="preference_default_values_barcode_summary">Wähle welcher Barcode-Typ standardmäßig verwendet werden soll</string>
-    <string name="no_images_to_calc_color">Keine Bilder vorhanden um Farbe zu berechnen</string>
+    <string name="no_images_to_calc_color">Keine Bilder vorhanden um die Farbe zu berechnen</string>
     <string name="barcode_library_title">Barcode</string>
     <string name="barcode_library_summary">ZXing ("Zebra Crossing")\nVon Github unter Apache License 2.0</string>
     <string name="crop_image_menu_rotate_right">Nach rechts drehen</string>
@@ -94,4 +94,9 @@
     <string name="crop_image_menu_crop">Zuschneiden</string>
     <string name="preferences_detailed_errors_title">Detaillierte Fehlermeldungen</string>
     <string name="preferences_detailed_errors_summary">Detaillierte, aber manchmal kryptische Fehlermeldungen anzeigen</string>
+    <string name="preferences_app_functions_title">App Funktionen</string>
+    <string name="preferences_app_functions_summary">Wähle die App Funktionen, die du benutzen möchtest</string>
+    <string name="preferences_app_functions_entries_cards">Karten</string>
+    <string name="preferences_app_functions_entries_passwords">Nur Passwörter</string>
+    <string name="preferences_app_functions_error_too_few_items">Du musst mindestens eine App Funktion auswählen ;)</string>
 </resources>

@@ -26,6 +26,22 @@
         <item>@string/preferences_theme_entries_light</item>
     </string-array>
 
+    <string name="preferences_app_functions_key" translatable="false">preferences.app_functions_key</string>
+    <string name="preferences_app_functions_entry_values_cards" translatable="false">1</string>
+    <string name="preferences_app_functions_entry_values_passwords" translatable="false">2</string>
+    <string-array name="preferences_app_functions_entry_values">
+        <item>@string/preferences_app_functions_entry_values_cards</item>
+        <item>@string/preferences_app_functions_entry_values_passwords</item>
+    </string-array>
+    <string name="preferences_app_functions_title">App functions</string>
+    <string name="preferences_app_functions_summary">Select which app functions you want to use</string>
+    <string name="preferences_app_functions_entries_cards">Cards</string>
+    <string name="preferences_app_functions_entries_passwords">Passwords</string>
+    <string-array name="preferences_app_functions_entries">
+        <item>@string/preferences_app_functions_entries_cards</item>
+        <item>@string/preferences_app_functions_entries_passwords</item>
+    </string-array>
+
     <string name="preferences_advanced_title">Advanced</string>
     
     <string name="preferences_back_confirm_key" translatable="false">preferences.confirm_back_key</string>
@@ -178,10 +194,11 @@
     <string name="image_crop_library_summary">Library made by ArthurHub\nFrom Github under Apache License 2.0</string>
     <string name="barcode_library_title">Barcode</string>
     <string name="barcode_library_summary">ZXing ("Zebra Crossing")\nFrom Github under Apache License 2.0</string>
-    <string name="no_images_to_calc_color">No images available to calculate color</string>
+    <string name="no_images_to_calc_color">No images available to calculate the color</string>
     <string name="crop_image_menu_rotate_right">Rotate right</string>
     <string name="crop_image_menu_flip">Flip</string>
     <string name="crop_image_menu_flip_horizontally">Flip horizontally</string>
     <string name="crop_image_menu_flip_vertically">Flip vertically</string>
     <string name="crop_image_menu_crop">Crop</string>
+    <string name="preferences_app_functions_error_too_few_items">You have to select at least one app function ;)</string>
 </resources>
