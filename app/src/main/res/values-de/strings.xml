@@ -99,4 +99,7 @@
     <string name="preferences_app_functions_entries_cards">Karten</string>
     <string name="preferences_app_functions_entries_passwords">Nur Passwörter</string>
     <string name="preferences_app_functions_error_too_few_items">Du musst mindestens eine App Funktion auswählen ;)</string>
+    <string name="create_new_card">Eine neue Karte erstellen</string>
+    <string name="cards">Karten</string>
+    <string name="passwords">Passwörter</string>
 </resources>

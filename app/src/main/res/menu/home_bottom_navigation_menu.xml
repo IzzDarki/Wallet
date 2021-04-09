@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/home_bottom_navigation_menu_cards"
+        android:enabled="true"
+        android:icon="@drawable/cards_icon"
+        android:title="@string/cards" />
+
+    <item
+        android:id="@+id/home_bottom_navigation_menu_passwords"
+        android:enabled="true"
+        android:icon="@drawable/passwords_icon"
+        android:title="@string/passwords" />
+
+</menu>

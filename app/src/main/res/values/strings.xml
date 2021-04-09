@@ -43,7 +43,7 @@
     </string-array>
 
     <string name="preferences_advanced_title">Advanced</string>
-    
+
     <string name="preferences_back_confirm_key" translatable="false">preferences.confirm_back_key</string>
     <string name="preferences_back_confirm_entry_values_new_card" translatable="false">1</string>
     <string name="preferences_back_confirm_entry_values_crop" translatable="false">2</string>
@@ -71,19 +71,19 @@
     <string name="preferences_default_values_barcode_key" translatable="false">default_values_preferences.barcode_key</string>
     <string name="preferences_default_values_barcode_default" translatable="false">@string/card_code_type_value_qr</string>
     <string-array name="preferences_default_values_barcode_entries">
-         <item>@string/card_code_type_value_aztec</item>
-         <item>@string/card_code_type_value_data_matrix</item>
-         <item>@string/card_code_type_value_pdf_417</item>
-         <item>@string/card_code_type_value_qr</item>
-         <item>@string/card_code_type_value_codabar</item>
-         <item>@string/card_code_type_value_code_39</item>
-         <item>@string/card_code_type_value_code_93</item>
-         <item>@string/card_code_type_value_code_128</item>
-         <item>@string/card_code_type_value_ean_8</item>
-         <item>@string/card_code_type_value_ean_13</item>
-         <item>@string/card_code_type_value_itf</item>
-         <item>@string/card_code_type_value_upc_a</item>
-         <item>@string/card_code_type_value_upc_e</item>
+        <item>@string/card_code_type_value_aztec</item>
+        <item>@string/card_code_type_value_data_matrix</item>
+        <item>@string/card_code_type_value_pdf_417</item>
+        <item>@string/card_code_type_value_qr</item>
+        <item>@string/card_code_type_value_codabar</item>
+        <item>@string/card_code_type_value_code_39</item>
+        <item>@string/card_code_type_value_code_93</item>
+        <item>@string/card_code_type_value_code_128</item>
+        <item>@string/card_code_type_value_ean_8</item>
+        <item>@string/card_code_type_value_ean_13</item>
+        <item>@string/card_code_type_value_itf</item>
+        <item>@string/card_code_type_value_upc_a</item>
+        <item>@string/card_code_type_value_upc_e</item>
     </string-array>
     <string name="preferences_default_values_barcode_title">Barcode</string>
     <string name="preference_default_values_barcode_summary">Choose which type of barcode should be used by default</string>
@@ -201,4 +201,7 @@
     <string name="crop_image_menu_flip_vertically">Flip vertically</string>
     <string name="crop_image_menu_crop">Crop</string>
     <string name="preferences_app_functions_error_too_few_items">You have to select at least one app function ;)</string>
+    <string name="create_new_card">Create new card</string>
+    <string name="cards">Cards</string>
+    <string name="passwords">Passwords</string>
 </resources>

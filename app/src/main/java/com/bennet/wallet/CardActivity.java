@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
+import androidx.security.crypto.EncryptedFile;
 
 import com.google.zxing.BarcodeFormat;
 
@@ -43,8 +44,10 @@ public class CardActivity extends AppCompatActivity {
     protected boolean cardCodeTypeText;
     protected String cardID;
     protected @ColorInt int cardColor;
+
     protected File currentFrontImage;
     protected File currentBackImage;
+
     /**
      * contains all the ids, that correspond to the properties of this card
      */

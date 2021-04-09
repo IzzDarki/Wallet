@@ -6,38 +6,28 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.preference.PreferenceManager;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PersistableBundle;
 import android.os.ResultReceiver;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity implements SmallCardAdapter.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener {
+public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     static public class SmallCard {
         public int card_ID;
@@ -53,19 +43,12 @@ public class HomeActivity extends AppCompatActivity implements SmallCardAdapter.
 
     // UI
     protected ConstraintLayout constraintLayout;
-    protected RecyclerView cardGridRecyclerView;
-    protected FloatingActionButton plusButton;
+
     protected MaterialToolbar toolbar;
     protected DrawerLayout drawerLayout;
     protected NavigationView navigationView;
     protected MaterialTextView versionNumberTextView;
     protected ActionBarDrawerToggle toggle;
-
-    // preferences
-    protected Utility.PreferenceArrayInt cardIDs;
-
-    // variables
-    protected List<SmallCard> cards = new ArrayList<>();
 
     // lifecycle
     @Override
@@ -75,20 +58,10 @@ public class HomeActivity extends AppCompatActivity implements SmallCardAdapter.
 
         // hooks
         constraintLayout = findViewById(R.id.home_constraint_layout);
-        cardGridRecyclerView = findViewById(R.id.home_card_grid_recycler_view);
-        plusButton = findViewById(R.id.home_plus_button);
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.home_drawer_layout);
         navigationView = findViewById(R.id.home_nav_view);
         versionNumberTextView = findViewById(R.id.home_nav_view_version_number_text_view);
-
-        // card grid recycler view
-        cardGridRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        SmallCardAdapter adapter = new SmallCardAdapter(this, cards, getCardWidth());
-        adapter.setOnItemClickListener(this);
-        cardGridRecyclerView.setAdapter(adapter);
-
-        plusButton.setOnClickListener(v -> createNewCard());
 
         // toolbar
         setSupportActionBar(toolbar);
@@ -109,6 +82,14 @@ public class HomeActivity extends AppCompatActivity implements SmallCardAdapter.
 
         // init for first run
         initFirstRun();
+
+        // initial fragment
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .replace(R.id.home_fragment_container, HomeCardsFragment.class, null, HomeCardsFragment.FRAGMENT_TAG)
+                    .commit();
+        }
     }
 
     @Override
@@ -121,7 +102,6 @@ public class HomeActivity extends AppCompatActivity implements SmallCardAdapter.
     protected void onResume() {
         super.onResume();
         navigationView.setCheckedItem(R.id.nav_home);
-        updateCards();
     }
 
     @Override
@@ -130,11 +110,6 @@ public class HomeActivity extends AppCompatActivity implements SmallCardAdapter.
 
         // Since onStop is probably(?) guaranteed to be called, this is a good place to clear cached card images
         clearCachedCardImages();
-    }
-
-    @Override
-    public void onItemClick(View view, int position) {
-        showCard(cards.get(position).card_ID);
     }
 
 
@@ -160,21 +135,6 @@ public class HomeActivity extends AppCompatActivity implements SmallCardAdapter.
             super.onBackPressed();
     }
 
-
-    // main functions
-    protected void showCard(int cardID) {
-        Intent intent = new Intent(HomeActivity.this, ShowCardActivity.class);
-        intent.putExtra(CardActivity.EXTRA_CARD_ID, cardID);
-        startActivity(intent);
-    }
-
-    protected void createNewCard() {
-        Intent intent = new Intent(HomeActivity.this, EditCardActivity.class);
-        intent.putExtra(EditCardActivity.EXTRA_CREATE_NEW_CARD, true);
-        startActivity(intent);
-    }
-
-
     // subroutines
     protected void clearCachedCardImages() {
         Intent intent = new Intent(this, ClearDirectoryService.class);
@@ -182,13 +142,7 @@ public class HomeActivity extends AppCompatActivity implements SmallCardAdapter.
         ClearDirectoryService.enqueueWork(this, intent);
     }
 
-    protected void updateCards() {
-        cardIDs = CardPreferenceManager.readAllCardIDs(this);
-        cards.clear();
-        for (int cardID : cardIDs)
-            cards.add(new SmallCard(cardID, CardPreferenceManager.readCardName(this, cardID), CardPreferenceManager.readCardColor(this, cardID)));
-        cardGridRecyclerView.getAdapter().notifyDataSetChanged();
-    }
+
 
     /**
      * Will execute the code only once (first time HomeActivity gets created after installation or data removal)
@@ -206,14 +160,17 @@ public class HomeActivity extends AppCompatActivity implements SmallCardAdapter.
     }
 
     protected void createExampleCard() {
-        updateCards(); // to keep existing cards
+        // updateCards(); // to keep existing cards // TODO I think this is not needed anymore, but i'm not sure
 
         Intent intent = new Intent(this, CreateExampleCardService.class);
         CreateExampleCardService.enqueueWork(this, intent, new ResultReceiver(new Handler()) {
             @Override
             protected void onReceiveResult(int resultCode, Bundle resultData) {
-                if (resultCode == RESULT_OK)
-                    updateCards();
+                if (resultCode == RESULT_OK) {
+                    HomeCardsFragment fragment = (HomeCardsFragment) getSupportFragmentManager().findFragmentByTag(HomeCardsFragment.FRAGMENT_TAG);
+                    if (fragment != null)
+                        fragment.updateCards();
+                }
                 else {
                     /*
                     if (BuildConfig.DEBUG)
@@ -222,16 +179,6 @@ public class HomeActivity extends AppCompatActivity implements SmallCardAdapter.
                 }
             }
         });
-    }
-
-
-    // helper functions
-    protected double getCardWidth() {
-        return ((getCalculatedLayoutWidth() / 2) - (2 * getResources().getDimension(R.dimen.small_card_item_margin)));
-    }
-
-    protected float getCalculatedLayoutWidth() {
-        return getResources().getDisplayMetrics().widthPixels - 2 * getResources().getDimension(R.dimen.card_padding);
     }
 
 }
