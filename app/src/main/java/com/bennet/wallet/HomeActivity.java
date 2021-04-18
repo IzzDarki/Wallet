@@ -8,7 +8,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
@@ -21,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -49,6 +49,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     protected NavigationView navigationView;
     protected MaterialTextView versionNumberTextView;
     protected ActionBarDrawerToggle toggle;
+    protected BottomNavigationView bottomNavigationView;
 
     // lifecycle
     @Override
@@ -62,6 +63,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout = findViewById(R.id.home_drawer_layout);
         navigationView = findViewById(R.id.home_nav_view);
         versionNumberTextView = findViewById(R.id.home_nav_view_version_number_text_view);
+        bottomNavigationView = findViewById(R.id.home_bottom_navigation);
 
         // toolbar
         setSupportActionBar(toolbar);
@@ -102,6 +104,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     protected void onResume() {
         super.onResume();
         navigationView.setCheckedItem(R.id.nav_home);
+
+        // bottom navigation (could be changed when coming back from SettingsActivity
+        if (!AppPreferenceManager.isAppFunctionCards(this) || !AppPreferenceManager.isAppFunctionPasswords(this))
+            bottomNavigationView.setVisibility(View.GONE);
+        else
+            bottomNavigationView.setVisibility(View.VISIBLE);
     }
 
     @Override
