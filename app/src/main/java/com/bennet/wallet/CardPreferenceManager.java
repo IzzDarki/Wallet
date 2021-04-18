@@ -77,47 +77,10 @@ public class CardPreferenceManager {
             } catch (GeneralSecurityException | IOException e) {
                 throw new RuntimeException(e);
             }
-            encryptOldPreferences(context); // Migrates old preferences (if present) to new encrypted preferences
 
             cardDefaultColor = context.getResources().getColor(R.color.cardDefaultColor);
         }
     }
-
-    /**
-     * If old unencrypted preferences are there, this copies all old preferences to new encrypted ones and deletes old preferences afterwards.
-     * CardPreferenceManager::preferences needs to be already set to the new encrypted preferences.
-     */
-    static private void encryptOldPreferences(Context context) {
-        SharedPreferences oldPreferences = context.getSharedPreferences(CARDS_PREFERENCES_NAME_OLD, Context.MODE_PRIVATE);
-        Map<String, ?> prefContent = oldPreferences.getAll();
-        if (prefContent.size() > 0) {
-
-            SharedPreferences.Editor editor = preferences.edit();
-
-            for (Map.Entry<String, ?> entry : prefContent.entrySet()) {
-                if (entry.getValue().getClass() == String.class)
-                    editor.putString(entry.getKey(), (String) entry.getValue());
-
-                else if (entry.getValue().getClass() == Integer.class)
-                    editor.putInt(entry.getKey(), (Integer) entry.getValue());
-
-                else if (entry.getValue().getClass() == Boolean.class)
-                    editor.putBoolean(entry.getKey(), (Boolean) entry.getValue());
-
-                else { // TODO remove or comment debug log
-                    if (BuildConfig.DEBUG) {
-                        Log.e("encryptOldPref", "Could not encrypt " + entry.getKey() + " (" + entry.getValue().getClass().getName() + ")" + ": " + entry.getValue().toString());
-                    }
-                }
-            }
-            editor.apply();
-
-            oldPreferences.edit().clear().apply();
-        }
-
-        // deleting the preferences file doesn't really work that well
-    }
-
 
     // functions
     static public SharedPreferences getPreferences(Context context) {

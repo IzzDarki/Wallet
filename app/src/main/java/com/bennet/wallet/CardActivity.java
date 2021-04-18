@@ -5,24 +5,25 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
 import androidx.security.crypto.EncryptedFile;
+import androidx.security.crypto.MasterKey;
 
 import com.google.zxing.BarcodeFormat;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.security.GeneralSecurityException;
 
 import com.bennet.wallet.Utility.PreferenceArrayInt;
 
@@ -58,6 +59,10 @@ public class CardActivity extends AppCompatActivity {
         private WeakReference<CardActivity> parentActivityReference;
         private File imageFile;
         private boolean isFront;
+        private enum Error {
+            NoError, FileTooBig, DecryptionFailed
+        }
+        private Error error = Error.NoError;
 
         public DecodeBitmapTask(CardActivity parentActivity, File imageFile, boolean isFront) {
             this.parentActivityReference = new WeakReference<>(parentActivity);
@@ -65,14 +70,56 @@ public class CardActivity extends AppCompatActivity {
             this.isFront = isFront;
         }
 
+        protected Bitmap decodeEncryptedFile() {
+            // stop if parent activity has been killed
+            if (parentActivityReference.get() == null) {
+                error = Error.DecryptionFailed;
+                return null;
+            }
+
+            InputStream inputStream;
+            try {
+                Context context = parentActivityReference.get();
+                MasterKey mainKey = new MasterKey.Builder(context)
+                        .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                        .build();
+
+                EncryptedFile encryptedImageFile = new EncryptedFile.Builder(context,
+                        imageFile,
+                        mainKey,
+                        EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
+                ).build();
+
+                inputStream = encryptedImageFile.openFileInput();
+
+            } catch (GeneralSecurityException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            return BitmapFactory.decodeStream(inputStream);
+        }
+
         @Override
         protected Bitmap doInBackground(Void... voids) {
             try {
                 //Utility.Timer timer = new Utility.Timer("decode bitmap");
-                Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+
+                Context context = parentActivityReference.get();
+                Bitmap bitmap;
+
+                // check if file is in files directory, which means it is encrypted
+                if (parentActivityReference.get().isInFilesDir(imageFile)
+                        && !imageFile.getName().equals(context.getString(R.string.example_card_front_image_file_name))
+                        && !imageFile.getName().equals(context.getString(R.string.example_card_back_image_file_name))
+                        && !imageFile.getName().equals(context.getString(R.string.mahler_card_front_image_file_name))) { // these files don't need to be encrypted
+                    bitmap = decodeEncryptedFile();
+                }
+                else
+                    bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+
                 //timer.end(bitmap.toString());
                 return bitmap;
             } catch (OutOfMemoryError e) {
+                error = Error.FileTooBig;
                 return null;
             }
         }
@@ -80,7 +127,7 @@ public class CardActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             CardActivity parentActivity = parentActivityReference.get();
-            if (bitmap != null) {
+            if (error == Error.NoError) {
                 if (parentActivity != null) {
                     if (isFront)
                         parentActivity.cardView.setFrontImage(bitmap);
@@ -88,32 +135,36 @@ public class CardActivity extends AppCompatActivity {
                         parentActivity.cardView.setBackImage(bitmap);
                 }
             }
-            else {
+            else if (error == Error.FileTooBig) {
+                // if file was too big, it has to be deleted
                 if (parentActivity != null)
                     Toast.makeText(parentActivity, R.string.file_too_big, Toast.LENGTH_SHORT).show();
 
                 if (isFront) {
-                    if (!imageFile.delete()) {
+                    if (imageFile != null && !imageFile.delete()) {
                         /*
                         if (BuildConfig.DEBUG)
                             Log.e("DecodeBitmapTask", "front image file couldn't be deleted");
                          */
                     }
-
                     if (parentActivity != null)
                         parentActivity.currentFrontImage = null;
                 }
                 else {
-                    if (!imageFile.delete()) {
+                    if (imageFile != null && !imageFile.delete()) {
                         /*
                         if (BuildConfig.DEBUG)
                             Log.e("DecodeBitmapTask", "back image file couldn't be deleted");
                          */
                     }
-
                     if (parentActivity != null)
                         parentActivity.currentBackImage = null;
                 }
+            }
+            else if (error == Error.DecryptionFailed) {
+                if (parentActivity != null)
+                    Toast.makeText(parentActivity, R.string.image_decryption_failed, Toast.LENGTH_SHORT).show();
+                // TODO is there anything to do, if decryption failed? See if it crashes
             }
         }
     }
@@ -327,6 +378,10 @@ public class CardActivity extends AppCompatActivity {
             default:
                 throw new IllegalStateException("Unexpected value: " + cardCodeType);
         }
+    }
+
+    protected boolean isInFilesDir(File file) {
+        return file.getAbsolutePath().contains(getFilesDir().getAbsolutePath());
     }
 
     protected boolean codeIs1D(int cardCodeType) {

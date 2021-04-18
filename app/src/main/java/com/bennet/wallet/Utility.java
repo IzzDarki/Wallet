@@ -181,6 +181,7 @@ public class Utility {
 
         } finally {
             from.close();
+            to.flush();
             to.close();
             //timer.end();
         }
@@ -276,7 +277,7 @@ public class Utility {
                     try {
                         out.close();
                     } catch (IOException e) {
-                        throw new AssertionError(e);
+                        e.printStackTrace();
                     }
                 }
             }

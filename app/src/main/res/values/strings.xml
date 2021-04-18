@@ -3,6 +3,9 @@
     <!-- strings -->
     <string name="fileprovider_authority" translatable="false">com.bennet.wallpaper.fileprovider</string>
     <string name="cards_images_folder_name" translatable="false">Cards_images/</string>
+    <string name="example_card_front_image_file_name" translatable="false">example_card_front_image.jpg</string> <!-- see res/raw -->
+    <string name="example_card_back_image_file_name" translatable="false">example_card_back_image.jpg</string> <!-- see res/raw -->
+    <string name="mahler_card_front_image_file_name" translatable="false">mahler_card_front_image.jpg</string> <!-- see res/raw -->
 
 
     <!-- settings preferences -->
@@ -204,4 +207,5 @@
     <string name="create_new_card">Create new card</string>
     <string name="cards">Cards</string>
     <string name="passwords">Passwords</string>
+    <string name="image_decryption_failed">Image decryption failed</string>
 </resources>

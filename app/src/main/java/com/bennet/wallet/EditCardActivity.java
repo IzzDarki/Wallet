@@ -3,6 +3,8 @@ package com.bennet.wallet;
 import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.security.crypto.EncryptedFile;
+import androidx.security.crypto.MasterKey;
 
 import android.app.DialogFragment;
 import android.content.Intent;
@@ -10,6 +12,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,8 +32,11 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.zxing.BarcodeFormat;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.security.GeneralSecurityException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -368,10 +374,8 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
         hideKeyboard(); // TODO remove this, if it didn't fix the "random" weird sizing issue
         finish();
         Intent intent = new Intent(this, ShowCardActivity.class);
-        if (intent != null) {
-            intent.putExtra(EXTRA_CARD_ID, ID);
-            startActivity(intent);
-        }
+        intent.putExtra(EXTRA_CARD_ID, ID);
+        startActivity(intent);
     }
 
     public void finishAndReturnToHome() {
@@ -636,14 +640,56 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
 
             // copy current
             if (currentFrontImage != null) {
+                OutputStream outputStream = null;
                 try {
-                    currentFrontImage = Utility.moveFile(currentFrontImage, getFilesDir() + "/" + getString(R.string.cards_images_folder_name));
-                } catch (IOException e) {
+                    File imagesDirectory = new File(getFilesDir() + "/" + getString(R.string.cards_images_folder_name));
+                    if (!imagesDirectory.exists())
+                        imagesDirectory.mkdirs();
+
+                    File newFrontImage = new File(imagesDirectory, currentFrontImage.getName());
+
+                    MasterKey mainKey = new MasterKey.Builder(this)
+                            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                            .build();
+
+                    EncryptedFile encryptedFile = new EncryptedFile.Builder(this,
+                            newFrontImage,
+                            mainKey,
+                            EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
+                    ).build();
+
+                    outputStream = encryptedFile.openFileOutput();
+
+                    Utility.copyFile(new FileInputStream(currentFrontImage), outputStream);
+
+                    if (!currentFrontImage.delete()) {
+                        /*
+                        if (BuildConfig.DEBUG)
+                            Log.e("EditCardActivity", "Could not delete front image file after copying it from cache to files");
+                         */
+                    }
+
+                    currentFrontImage = newFrontImage;
+
+                    // TODO remove old code from before encryption
+                    //currentFrontImage = Utility.moveFile(currentFrontImage, getFilesDir() + "/" + getString(R.string.cards_images_folder_name));
+
+                } catch (IOException | GeneralSecurityException e) {
                     /*
                     if (BuildConfig.DEBUG)
                         Log.e("EditCardActivity", "couldn't copy current front image file from cache to files directory");
                      */
                     throw new AssertionError(e);
+                } finally {
+                    // flush and close the stream
+                    if (outputStream != null) {
+                        try {
+                            outputStream.flush();
+                            outputStream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
         }
@@ -659,14 +705,56 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
 
             // copy current
             if (currentBackImage != null) {
+                OutputStream outputStream = null;
                 try {
-                    currentBackImage = Utility.moveFile(currentBackImage, getFilesDir() + "/" + getString(R.string.cards_images_folder_name));
-                } catch (IOException e) {
+                    File imagesDirectory = new File(getFilesDir() + "/" + getString(R.string.cards_images_folder_name));
+                    if (!imagesDirectory.exists())
+                        imagesDirectory.mkdirs();
+
+                    File newBackImage = new File(imagesDirectory, currentBackImage.getName());
+
+                    MasterKey mainKey = new MasterKey.Builder(this)
+                            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                            .build();
+
+                    EncryptedFile encryptedFile = new EncryptedFile.Builder(this,
+                            newBackImage,
+                            mainKey,
+                            EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
+                    ).build();
+
+                    outputStream = encryptedFile.openFileOutput();
+
+                    Utility.copyFile(new FileInputStream(currentBackImage), outputStream);
+
+                    if (!currentBackImage.delete()) {
+                        /*
+                        if (BuildConfig.DEBUG)
+                            Log.e("EditCardActivity", "Could not delete back image file after copying it from cache to files");
+                         */
+                    }
+
+                    currentBackImage = newBackImage;
+
+                    // TODO remove old code from before encryption
+                    //currentBackImage = Utility.moveFile(currentBackImage, getFilesDir() + "/" + getString(R.string.cards_images_folder_name));
+
+                } catch (IOException | GeneralSecurityException e) {
                     /*
                     if (BuildConfig.DEBUG)
                         Log.e("EditCardActivity", "couldn't copy current back image file from cache to files directory");
                      */
                     throw new AssertionError(e);
+                } finally {
+                    // flush and close the stream
+                    if (outputStream != null) {
+                        try {
+                            outputStream.flush();
+                            outputStream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
         }
