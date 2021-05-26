@@ -646,6 +646,7 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
                     if (!imagesDirectory.exists())
                         imagesDirectory.mkdirs();
 
+
                     File newFrontImage = new File(imagesDirectory, currentFrontImage.getName());
 
                     MasterKey mainKey = new MasterKey.Builder(this)
@@ -663,10 +664,8 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
                     Utility.copyFile(new FileInputStream(currentFrontImage), outputStream);
 
                     if (!currentFrontImage.delete()) {
-                        /*
-                        if (BuildConfig.DEBUG)
-                            Log.e("EditCardActivity", "Could not delete front image file after copying it from cache to files");
-                         */
+                        //if (BuildConfig.DEBUG)
+                        //    Log.e("EditCardActivity", "Could not delete front image file after copying it from cache to files");
                     }
 
                     currentFrontImage = newFrontImage;
@@ -728,10 +727,8 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
                     Utility.copyFile(new FileInputStream(currentBackImage), outputStream);
 
                     if (!currentBackImage.delete()) {
-                        /*
-                        if (BuildConfig.DEBUG)
-                            Log.e("EditCardActivity", "Could not delete back image file after copying it from cache to files");
-                         */
+                        //if (BuildConfig.DEBUG)
+                        //    Log.e("EditCardActivity", "Could not delete back image file after copying it from cache to files");
                     }
 
                     currentBackImage = newBackImage;

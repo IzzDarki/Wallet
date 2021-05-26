@@ -30,7 +30,6 @@ public class Utility {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DP, displayMetrics);
     }
 
-
     static public @ColorInt int makeRGB(int a, int r, int g, int b) {
         return  (a & 0xff) << 24 | (r & 0xff) << 16 | (g & 0xff) << 8 | (b & 0xff);
     }
@@ -428,7 +427,7 @@ public class Utility {
                     else
                         throw new ElementNotOkException(this, indexOf(element));
                 }
-                return stringBuilder.toString().substring(0, stringBuilder.length() - 1);
+                return stringBuilder.substring(0, stringBuilder.length() - 1);
             }
             else
                 return null;

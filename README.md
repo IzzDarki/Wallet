@@ -1,7 +1,7 @@
 # Wallet
 
 ### TODO list
- - fix or remove horizontal layout on HomeActivity
+ - fix or remove horizontal screen orientation layout on HomeActivity
  
 ### TODO Optional list
  - resize Example and Mahler images for faster loading

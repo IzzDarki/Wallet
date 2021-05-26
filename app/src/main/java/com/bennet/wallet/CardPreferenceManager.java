@@ -65,7 +65,7 @@ public class CardPreferenceManager {
      * Initializes this static class if it has not yet been initialized
      * @param context Context to initialize
      */
-    static private void init(Context context) {
+    static public void initOnce(Context context) {
         if (preferences == null) {
             try {
                 MasterKey mainKey = new MasterKey.Builder(context)
@@ -79,13 +79,15 @@ public class CardPreferenceManager {
             }
 
             cardDefaultColor = context.getResources().getColor(R.color.cardDefaultColor);
+
+            // TODO remove old code from before encryption
+            //preferences = context.getSharedPreferences(CardPreferenceManager.CARDS_PREFERENCES_NAME_OLD, Context.MODE_PRIVATE);
         }
     }
 
     // functions
     static public SharedPreferences getPreferences(Context context) {
-        if (preferences == null)
-            init(context);
+        initOnce(context);
         return preferences;
     }
 

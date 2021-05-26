@@ -20,6 +20,7 @@ import androidx.security.crypto.MasterKey;
 import com.google.zxing.BarcodeFormat;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
@@ -56,9 +57,9 @@ public class CardActivity extends AppCompatActivity {
 
     // decode bitmap task
     protected static class DecodeBitmapTask extends AsyncTask<Void, Void, Bitmap> {
-        private WeakReference<CardActivity> parentActivityReference;
-        private File imageFile;
-        private boolean isFront;
+        private final WeakReference<CardActivity> parentActivityReference;
+        private final File imageFile;
+        private final boolean isFront;
         private enum Error {
             NoError, FileTooBig, DecryptionFailed
         }
@@ -80,6 +81,7 @@ public class CardActivity extends AppCompatActivity {
             InputStream inputStream;
             try {
                 Context context = parentActivityReference.get();
+
                 MasterKey mainKey = new MasterKey.Builder(context)
                         .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
                         .build();
@@ -92,7 +94,11 @@ public class CardActivity extends AppCompatActivity {
 
                 inputStream = encryptedImageFile.openFileInput();
 
-            } catch (GeneralSecurityException | IOException e) {
+
+                // TODO remove old code from before encryption
+                //inputStream = new FileInputStream(imageFile);
+
+            } catch (IOException | GeneralSecurityException e) {
                 throw new RuntimeException(e);
             }
             return BitmapFactory.decodeStream(inputStream);
@@ -110,7 +116,7 @@ public class CardActivity extends AppCompatActivity {
                 if (parentActivityReference.get().isInFilesDir(imageFile)
                         && !imageFile.getName().equals(context.getString(R.string.example_card_front_image_file_name))
                         && !imageFile.getName().equals(context.getString(R.string.example_card_back_image_file_name))
-                        && !imageFile.getName().equals(context.getString(R.string.mahler_card_front_image_file_name))) { // these files don't need to be encrypted
+                        && !imageFile.getName().contains(context.getString(R.string.mahler_card_front_image_file_name))) { // these files don't need to be encrypted
                     bitmap = decodeEncryptedFile();
                 }
                 else

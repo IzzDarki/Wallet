@@ -67,7 +67,7 @@ public class Application extends android.app.Application {
 
         // -1 means either new install or last version is prior to 5 (1.4.0-alpha)
 
-        // encrypt old image files
+        // encrypt old image files and preferences
         if (lastVersionNumber < 5) { // < 1.4.0-alpha (or fresh install)
             encryptAllOldImageFiles(); // this code is also run on every fresh install, but in that case there are no images to encrypt anyway
             encryptOldPreferences();
@@ -100,6 +100,8 @@ public class Application extends android.app.Application {
                 else if (entry.getValue().getClass() == Boolean.class)
                     editor.putBoolean(entry.getKey(), (Boolean) entry.getValue());
 
+                // These are all the types that existed before version 5
+
                 else { // TODO remove or comment debug log
                     if (BuildConfig.DEBUG) {
                         Log.e("encryptOldPref", "Could not encrypt " + entry.getKey() + " (" + entry.getValue().getClass().getName() + ")" + ": " + entry.getValue().toString());
@@ -127,7 +129,7 @@ public class Application extends android.app.Application {
         for (File file : files) {
             if (!file.getName().equals(getString(R.string.example_card_front_image_file_name))
                     && !file.getName().equals(getString(R.string.example_card_back_image_file_name))
-                    && !file.getName().equals(getString(R.string.mahler_card_front_image_file_name))) { // These files don't need to be encrypted
+                    && !file.getName().contains(getString(R.string.mahler_card_front_image_file_name))) { // These files don't need to be encrypted
                 encryptOldImageFile(file);
             }
         }
