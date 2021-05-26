@@ -38,11 +38,13 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
+
 public class ColorPickerDialogFragment extends DialogFragment {
 
 	public interface ColorPickerDialogListener {
-		public void onColorSelected(int dialogId, int color);
-		public void onDialogDismissed(int dialogId);
+		void onColorSelected(int dialogId, int color);
+		void onDialogDismissed(int dialogId);
 	}
 
 	static private String ARGUMENTS_CUSTOM_BUTTON_SHOW = "custom_button_show";
@@ -59,7 +61,6 @@ public class ColorPickerDialogFragment extends DialogFragment {
 	private OnClickListener mCustomButtonOnClickListener = null;
 
 	private ColorPickerDialogListener mListener;
-	
 	
 	public static ColorPickerDialogFragment newInstance(int dialogId, int initialColor) {
 		return newInstance(dialogId, null, null, initialColor, false);
@@ -106,6 +107,10 @@ public class ColorPickerDialogFragment extends DialogFragment {
 			mCustomButtonText = null;
 			mCustomButtonOnClickListener = null;
 		}
+	}
+
+	public void setColor(@ColorInt int color) {
+		mColorPicker.setColor(color, true);
 	}
 
 	
@@ -161,22 +166,11 @@ public class ColorPickerDialogFragment extends DialogFragment {
 			mCustomButtonOnClickListener = null;
 		}
 
-		mColorPicker.setOnColorChangedListener(new OnColorChangedListener() {
-			
-			@Override
-			public void onColorChanged(int newColor) {
-				mNewColorPanel.setColor(newColor);
-			}
-		});
+		mColorPicker.setOnColorChangedListener(newColor -> mNewColorPanel.setColor(newColor));
 		
-		mOkButton.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {				
-				mListener.onColorSelected(mDialogId, mColorPicker.getColor());
-				getDialog().dismiss();
-			}
-			
+		mOkButton.setOnClickListener(v1 -> {
+			mListener.onColorSelected(mDialogId, mColorPicker.getColor());
+			getDialog().dismiss();
 		});
 		
 		
