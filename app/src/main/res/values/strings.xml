@@ -2,10 +2,10 @@
 
     <!-- strings -->
     <string name="fileprovider_authority" translatable="false">com.bennet.wallpaper.fileprovider</string>
-    <string name="cards_images_folder_name" translatable="false">Cards_images/</string>
-    <string name="example_card_front_image_file_name" translatable="false">example_card_front_image.jpg</string> <!-- see res/raw -->
-    <string name="example_card_back_image_file_name" translatable="false">example_card_back_image.jpg</string> <!-- see res/raw -->
-    <string name="mahler_card_front_image_file_name" translatable="false">mahler_card_front_image.jpg</string> <!-- see res/raw -->
+    <string name="cards_images_folder_name" translatable="false">Cards_images/</string> <!-- must stay the same -->
+    <string name="example_card_front_image_file_name" translatable="false">example_card_front_image.jpg</string> <!-- see res/raw --> <!-- must stay the same -->
+    <string name="example_card_back_image_file_name" translatable="false">example_card_back_image.jpg</string> <!-- see res/raw --> <!-- must stay the same -->
+    <string name="mahler_card_front_image_file_name" translatable="false">front_mahler_image.jpg</string> <!-- see res/raw --> <!-- must stay the same -->
 
 
     <!-- settings preferences -->

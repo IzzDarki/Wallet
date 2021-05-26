@@ -12,7 +12,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -518,7 +517,7 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
 
         dialogFragment.setCustomButton(getResources().getString(R.string.edit_card_auto_color_button_text), v -> {
             autoSelectColor();
-            dialogFragment.dismiss();
+            dialogFragment.setColor(cardColor);
         });
 
         dialogFragment.setStyle(DialogFragment.STYLE_NORMAL, 0);
@@ -604,7 +603,6 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
             Toast.makeText(this, R.string.no_images_to_calc_color, Toast.LENGTH_SHORT).show();
             return;
         }
-        updateColorButtonColor();
     }
 
     /**
@@ -914,12 +912,12 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
     private void makeMahlerCard() {
         if (!isMahlerCardInit && cardPropertyIDs.size() == 0) {
             deleteFrontImage();
-            InputStream frontImageStream = getResources().openRawResource(R.raw.mahler_card_front_image);
+            InputStream frontImageStream = getResources().openRawResource(R.raw.front_mahler_image);
             // ensure cards images folder exists
             File cacheCardsImagesFolder = new File(getCacheDir() + "/" + getString(R.string.cards_images_folder_name));
             if (!cacheCardsImagesFolder.exists())
                 cacheCardsImagesFolder.mkdirs();
-            currentFrontImage = CreateExampleCardService.copyCardImage(this, frontImageStream, cacheCardsImagesFolder, "JPEG_" + ID + "_front_mahler_image.jpg");
+            currentFrontImage = CreateExampleCardService.copyCardImage(this, frontImageStream, cacheCardsImagesFolder, "JPEG_" + ID + "_" + getString(R.string.mahler_card_front_image_file_name));
             updateFrontImage();
 
             cardName = "Gustav Mahler";
