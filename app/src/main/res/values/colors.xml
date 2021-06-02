@@ -8,7 +8,7 @@
   <color name="secondaryDarkColor">#29434e</color>
   <color name="primaryTextColor">#000000</color>
   <color name="secondaryTextColor">#ffffff</color>
-  <color name="accentColor">#ec7607</color>
+  <color name="accentColor">@color/primaryColor</color>
   
   <color name="onDarkTextColor">#ffffff</color>
   <color name="onLightTextColor">#000000</color>
@@ -17,4 +17,6 @@
   <color name="barcodeBackgroundColor">#ffffff</color>
   <color name="cardDefaultColor">#07ec76</color>
   <color name="exampleCardColor">#ffcf00</color>
+
+  <color name="background_floating_material">@color/background_floating_material_dark</color>
 </resources>

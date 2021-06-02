@@ -15,30 +15,24 @@
  */
 package com.bennet.colorpickerview.dialog;
 
-import com.bennet.colorpickerview.BuildConfig;
 import com.bennet.colorpickerview.R;
 import com.bennet.colorpickerview.view.ColorPanelView;
 import com.bennet.colorpickerview.view.ColorPickerView;
-import com.bennet.colorpickerview.view.ColorPickerView.OnColorChangedListener;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
+import androidx.fragment.app.DialogFragment;
 
 public class ColorPickerDialogFragment extends DialogFragment {
 
@@ -47,8 +41,6 @@ public class ColorPickerDialogFragment extends DialogFragment {
 		void onDialogDismissed(int dialogId);
 	}
 
-	static private String ARGUMENTS_CUSTOM_BUTTON_SHOW = "custom_button_show";
-	
 	private int mDialogId = -1;
 	
 	private ColorPickerView mColorPicker;

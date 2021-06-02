@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.bennet.wallet">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission
         android:name="android.permission.WAKE_LOCK"
-        android:maxSdkVersion="25"/>
+        android:maxSdkVersion="25" />
 
     <application
         android:name=".Application"
@@ -21,57 +21,61 @@
         android:theme="@style/AppTheme">
 
         <!-- main activities -->
-        <activity android:name=".HomeActivity"
+        <activity
+            android:name=".activities.HomeActivity"
             android:launchMode="singleTop">
-
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name=".ShowCardActivity"
+            android:name=".activities.cards.ShowCardActivity"
             android:configChanges="orientation"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".EditCardActivity"
+            android:name=".activities.cards.EditCardActivity"
             android:configChanges="orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ShowCardActivity"/>
+                android:value=".activities.cards.ShowCardActivity" />
         </activity>
-
-        <activity android:name=".SettingsActivity"
+        <activity
+            android:name=".activities.passwords.ShowPasswordActivity"
+            android:launchMode="singleTop" />
+        <activity android:name=".activities.passwords.EditPasswordActivity" />
+        <activity
+            android:name=".activities.SettingsActivity"
             android:launchMode="singleTop">
             <intent-filter>
+
                 <!-- Intent filter Settings -->
                 <action android:name="android.intent.action.APPLICATION_PREFERENCES" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+
         </activity>
 
         <!-- other activities -->
-        <activity android:name=".GetContentImageActivity"/>
-        <activity android:name=".ImageCaptureActivity"/>
-        <activity android:name=".CodeScannerActivity"/>
-        <activity android:name=".CropActivity"/>
-
-        <!-- services -->
+        <activity android:name=".activities.GetContentImageActivity" />
+        <activity android:name=".activities.ImageCaptureActivity" />
+        <activity android:name=".activities.CodeScannerActivity" />
+        <activity android:name=".activities.CropActivity" /> <!-- services -->
         <service
-            android:name=".ClearDirectoryService"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+            android:name=".services.ClearDirectoryService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
-            android:name=".CreateExampleCardService"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+            android:name=".services.CreateExampleCardService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
-            android:name=".DeleteCardService"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+            android:name=".services.DeleteCardService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -80,9 +84,8 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
+                android:resource="@xml/file_paths" />
         </provider>
-
     </application>
 
 </manifest>

@@ -9,6 +9,10 @@ import androidx.preference.PreferenceManager;
 import androidx.security.crypto.EncryptedFile;
 import androidx.security.crypto.MasterKey;
 
+import com.bennet.wallet.activities.SettingsActivity;
+import com.bennet.wallet.preferences.CardPreferenceManager;
+import com.bennet.wallet.utils.Utility;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -77,7 +81,6 @@ public class Application extends android.app.Application {
     }
 
     // Migration to 5 (1.4.0-alpha) - Encryption
-
     /**
      * If old unencrypted preferences are there, this copies all old preferences to new encrypted ones and deletes old preferences afterwards.
      */
@@ -186,6 +189,5 @@ public class Application extends android.app.Application {
                 }
             }
         }
-
     }
 }

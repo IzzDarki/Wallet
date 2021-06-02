@@ -47,8 +47,7 @@
 
         <Preference
             android:title="@string/credits"
-            android:fragment="com.bennet.wallet.SettingsActivity$CreditsSettingsFragment"
-            android:defaultValue="@bool/preferences_detailed_errors_default" />
+            android:fragment="com.bennet.wallet.activities.SettingsActivity$CreditsSettingsFragment" />
 
     </PreferenceCategory>
 
