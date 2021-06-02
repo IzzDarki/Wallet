@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <!--
-    <ImageView
+    <AppCompatImageView
         android:id="@+id/show_card_property_list_item_icon_view"
         android:layout_width="40dp"
         android:layout_height="40dp"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -29,10 +29,11 @@
         android:focusable="true"
         android:background="?attr/selectableItemBackground">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/delete_icon_36dp"
+            android:contentDescription="@string/delete"
+            app:srcCompat="@drawable/delete_icon_36dp"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="12dp"/>
 
@@ -45,7 +46,7 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/image_chooser_dialog_storage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -58,10 +59,11 @@
         android:focusable="true"
         android:background="?attr/selectableItemBackground">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/folder_icon_36dp"
+            android:contentDescription="@string/choose_image_app_storage"
+            app:srcCompat="@drawable/folder_icon_36dp"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="12dp"/>
 
@@ -72,9 +74,9 @@
             android:text="@string/choose_image_app_storage"
             android:textSize="18sp"/>
 
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/image_chooser_dialog_camera"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -87,10 +89,11 @@
         android:focusable="true"
         android:background="?attr/selectableItemBackground">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/camera_icon_36dp"
+            android:contentDescription="@string/choose_image_app_camera"
+            app:srcCompat="@drawable/camera_icon_36dp"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="12dp"/>
 
@@ -101,6 +104,6 @@
             android:text="@string/choose_image_app_camera"
             android:textSize="18sp"/>
 
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
-</LinearLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>
