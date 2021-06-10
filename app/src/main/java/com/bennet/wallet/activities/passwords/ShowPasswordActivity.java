@@ -152,7 +152,7 @@ public class ShowPasswordActivity extends AppCompatActivity {
 
         passwordValue = PasswordPreferenceManager.readPasswordValue(this, ID);
 
-        if (!passwordValue.isEmpty())
+        if (!passwordValue.equals(""))
             passwordProperties.add(new ShowPasswordProperty(getString(R.string.password), passwordValue, true)); // Add password value to password properties (will also be part of recycler view)
 
         List<Integer> passwordPropertyIDs = PasswordPreferenceManager.readPasswordPropertyIds(this, ID);
