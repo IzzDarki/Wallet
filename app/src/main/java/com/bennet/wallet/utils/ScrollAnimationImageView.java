@@ -12,10 +12,10 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.text.TextPaint;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.Space;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.widget.NestedScrollView;
 
 import com.bennet.wallet.R;
@@ -25,7 +25,7 @@ public class ScrollAnimationImageView extends androidx.appcompat.widget.AppCompa
     static protected float offset = 0;
 
     protected NestedScrollView scrollView;
-    protected LinearLayout linearLayout;
+    protected LinearLayoutCompat linearLayout;
     protected Space spaceInLinearLayout;
     protected Bitmap frontImage = null;
     protected Bitmap backImage = null;
@@ -48,17 +48,7 @@ public class ScrollAnimationImageView extends androidx.appcompat.widget.AppCompa
         this.scrollView = scrollView;
         scrollView.setOnScrollChangeListener(this);
 
-        /* TODO remove this block, if the problem of weird card displaying when keyboard up doesn't come back
-        scrollView.addOnLayoutChangeListener(new OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                //setScrollY(getScrollY()); //drawAnimation();
-                Log.i("ScrollAnimationIV", "onLayoutChange");
-            }
-        }); // ex. when keyboard pops up
-        */
-
-        this.linearLayout = (LinearLayout) scrollView.getChildAt(0);
+        this.linearLayout = (LinearLayoutCompat) scrollView.getChildAt(0);
         spaceInLinearLayout = new Space(scrollView.getContext());
         updateSpace();
         linearLayout.addView(spaceInLinearLayout);
@@ -135,7 +125,7 @@ public class ScrollAnimationImageView extends androidx.appcompat.widget.AppCompa
 
     public void updateSpace() {
         if (spaceInLinearLayout != null)
-            spaceInLinearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getSpaceHeight()));
+            spaceInLinearLayout.setLayoutParams(new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getSpaceHeight()));
     }
 
     public int getSpaceHeight() {

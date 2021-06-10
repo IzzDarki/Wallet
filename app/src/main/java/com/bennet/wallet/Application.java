@@ -100,16 +100,18 @@ public class Application extends android.app.Application {
                 else if (entry.getValue().getClass() == Integer.class)
                     editor.putInt(entry.getKey(), (Integer) entry.getValue());
 
-                else if (entry.getValue().getClass() == Boolean.class)
+                else if (entry.getValue().getClass() == Boolean.class) {
                     editor.putBoolean(entry.getKey(), (Boolean) entry.getValue());
+                }
 
                 // These are all the types that existed before version 5
 
-                else { // TODO remove or comment debug log
+                /*
+                else {
                     if (BuildConfig.DEBUG) {
                         Log.e("encryptOldPref", "Could not encrypt " + entry.getKey() + " (" + entry.getValue().getClass().getName() + ")" + ": " + entry.getValue().toString());
                     }
-                }
+                } */
             }
             editor.apply();
 
@@ -127,12 +129,12 @@ public class Application extends android.app.Application {
         File[] files = directory.listFiles();
 
         if (files == null)
-            throw new RuntimeException("Could not list files in: " + directory.getAbsolutePath());
+            return;
 
         for (File file : files) {
             if (!file.getName().equals(getString(R.string.example_card_front_image_file_name))
                     && !file.getName().equals(getString(R.string.example_card_back_image_file_name))
-                    && !file.getName().contains(getString(R.string.mahler_card_front_image_file_name))) { // These files don't need to be encrypted
+                    && !Utility.isMahlerFile(this, file)) { // These files don't need to be encrypted
                 encryptOldImageFile(file);
             }
         }
@@ -172,9 +174,10 @@ public class Application extends android.app.Application {
 
             // delete old unencrypted image file
             boolean success = oldImageFile.delete();
-            if (BuildConfig.DEBUG && !success) { // TODO Remove debug code
+            /*
+            if (BuildConfig.DEBUG && !success) {
                 Log.e("EncryptOldFile", "Could not delete old image file after replacing it with an encrypted file");
-            }
+            } */
 
         } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException(e);

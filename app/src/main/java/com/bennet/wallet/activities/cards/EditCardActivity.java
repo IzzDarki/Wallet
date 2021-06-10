@@ -3,6 +3,7 @@ package com.bennet.wallet.activities.cards;
 import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.security.crypto.EncryptedFile;
 import androidx.security.crypto.MasterKey;
@@ -19,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bennet.colorpickerview.dialog.ColorPickerDialogFragment;
@@ -97,11 +97,11 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
     protected TextInputEditText cardNameInput;
     protected TextInputLayout cardCodeInputLayout;
     protected TextInputEditText cardCodeInput;
-    protected LinearLayout cardCodeTypeAndShowLayout;
+    protected LinearLayoutCompat cardCodeTypeAndShowLayout;
     protected MaterialAutoCompleteTextView cardCodeTypeInput;
     protected MaterialAutoCompleteTextView cardCodeTypeTextInput;
     protected TextInputEditText cardIDInput;
-    protected LinearLayout createNewCardPropertyButton;
+    protected LinearLayoutCompat createNewCardPropertyButton;
     protected MaterialButton cardColorButton;
     protected MaterialButton cardFrontImageButton;
     protected MaterialButton cardBackImageButton;
@@ -144,13 +144,16 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(R.string.edit_card);
+
 
         // init
-        if (isCreateNewCardIntent)
+        if (isCreateNewCardIntent) {
             initNewCard(); // create new card
+            getSupportActionBar().setTitle(R.string.new_card);
+        }
         else {
             initFromPreferences(); // load existing card
+            getSupportActionBar().setTitle(R.string.edit_card);
             lastFrontImage = currentFrontImage;
             lastBackImage = currentBackImage;
             /* explanation
@@ -208,7 +211,7 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
             if (!hasFocus)
                 readCodeTypeInput();
         });
-        cardCodeTypeInput.setWidth((int) ((getCalculatedLayoutWidth() - Utility.DPtoPX(getResources().getDisplayMetrics(), 8)) / 2));
+        cardCodeTypeInput.setWidth((int) ((getCalculatedLayoutWidth() - getResources().getDimension(R.dimen.text_input_padding_bottom)) / 2));
 
         // card code text type
         cardCodeTypeTextInput.setText(codeTypeTextBoolToString(cardCodeTypeText));
@@ -217,7 +220,7 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
             if (!hasFocus)
                 readCodeTypeTextInput();
         });
-        cardCodeTypeTextInput.setWidth((int) ((getCalculatedLayoutWidth() - Utility.DPtoPX(getResources().getDisplayMetrics(), 8)) / 2));
+        cardCodeTypeTextInput.setWidth((int) ((getCalculatedLayoutWidth() - getResources().getDimension(R.dimen.text_input_padding_bottom)) / 2));
 
         // card ID
         cardIDInput.setText(cardID);
@@ -345,21 +348,21 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
     }
 
 
-    // handling action bar menu
+    // action bar menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.edit_card_action_bar_menu, menu);
+        getMenuInflater().inflate(R.menu.edit_action_bar_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.edit_card_action_bar_done) {  // finish if input can be saved (no input errors)
+        if (item.getItemId() == R.id.edit_action_bar_done) {  // finish if input can be saved (no input errors)
             save();
             return true;
-        } else if (itemId == R.id.edit_card_action_bar_delete) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.RoundedCornersDialog));
+        }
+        else if (item.getItemId() == R.id.edit_action_bar_delete) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.delete_card);
             builder.setMessage(R.string.delete_card_dialog_message);
             builder.setCancelable(true);
@@ -376,8 +379,7 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
 
     @Override
     public boolean onSupportNavigateUp() {
-        requestCancel();
-        return true;
+        return requestCancel();
     }
 
 
@@ -388,8 +390,8 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
     }
 
     public void finishAndShowCard() {
-        hideKeyboard(); // TODO remove this, if it didn't fix the "random" weird sizing issue
-        finish();
+        hideKeyboard();
+        finish(); // finish first
         Intent intent = new Intent(this, ShowCardActivity.class);
         intent.putExtra(EXTRA_CARD_ID, ID);
         startActivity(intent);
@@ -398,60 +400,62 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
     public void finishAndReturnToHome() {
         finish();
         Intent intent = new Intent(this, HomeActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // will clear back stack until instance of HomeActivity
-        intent.putExtra(EXTRA_CARD_ID, ID);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // will clear back stack until instance of HomeActivity // It looks like this is needed although HomeActivity is singleTop
         startActivity(intent);
     }
 
 
-    // functions
+    // main functions
     protected void save() {
         if (checkInputAndSavePreferences())
             finishAndShowCard();
     }
 
     /**
-     * Either cancels or shows an alert box to cancel
-     * Should be called when user cancels card editing
+     * Either cancels or shows an alert box to cancel.
+     * Should be called when user cancels card editing.
      *
      * <br>Detail:
      * Alert dialog is shown, when
      * a new card gets canceled and the according setting is enabled
      * or when
      * editing an existing card gets canceled, the card has been modified the according setting is enabled
+     * @return true when the activity was finished, false otherwise
      */
-    protected void requestCancel() {
+    protected boolean requestCancel() {
         checkAndReadInput(); // Read input to figure out of card has been modified (member variable hasBeenModified)
-        if (AppPreferenceManager.isBackConfirmNewCard(this) && isCreateNewCardIntent || AppPreferenceManager.isBackConfirmEditCard(this) && !isCreateNewCardIntent && hasBeenModified) {
+        if (AppPreferenceManager.isBackConfirmNewCardOrPassword(this) && isCreateNewCardIntent || AppPreferenceManager.isBackConfirmEditCardOrPassword(this) && !isCreateNewCardIntent && hasBeenModified) {
             String dialogTitle;
             String dialogMessage;
-            String dialogSaveInstead;
             if (isCreateNewCardIntent) {
                 dialogTitle = getString(R.string.cancel_create_new_card_title);
-                dialogMessage = getString(R.string.cancel_create_new_card_message);
+                dialogMessage = getString(R.string.nothing_will_be_saved);
             }
             else {
-                dialogTitle = getString(R.string.cancel_edit_card_title);
-                dialogMessage = getString(R.string.cancel_edit_card_message);
+                dialogTitle = getString(R.string.discard_changes);
+                dialogMessage = getString(R.string.changes_are_not_saved);
             }
 
             AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.RoundedCornersDialog));
             builder.setTitle(dialogTitle);
             builder.setMessage(dialogMessage);
             builder.setCancelable(true);
-            builder.setPositiveButton(R.string.discard, (dialog, which) -> {
+            builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
                 cancelDirectly();
                 dialog.dismiss();
             });
-            builder.setNeutralButton(R.string.save, (dialog, which) -> {
+            /*builder.setNeutralButton(R.string.save, (dialog, which) -> {
                save();
                dialog.dismiss();
-            });
+            });*/ // The dialog is easier to understand without this extra option
             builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
             builder.show();
+            return false;
         }
-        else
+        else {
             cancelDirectly();
+            return true;
+        }
     }
 
     /**
@@ -463,7 +467,7 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
         if (currentBackImage != lastBackImage)
             deleteBackImage();
 
-        if (getIntent().getBooleanExtra(EXTRA_CREATE_NEW_CARD, false)) {
+        if (isCreateNewCardIntent) {
             setResult(RESULT_CANCELED);
             finish(); // return to calling activity (do not launch ShowCardActivity)
         }
@@ -540,7 +544,7 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
 
     protected void initNewCard() {
         ID = generateNewCardID();
-        cardName = getString(R.string.new_card_name);
+        cardName = getString(R.string.new_card);
         cardCode = "";
         cardID = "";
         cardCodeType = AppPreferenceManager.getDefaultCardCodeType(this);
@@ -587,7 +591,7 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
     public void onDialogDismissed(int dialogId) {}
 
 
-    // subroutines
+    // helpers
     protected void createNewCardProperty() {
         // set the property view at the end of the visible list to IME next
         CardPropertyView lastPropertyView = getLastVisiblePropertyView();
@@ -618,7 +622,7 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
     protected boolean checkInputAndSavePreferences() {
         // update values from input boxes
         if (checkAndReadInput()) {
-            CardPreferenceManager.addToAllCardIDs(this, ID);
+            CardPreferenceManager.addToAllCardIDs(this, ID); // This should be fine. At this moment no other process should modify this preference list (Note that this only adds the ID if it is not yet contained in the list)
 
             CardPreferenceManager.writeCardName(this, ID, cardName);
             CardPreferenceManager.writeCardCode(this, ID, cardCode);
@@ -684,10 +688,10 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
     }
 
     /**
-     * deletes last front image and copies to current front image from cache to files directory, if front image has been changed
+     * deletes last front image and copies to current front image from cache to files directory, if front image has been changed. Doesn't copy the file if it's already in files directory
      */
     protected void moveFrontImageFromCacheToFiles() {
-        if (currentFrontImage != lastFrontImage) {
+        if (currentFrontImage != lastFrontImage && !isInFilesDir(currentFrontImage)) {
             // delete last
             deleteLastFrontImage();
 
@@ -723,9 +727,6 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
 
                     currentFrontImage = newFrontImage;
 
-                    // TODO remove old code from before encryption
-                    //currentFrontImage = Utility.moveFile(currentFrontImage, getFilesDir() + "/" + getString(R.string.cards_images_folder_name));
-
                 } catch (IOException | GeneralSecurityException e) {
                     /*
                     if (BuildConfig.DEBUG)
@@ -748,10 +749,10 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
     }
 
     /**
-     * deletes last back image and copies current back image from cache to files directory, if back image has been changed
+     * deletes last back image and copies current back image from cache to files directory, if back image has been changed. Doesn't copy the file if it's already in files directory
      */
     protected void moveBackImageFromCacheToFiles() {
-        if (currentBackImage != lastBackImage) {
+        if (currentBackImage != lastBackImage && !isInFilesDir(currentBackImage)) {
             // delete last
             deleteLastBackImage();
 
@@ -785,9 +786,6 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
                     }
 
                     currentBackImage = newBackImage;
-
-                    // TODO remove old code from before encryption
-                    //currentBackImage = Utility.moveFile(currentBackImage, getFilesDir() + "/" + getString(R.string.cards_images_folder_name));
 
                 } catch (IOException | GeneralSecurityException e) {
                     /*
@@ -917,8 +915,6 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
         return true;
     }
 
-
-    // helper functions
     /**
      * Reads all the input from the input boxes
      * @return false when there are errors, true otherwise
@@ -996,10 +992,10 @@ public class EditCardActivity extends CardActivity implements ColorPickerDialogF
             deleteFrontImage();
             InputStream frontImageStream = getResources().openRawResource(R.raw.front_mahler_image);
             // ensure cards images folder exists
-            File cacheCardsImagesFolder = new File(getCacheDir() + "/" + getString(R.string.cards_images_folder_name));
-            if (!cacheCardsImagesFolder.exists())
-                cacheCardsImagesFolder.mkdirs();
-            currentFrontImage = CreateExampleCardService.copyCardImage(this, frontImageStream, cacheCardsImagesFolder, "JPEG_" + ID + "_" + getString(R.string.mahler_card_front_image_file_name));
+            File cardsImagesFolder = new File(getFilesDir() + "/" + getString(R.string.cards_images_folder_name));
+            if (!cardsImagesFolder.exists())
+                cardsImagesFolder.mkdirs();
+            currentFrontImage = CreateExampleCardService.copyCardImage(this, frontImageStream, cardsImagesFolder, "JPEG_" + ID + "_" + getString(R.string.mahler_card_front_image_file_name)); // The filename of Mahler card should not change in future versions of the app (It's checked by Utility.isMahlerFile(...))
             updateFrontImage();
 
             cardName = "Gustav Mahler";

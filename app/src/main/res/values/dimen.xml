@@ -3,4 +3,7 @@
     <dimen name="default_padding">16dp</dimen>
     <dimen name="small_card_item_margin">4dp</dimen>
     <dimen name="horizontal_divider_padding">8dp</dimen>
+    <dimen name="list_item_start_margin">10dp</dimen>
+    <dimen name="text_input_padding_bottom">10dp</dimen>
+    <dimen name="create_new_property_top_and_bottom_padding">6dp</dimen>
 </resources>

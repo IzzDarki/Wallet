@@ -16,6 +16,8 @@ import android.widget.EditText;
 import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
 
+import com.bennet.wallet.R;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -43,6 +45,17 @@ public class Utility {
 
     public interface VoidCallback {
         void callback();
+    }
+
+    static public String createStringNCopies(int n, String copies) {
+        StringBuilder str = new StringBuilder("");
+        for (int i = 0; i < n; i++)
+            str.append(copies);
+        return str.toString();
+    }
+
+    static public boolean isMahlerFile(Context context, File imageFile) {
+        return imageFile.getName().contains(context.getString(R.string.mahler_card_front_image_file_name));
     }
 
     static public float DPtoPX(DisplayMetrics displayMetrics, float DP) {
@@ -558,6 +571,10 @@ public class Utility {
      * Wrapper around an {@link ArrayList<Integer>}. Has functionality for converting the list to a String and creating the list from a String
      */
     public static class PreferenceArrayInt extends PreferenceArray<Integer> {
+        public PreferenceArrayInt() {
+            this(null);
+        }
+
         public PreferenceArrayInt(String preferenceString) {
             super(preferenceString, new Operations<Integer>() {
                 @Override

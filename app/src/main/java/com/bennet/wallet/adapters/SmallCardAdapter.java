@@ -77,7 +77,7 @@ public class SmallCardAdapter extends RecyclerView.Adapter<SmallCardAdapter.View
     public SmallCardAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // inflates item
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.small_card_item, parent, false);
+        View view = inflater.inflate(R.layout.adapter_small_card_item, parent, false);
         return new ViewHolder(view);
     }
 

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginStart="@dimen/list_item_start_margin">
+
+    <View
+        android:id="@+id/show_card_property_list_item_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="5dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <!--
+    <AppCompatImageView
+        android:id="@+id/show_card_property_list_item_icon_view"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/show_card_property_list_item_divider"/>
+        -->
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/show_card_property_list_item_name_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/show_card_property_list_item_divider"
+        app:layout_constraintBottom_toTopOf="@id/show_card_property_list_item_value_view"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:textSize="16sp"
+        android:textColor="@color/material_on_background_emphasis_high_type"
+        android:maxLines="1"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/show_card_property_list_item_value_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/show_card_property_list_item_name_view"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="5dp"
+        android:textSize="16sp"
+        android:textColor="@color/material_on_background_emphasis_medium"
+        android:textIsSelectable="true"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

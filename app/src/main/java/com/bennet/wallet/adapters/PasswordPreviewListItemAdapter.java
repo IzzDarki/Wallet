@@ -59,7 +59,7 @@ public class PasswordPreviewListItemAdapter extends RecyclerView.Adapter<Passwor
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.password_preview_list_item, parent, false);
+        View view = inflater.inflate(R.layout.adapter_password_preview_list_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -69,6 +69,8 @@ public class PasswordPreviewListItemAdapter extends RecyclerView.Adapter<Passwor
 
         if (position == 0)
             holder.divider.setVisibility(View.GONE);
+        else
+            holder.divider.setVisibility(View.VISIBLE);
 
         String name = passwords.get(position).passwordName;
         holder.nameView.setText(name);

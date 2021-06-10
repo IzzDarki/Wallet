@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PersistableBundle;
 import android.os.ResultReceiver;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -165,6 +166,12 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         sideNavigationView.setCheckedItem(R.id.nav_home);
@@ -175,7 +182,7 @@ public class HomeActivity extends AppCompatActivity {
         else
             bottomNavigationView.setVisibility(View.VISIBLE);
 
-        // fragment view pager (reload if settings have changed)#
+        // fragment view pager (reload if settings have changed)
         ScreenSlidePagerAdapter currentAdapter = (ScreenSlidePagerAdapter)fragmentViewPager.getAdapter();
         if (currentAdapter == null || !currentAdapter.isStateUpToDate())
             fragmentViewPager.setAdapter(new ScreenSlidePagerAdapter(this));
@@ -246,9 +253,11 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             protected void onReceiveResult(int resultCode, Bundle resultData) {
                 if (resultCode == RESULT_OK) {
-                    HomeCardsFragment fragment = (HomeCardsFragment) getSupportFragmentManager().findFragmentByTag(CARDS_FRAGMENT_TAG);
-                    if (fragment != null)
-                        fragment.updateCards();
+                    Fragment fragment = getSupportFragmentManager().findFragmentByTag("f0"); // f0 is the Tag of the view at position 0 in the fragmentViewPager // this could be a cause for bugs in the future
+                    if (fragment instanceof HomeCardsFragment) // also checks null
+                        ((HomeCardsFragment) fragment).updateCards();
+                    else if (fragment == null)
+                        Log.e("WalletImportant", "From: HomeActivity.createExampleCard(): Couldn't find HomeCardsFragment");
                 }
                 /*
                 else {

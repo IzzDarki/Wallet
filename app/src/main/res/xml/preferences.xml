@@ -33,12 +33,26 @@
         <Preference
             android:title="@string/preferences_default_values_title"
             android:summary="@string/preferences_default_values_summary"
-            app:fragment="com.bennet.wallet.SettingsActivity$DefaultValuesSettingsFragment"/>
+            app:fragment="com.bennet.wallet.activities.SettingsActivity$DefaultValuesSettingsFragment"/>
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:key="@string/preferences_detailed_errors_key"
             android:title="@string/preferences_detailed_errors_title"
-            android:summary="@string/preferences_detailed_errors_summary" />
+            android:summary="@string/preferences_detailed_errors_summary"
+            app:defaultValue="@bool/preferences_detailed_errors_default" />
+
+        <SwitchPreferenceCompat
+            android:key="@string/preferences_hide_length_secret_field_key"
+            android:title="@string/preferences_hide_length_secret_field_title"
+            android:summary="@string/preferences_hide_length_secret_field_summary"
+            app:defaultValue="@bool/preferences_hide_length_secret_field_default" />
+
+        <SwitchPreferenceCompat
+            android:key="@string/preferences_secret_field_monospace_key"
+            android:title="@string/preferences_secret_field_monospace_title"
+            android:summary="@string/preferences_secret_field_monospace_summary"
+            app:defaultValue="@bool/preferences_secret_field_monospace_default" />
+
 
     </PreferenceCategory>
 

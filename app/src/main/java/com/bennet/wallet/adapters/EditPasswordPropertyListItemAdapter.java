@@ -1,6 +1,5 @@
 package com.bennet.wallet.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +17,7 @@ import androidx.core.util.Pair;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bennet.wallet.activities.passwords.EditPasswordActivity;
+import com.bennet.wallet.preferences.AppPreferenceManager;
 import com.bennet.wallet.utils.Utility;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
@@ -54,13 +54,14 @@ public class EditPasswordPropertyListItemAdapter extends RecyclerView.Adapter<Ed
 
                 if (!hasFocus) {
                     readValue();
-                    if (passwordProperties.get(getAdapterPosition()).hidden)
+                    if (passwordProperties.get(getAdapterPosition()).secret)
                         textInputEditText.setInputType(Utility.inputTypeTextHiddenPassword);
                 }
             });
         }
 
-        protected void readValue() {
+        /** Reads the user input for the property value */
+        public void readValue() {
             String newValue = textInputEditText.getText().toString().trim();
             passwordProperties.get(getAdapterPosition()).value = newValue;
         }
@@ -77,7 +78,7 @@ public class EditPasswordPropertyListItemAdapter extends RecyclerView.Adapter<Ed
 
             editText.setText(passwordProperties.get(getAdapterPosition()).name);
             editText.requestFocus();
-            visibilitySwitch.setChecked(passwordProperties.get(getAdapterPosition()).hidden);
+            visibilitySwitch.setChecked(passwordProperties.get(getAdapterPosition()).secret);
 
             builder.setView(dialogView)
                     .setCancelable(true)
@@ -88,7 +89,7 @@ public class EditPasswordPropertyListItemAdapter extends RecyclerView.Adapter<Ed
                         textInputLayout.setHint(newPropertyName);
 
                         // read visibility input
-                        passwordProperties.get(getAdapterPosition()).hidden = visibilitySwitch.isChecked();
+                        passwordProperties.get(getAdapterPosition()).secret = visibilitySwitch.isChecked();
 
                         cursorToReset = new Pair<>(getAdapterPosition(), textInputEditText.getSelectionStart()); // onBindViewHolder uses this to reset the cursor
                         notifyItemChanged(getAdapterPosition());
@@ -101,7 +102,7 @@ public class EditPasswordPropertyListItemAdapter extends RecyclerView.Adapter<Ed
         }
 
         protected void onEndIconClick(View view) {
-            if (passwordProperties.get(getAdapterPosition()).hidden) {
+            if (passwordProperties.get(getAdapterPosition()).secret) {
                 View popupView = LayoutInflater.from(view.getContext()).inflate(R.layout.edit_password_property_list_item_end_icon_popup_window_layout, null);
                 ImageButton visibilityButton = popupView.findViewById(R.id.edit_password_property_list_item_end_icon_popup_window_visibility_button);
                 ImageButton deleteButton = popupView.findViewById(R.id.edit_password_property_list_item_end_icon_popup_window_delete_button);
@@ -146,10 +147,14 @@ public class EditPasswordPropertyListItemAdapter extends RecyclerView.Adapter<Ed
 
         protected void toggleTextVisibility() {
             int cursor = textInputEditText.getSelectionStart();
-            if (isTextHidden())
+
+            if (!isTextHidden())
+                textInputEditText.setInputType(Utility.inputTypeTextHiddenPassword);
+            else if (AppPreferenceManager.isMonospaceInSecretFields(getContext()))
                 textInputEditText.setInputType(Utility.inputTypeTextVisiblePassword);
             else
-                textInputEditText.setInputType(Utility.inputTypeTextHiddenPassword);
+                textInputEditText.setInputType(Utility.inputTypeTextNormal);
+
             textInputEditText.setSelection(cursor); // Otherwise cursor will be reset to start
         }
 
@@ -181,7 +186,7 @@ public class EditPasswordPropertyListItemAdapter extends RecyclerView.Adapter<Ed
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.edit_password_property_list_item, parent, false);
+        View view = inflater.inflate(R.layout.adapter_edit_password_property_list_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -193,7 +198,7 @@ public class EditPasswordPropertyListItemAdapter extends RecyclerView.Adapter<Ed
          */
 
         // text hidden mode, end icon expand (dropdown) for both visibility and delete icons
-        if (passwordProperties.get(position).hidden) {
+        if (passwordProperties.get(position).secret) {
             holder.textInputEditText.setInputType(Utility.inputTypeTextHiddenPassword);
             holder.textInputLayout.setEndIconDrawable(R.drawable.expand_more_icon_30dp);
         }

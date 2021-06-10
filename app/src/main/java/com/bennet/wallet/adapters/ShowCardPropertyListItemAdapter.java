@@ -38,7 +38,7 @@ public class ShowCardPropertyListItemAdapter extends RecyclerView.Adapter<ShowCa
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.show_card_property_list_item, parent, false);
+        View view = inflater.inflate(R.layout.adapter_show_card_property_list_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -48,6 +48,8 @@ public class ShowCardPropertyListItemAdapter extends RecyclerView.Adapter<ShowCa
 
         if (position == 0)
             holder.divider.setVisibility(View.GONE);
+        else
+            holder.divider.setVisibility(View.VISIBLE);
 
         holder.nameView.setText(cardProperties.get(position).first);
         holder.valueView.setText(cardProperties.get(position).second);

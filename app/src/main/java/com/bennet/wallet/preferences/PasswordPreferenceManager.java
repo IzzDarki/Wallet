@@ -21,12 +21,11 @@ public class PasswordPreferenceManager {
     static public final String PREFERENCE_ALL_PASSWORD_IDS = "password_ids";
 
     static public final String PREFERENCE_PASSWORD_NAME = "%d.name"; // String
-    static public final String PREFERENCE_PASSWORD_ACCOUNT = "%d.account"; // String
-    static public final String PREFERENCE_PASSWORD_PASSWORD = "%d.password"; // String
+    static public final String PREFERENCE_PASSWORD_VALUE = "%d.password"; // String
     static public final String PREFERENCE_PASSWORD_PROPERTIES_IDS = "%d.password_properties"; // String (PreferenceArrayInt)
     static public final String PREFERENCE_PASSWORD_PROPERTY_NAME = "%d.%d.property_name"; // String
     static public final String PREFERENCE_PASSWORD_PROPERTY_VALUE = "%d.%d.property_value"; // String
-    static public final String PREFERENCE_PASSWORD_PROPERTY_HIDDEN = "%d.%d.property_hidden"; // boolean
+    static public final String PREFERENCE_PASSWORD_PROPERTY_SECRET = "%d.%d.property_secret"; // boolean
 
     // static variables
     static protected SharedPreferences preferences;
@@ -88,8 +87,8 @@ public class PasswordPreferenceManager {
         return String.format(Locale.ENGLISH, PREFERENCE_PASSWORD_PROPERTY_VALUE, ID, propertyID);
     }
 
-    static public String getPropertyHiddenKey(int ID, int propertyID) {
-        return String.format(Locale.ENGLISH, PREFERENCE_PASSWORD_PROPERTY_HIDDEN, ID, propertyID);
+    static public String getPropertySecretKey(int ID, int propertyID) {
+        return String.format(Locale.ENGLISH, PREFERENCE_PASSWORD_PROPERTY_SECRET, ID, propertyID);
     }
 
     // read functions
@@ -107,8 +106,8 @@ public class PasswordPreferenceManager {
      * @param ID Id of the password
      * @return Password of the stored password or empty string if not found in preferences
      */
-    static public String readPasswordPassword(Context context, int ID) {
-        return getPreferences(context).getString(getKey(ID, PREFERENCE_PASSWORD_PASSWORD), "");
+    static public String readPasswordValue(Context context, int ID) {
+        return getPreferences(context).getString(getKey(ID, PREFERENCE_PASSWORD_VALUE), "");
     }
 
     /**
@@ -153,13 +152,13 @@ public class PasswordPreferenceManager {
     }
 
     /**
-     * Reads if password property should be displayed as hidden
+     * Reads if password property should be secret. This means the text is displayed like a password (hidden)
      * @param ID Id of the password
      * @param propertyID ID of the property
-     * @return true if the password property should be displayed as hidden, false otherwise. Also true if not found in preferences
+     * @return true if the password property should be secret, false otherwise. Also true if not found in preferences
      */
-    static public boolean readPasswordPropertyHidden(Context context, int ID, int propertyID) {
-        return getPreferences(context).getBoolean(getPropertyHiddenKey(ID, propertyID), true);
+    static public boolean readPasswordPropertySecret(Context context, int ID, int propertyID) {
+        return getPreferences(context).getBoolean(getPropertySecretKey(ID, propertyID), true);
     }
 
 
@@ -172,6 +171,15 @@ public class PasswordPreferenceManager {
      */
     static public void writePasswordName(Context context, int ID, String passwordName) {
         getPreferences(context).edit().putString(getKey(ID, PREFERENCE_PASSWORD_NAME), passwordName).apply();
+    }
+
+    /**
+     * Writes new password value to preferences
+     * @param ID Id of the password
+     * @param passwordValue New password value
+     */
+    static public void writePasswordValue(Context context, int ID, String passwordValue) {
+        getPreferences(context).edit().putString(getKey(ID, PREFERENCE_PASSWORD_VALUE), passwordValue).apply();
     }
 
     /**
@@ -204,13 +212,13 @@ public class PasswordPreferenceManager {
     }
 
     /**
-     * Writes new value for displaying a password property as hidden to preferences
+     * Writes new password secrecy (secret or not) to preferences
      * @param ID Id of the password
      * @param propertyID Id of the property
-     * @param passwordPropertyHidden true if password should be displayed as hidden, false otherwise
+     * @param passwordPropertySecret true if password is secret, false otherwise
      */
-    static public void writePasswordPropertyHidden(Context context, int ID, int propertyID, boolean passwordPropertyHidden) {
-        getPreferences(context).edit().putBoolean(getPropertyHiddenKey(ID, propertyID), passwordPropertyHidden).apply();
+    static public void writePasswordPropertySecret(Context context, int ID, int propertyID, boolean passwordPropertySecret) {
+        getPreferences(context).edit().putBoolean(getPropertySecretKey(ID, propertyID), passwordPropertySecret).apply();
     }
 
 
@@ -222,6 +230,15 @@ public class PasswordPreferenceManager {
     static public void removePasswordName(Context context, int ID) {
         getPreferences(context).edit().remove(getKey(ID, PREFERENCE_PASSWORD_NAME)).apply();
     }
+
+    /**
+     * Removes password value from preferences
+     * @param ID Id of the password
+     */
+    static public void removePasswordValue(Context context, int ID) {
+        getPreferences(context).edit().remove(getKey(ID, PREFERENCE_PASSWORD_VALUE)).apply();
+    }
+
 
     /**
      * Removes password property ids list from preferences
@@ -250,12 +267,12 @@ public class PasswordPreferenceManager {
     }
 
     /**
-     * Removes value for displaying a password property as hidden from preferences
+     * Removes password secrecy (secret or not) from preferences
      * @param ID Id of the password
      * @param propertyID Id of the property
      */
-    static public void removePasswordPropertyHidden(Context context, int ID, int propertyID) {
-        getPreferences(context).edit().remove(getPropertyHiddenKey(ID, propertyID)).apply();
+    static public void removePasswordPropertySecret(Context context, int ID, int propertyID) {
+        getPreferences(context).edit().remove(getPropertySecretKey(ID, propertyID)).apply();
     }
 
     // combined remove functions
@@ -267,7 +284,7 @@ public class PasswordPreferenceManager {
     static public void removePasswordProperty(Context context, int ID, int propertyID) {
         removePasswordPropertyName(context, ID, propertyID);
         removePasswordPropertyValue(context, ID, propertyID);
-        removePasswordPropertyHidden(context, ID, propertyID);
+        removePasswordPropertySecret(context, ID, propertyID);
     }
 
     /**
@@ -287,6 +304,7 @@ public class PasswordPreferenceManager {
      */
     static public void removePassword(Context context, int ID) {
         removePasswordName(context, ID);
+        removePasswordValue(context, ID);
         removePasswordProperties(context, ID);
         removeFromAllPasswordIDs(context, ID);
     }
@@ -311,7 +329,7 @@ public class PasswordPreferenceManager {
 
 
     /**
-     * Adds {@code ID} to list of all passwords ids in preferences <br>
+     * Adds {@code ID} to list of all passwords ids in preferences but only if it is not yet contained<br>
      *     Note that this reads the list from preferences first and would not recognize if somewhere else the list was read from preferences
      *     and could possibly write the same list again to preferences in which case {@code ID} would still be on the list.
      *     Only use this function if you are sure, that nowhere else the list of all card ids is edited in that moment

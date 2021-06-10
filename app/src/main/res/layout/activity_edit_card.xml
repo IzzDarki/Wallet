@@ -33,7 +33,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="8dp"
+                    android:paddingBottom="@dimen/text_input_padding_bottom"
 
                     android:hint="@string/card_name"
                     app:endIconMode="none"
@@ -54,7 +54,7 @@
                     android:id="@+id/edit_card_code_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="8dp"
+                    android:paddingBottom="@dimen/text_input_padding_bottom"
 
                     android:hint="@string/card_code"
                     app:endIconMode="custom"
@@ -74,14 +74,14 @@
                     android:id="@+id/edit_card_code_type_and_show_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="8dp"
+                    android:paddingBottom="@dimen/text_input_padding_bottom"
                     android:orientation="horizontal">
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingStart="0dp"
-                        android:paddingEnd="8dp"
+                        android:paddingEnd="@dimen/text_input_padding_bottom"
 
                         android:hint="@string/card_code_type"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
@@ -118,7 +118,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="8dp"
+                    android:paddingBottom="@dimen/text_input_padding_bottom"
 
                     android:hint="@string/card_id"
                     app:endIconMode="clear_text"
@@ -138,8 +138,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp">
+                    android:paddingTop="@dimen/create_new_property_top_and_bottom_padding"
+                    android:paddingBottom="@dimen/create_new_property_top_and_bottom_padding">
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="wrap_content"
@@ -157,7 +157,6 @@
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
-
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -165,27 +164,20 @@
                     android:layout_marginBottom="@dimen/horizontal_divider_padding"
                     android:background="?android:attr/listDivider"/>
 
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/edit_card_color_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:text="@string/edit_card_color_button_text"/>
+
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_gravity="center_horizontal">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/edit_card_color_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginEnd="4dp"
-                        android:text="@string/edit_card_color_button_text"/>
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_gravity="center_horizontal" >
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/edit_card_front_image_button"
@@ -205,16 +197,18 @@
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="8dp"/>
-
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="@dimen/horizontal_divider_padding"
                     android:layout_marginBottom="@dimen/horizontal_divider_padding"
                     android:background="?android:attr/listDivider"/>
+
+                <!-- extra space -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:visibility="invisible"/>
 
                 <!-- card (space) is displayed at the bottom, programmatically -->
 

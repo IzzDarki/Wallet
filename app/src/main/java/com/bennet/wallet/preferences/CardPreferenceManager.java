@@ -79,9 +79,6 @@ public class CardPreferenceManager {
             }
 
             cardDefaultColor = context.getResources().getColor(R.color.cardDefaultColor);
-
-            // TODO remove old code from before encryption
-            //preferences = context.getSharedPreferences(CardPreferenceManager.CARDS_PREFERENCES_NAME_OLD, Context.MODE_PRIVATE);
         }
     }
 
@@ -610,7 +607,7 @@ public class CardPreferenceManager {
     }
 
     /**
-     * Adds {@code ID} to list of all card ids in preferences <br>
+     * Adds {@code ID} to list of all card ids in preferences but only if it is not yet contained<br>
      *     Note that this reads the list from preferences first and would not recognize if somewhere else the list was read from preferences
      *     and could possibly write the same list again to preferences in which case {@code ID} would still be on the list.
      *     Only use this function if you are sure, that nowhere else the list of all card ids is edited in that moment

@@ -15,7 +15,6 @@ import com.bennet.wallet.R;
 import com.bennet.wallet.activities.passwords.EditPasswordActivity;
 import com.bennet.wallet.activities.passwords.ShowPasswordActivity;
 import com.bennet.wallet.adapters.PasswordPreviewListItemAdapter;
-import com.bennet.wallet.preferences.CardPreferenceManager;
 import com.bennet.wallet.preferences.PasswordPreferenceManager;
 import com.bennet.wallet.utils.Utility;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -39,7 +38,6 @@ public class HomePasswordsFragment extends Fragment {
     public static class PasswordPreview {
         public int passwordID;
         public String passwordName;
-        // TODO more?
 
         public PasswordPreview(int passwordID, String name) {
             this.passwordID = passwordID;
@@ -89,7 +87,7 @@ public class HomePasswordsFragment extends Fragment {
         passwordIDs = PasswordPreferenceManager.readAllPasswordIDs(requireContext());
         passwords.clear();
         for (int passwordID : passwordIDs) {
-            String passwordName = CardPreferenceManager.readCardName(requireContext(), passwordID);
+            String passwordName = PasswordPreferenceManager.readPasswordName(requireContext(), passwordID);
             passwords.add(new PasswordPreview(passwordID, passwordName));
         }
         passwordsRecyclerView.getAdapter().notifyDataSetChanged();

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,7 +23,7 @@ import java.util.List;
 public class ShowPasswordActivity extends AppCompatActivity {
 
     // intent extras
-    static public final String EXTRA_PASSWORD_ID = "show_password.extra_password_id"; // int
+    static public final String EXTRA_PASSWORD_ID = "show_password.extra_password_id"; // int (EditPasswordActivity matches this)
 
     // UI
     protected RecyclerView passwordPropertiesView;
@@ -37,12 +38,12 @@ public class ShowPasswordActivity extends AppCompatActivity {
     static public class ShowPasswordProperty {
         public String name;
         public String value;
-        public boolean hidden;
+        public boolean secret;
 
-        public ShowPasswordProperty(String name, String value, boolean hidden) {
+        public ShowPasswordProperty(String name, String value, boolean secret) {
             this.name = name;
             this.value = value;
-            this.hidden = hidden;
+            this.secret = secret;
         }
     }
 
@@ -51,19 +52,21 @@ public class ShowPasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_password);
 
+        // hooks
+        passwordPropertiesView = findViewById(R.id.show_password_recycler_view);
+
+        // init
+        initFromPreferences();
+
         // toolbar
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        // hooks
-        passwordPropertiesView = findViewById(R.id.show_password_recycler_view);
+        setActionBarName();
 
         // password properties recycler view
         passwordPropertiesView.setLayoutManager(new LinearLayoutManager(this));
-        passwordPropertiesView.setAdapter(new ShowPasswordPropertyListItemAdapter(passwordProperties));
-
-        // TODO display password value
+        passwordPropertiesView.setAdapter(new ShowPasswordPropertyListItemAdapter(passwordProperties, this::hideAllSecretValuesInAdapter));
 
     }
 
@@ -71,16 +74,23 @@ public class ShowPasswordActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
-        // (re)init and notify adapter
+        // re-init and notify adapter
         initFromPreferences();
         passwordPropertiesView.getAdapter().notifyDataSetChanged();
 
+        // toolbar
+        setActionBarName();
+
         // reset scroll
         passwordPropertiesView.scrollToPosition(0);
-
-        // toolbar
-        getSupportActionBar().setTitle(passwordName);
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        hideAllSecretValuesInAdapter();
+    }
+
 
     // handling action bar menu
     @Override
@@ -96,14 +106,13 @@ public class ShowPasswordActivity extends AppCompatActivity {
             return true;
         }
         else if (item.getItemId() == R.id.show_card_or_password_action_bar_delete) {
-            // TODO AlertDialog
             AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.RoundedCornersDialog));
             builder.setTitle(R.string.delete_password);
             builder.setMessage(R.string.delete_password_dialog_message);
             builder.setCancelable(true);
             builder.setPositiveButton(R.string.delete, (dialog, which) -> {
-                finish(); // ALWAYS FINISH BEFORE STARTING OTHER ACTIVITY
-                deletePassword();
+                PasswordPreferenceManager.removePassword(this, ID);
+                finish();
                 dialog.dismiss();
             });
             builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
@@ -116,19 +125,20 @@ public class ShowPasswordActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        finish(); // TODO check this
+        finish();
         return true;
     }
 
+
     // main functions
     protected void editPassword() {
-        // TODO implement edit password
+        Intent intent = new Intent(this, EditPasswordActivity.class);
+        intent.putExtra(EditPasswordActivity.EXTRA_PASSWORD_ID, ID);
+        startActivity(intent);
     }
 
-    protected void deletePassword() {
-        // TODO implement delete password
-    }
 
+    // helpers
     protected void initFromPreferences() {
         passwordProperties.clear();
 
@@ -140,14 +150,29 @@ public class ShowPasswordActivity extends AppCompatActivity {
         if (passwordName == null)
             throw new IllegalStateException("PasswordActivity: missing preference: password name");
 
-        passwordValue = PasswordPreferenceManager.readPasswordPassword(this, ID);
+        passwordValue = PasswordPreferenceManager.readPasswordValue(this, ID);
+
+        if (!passwordValue.isEmpty())
+            passwordProperties.add(new ShowPasswordProperty(getString(R.string.password), passwordValue, true)); // Add password value to password properties (will also be part of recycler view)
 
         List<Integer> passwordPropertyIDs = PasswordPreferenceManager.readPasswordPropertyIds(this, ID);
         for (Integer propertyID : passwordPropertyIDs) {
             String propertyName = PasswordPreferenceManager.readPasswordPropertyName(this, ID, propertyID);
             String propertyValue = PasswordPreferenceManager.readPasswordPropertyValue(this, ID, propertyID);
-            boolean propertyHidden = PasswordPreferenceManager.readPasswordPropertyHidden(this, ID, propertyID);
-            passwordProperties.add(new ShowPasswordProperty(propertyName, propertyValue, propertyHidden));
+            boolean propertySecret = PasswordPreferenceManager.readPasswordPropertySecret(this, ID, propertyID);
+            passwordProperties.add(new ShowPasswordProperty(propertyName, propertyValue, propertySecret));
+        }
+    }
+
+    protected void setActionBarName() {
+        getSupportActionBar().setTitle(passwordName);
+    }
+
+    protected void hideAllSecretValuesInAdapter() {
+        for (int position = 0; position < passwordProperties.size(); position++) {
+            ShowPasswordPropertyListItemAdapter.ViewHolder holder = (ShowPasswordPropertyListItemAdapter.ViewHolder) passwordPropertiesView.findViewHolderForAdapterPosition(position);
+            if (holder != null)
+                holder.setValueHidden(passwordProperties.get(position).secret);
         }
     }
 

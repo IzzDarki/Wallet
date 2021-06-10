@@ -10,7 +10,7 @@
     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
 
     android:hint="@string/new_card_property_name"
-    android:paddingBottom="8dp"
+    android:paddingBottom="@dimen/text_input_padding_bottom"
 
     app:endIconMode="custom"
     app:endIconDrawable="@drawable/delete_icon_30dp"

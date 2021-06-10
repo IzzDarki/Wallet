@@ -26,9 +26,9 @@
                 android:id="@+id/show_card_linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_marginStart="@dimen/default_padding"
-                android:layout_marginEnd="@dimen/default_padding">
+                android:layout_marginEnd="@dimen/default_padding"
+                android:orientation="vertical">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/show_card_code_image_view"
@@ -36,17 +36,17 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
-                    android:contentDescription="@string/show_card_code_image_view_content_description"/>
+                    android:contentDescription="@string/show_card_code_image_view_content_description" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/show_card_code_plain_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
                     android:textAlignment="center"
                     android:textColor="@color/material_on_background_emphasis_medium"
-                    android:textIsSelectable="true"/>
+                    android:textIsSelectable="true" />
 
                 <!-- divider with no bottom padding, because adapter does it -->
                 <View
@@ -54,19 +54,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="20dp"
-                    android:background="?android:attr/listDivider"/>
+                    android:background="?android:attr/listDivider" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/show_card_property_list_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    android:clipToPadding="false"/>
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false" />
 
                 <Space
                     android:id="@+id/show_card_extra_space_card_images"
                     android:layout_width="match_parent"
-                    android:layout_height="10dp"/>
+                    android:layout_height="10dp" />
 
                 <!-- divider with no top padding, because adapter does it -->
                 <View
@@ -74,7 +74,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginBottom="20dp"
-                    android:background="?android:attr/listDivider"/>
+                    android:background="?android:attr/listDivider" />
 
                 <!-- card (space) is displayed at the bottom, programmatically -->
 

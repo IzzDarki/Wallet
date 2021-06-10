@@ -110,6 +110,7 @@ public class HomeCardsFragment extends Fragment implements SmallCardAdapter.OnIt
         super.onConfigurationChanged(newConfig);
     }
 
+
     // helper functions
     protected void setCardGridLayoutManager() {
         boolean portrait = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;

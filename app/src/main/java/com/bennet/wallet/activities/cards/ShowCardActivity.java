@@ -1,6 +1,5 @@
 package com.bennet.wallet.activities.cards;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -187,7 +186,7 @@ public class ShowCardActivity extends CardActivity {
                     codeBitmap = createCodeDefault();
             } catch (IllegalArgumentException | WriterException | ArrayIndexOutOfBoundsException e) {
 
-                String detailedErrorMessage = ""; // TODO test this
+                String detailedErrorMessage = "";
                 if (AppPreferenceManager.isDetailedErrors(this))
                     detailedErrorMessage = System.getProperty("line.separator") + e.getLocalizedMessage();
 

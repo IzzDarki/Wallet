@@ -6,11 +6,11 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.security.crypto.EncryptedFile;
 import androidx.security.crypto.MasterKey;
@@ -36,7 +36,7 @@ public class CardActivity extends AppCompatActivity {
     // UI
     protected FrameLayout cardViewLayout;
     protected NestedScrollView scrollView;
-    protected LinearLayout linearLayout;
+    protected LinearLayoutCompat linearLayout;
     protected ScrollAnimationImageView cardView;
 
     // card properties
@@ -95,10 +95,6 @@ public class CardActivity extends AppCompatActivity {
 
                 inputStream = encryptedImageFile.openFileInput();
 
-
-                // TODO remove old code from before encryption
-                //inputStream = new FileInputStream(imageFile);
-
             } catch (IOException | GeneralSecurityException e) {
                 throw new RuntimeException(e);
             }
@@ -117,7 +113,7 @@ public class CardActivity extends AppCompatActivity {
                 if (parentActivityReference.get().isInFilesDir(imageFile)
                         && !imageFile.getName().equals(context.getString(R.string.example_card_front_image_file_name))
                         && !imageFile.getName().equals(context.getString(R.string.example_card_back_image_file_name))
-                        && !imageFile.getName().contains(context.getString(R.string.mahler_card_front_image_file_name))) { // these files don't need to be encrypted
+                        && !Utility.isMahlerFile(parentActivityReference.get(), imageFile)) { // these files don't need to be encrypted
                     bitmap = decodeEncryptedFile();
                 }
                 else
@@ -171,7 +167,12 @@ public class CardActivity extends AppCompatActivity {
             else if (error == Error.DecryptionFailed) {
                 if (parentActivity != null)
                     Toast.makeText(parentActivity, R.string.image_decryption_failed, Toast.LENGTH_SHORT).show();
-                // TODO is there anything to do, if decryption failed? See if it crashes
+                if (parentActivity != null) {
+                    if (isFront)
+                        parentActivity.currentFrontImage = null;
+                    else
+                        parentActivity.currentBackImage = null;
+                }
             }
         }
     }
@@ -390,7 +391,6 @@ public class CardActivity extends AppCompatActivity {
                 cardCodeType == CardPreferenceManager.CARD_CODE_TYPE_EAN_8 || cardCodeType == CardPreferenceManager.CARD_CODE_TYPE_EAN_13 ||
                 cardCodeType == CardPreferenceManager.CARD_CODE_TYPE_ITF || cardCodeType == CardPreferenceManager.CARD_CODE_TYPE_UPC_A ||
                 cardCodeType == CardPreferenceManager.CARD_CODE_TYPE_UPC_E;
-        // TODO if one 2D code is accidentally in 1D there will easily be a bug
     }
 
     protected boolean codeTypeTextStringToBool(String cardCodeTypeText) {

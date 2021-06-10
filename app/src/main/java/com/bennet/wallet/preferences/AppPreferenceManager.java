@@ -29,9 +29,9 @@ public class AppPreferenceManager {
     }
 
 
-    static public boolean isBackConfirmNewCard(Context context) {
+    static public boolean isBackConfirmNewCardOrPassword(Context context) {
         Set<String> stringSet = getBackConfirmStringSet(context);
-        return stringSet.contains(context.getString(R.string.preferences_back_confirm_entry_values_new_card));
+        return stringSet.contains(context.getString(R.string.preferences_back_confirm_entry_values_new_card_or_password));
     }
 
     static public boolean isBackConfirmCrop(Context context) {
@@ -39,9 +39,9 @@ public class AppPreferenceManager {
         return stringSet.contains(context.getString(R.string.preferences_back_confirm_entry_values_crop));
     }
 
-    static public boolean isBackConfirmEditCard(Context context) {
+    static public boolean isBackConfirmEditCardOrPassword(Context context) {
         Set<String> stringSet = getBackConfirmStringSet(context);
-        return stringSet.contains(context.getString(R.string.preferences_back_confirm_entry_values_edit_card));
+        return stringSet.contains(context.getString(R.string.preferences_back_confirm_entry_values_edit_card_or_password));
     }
 
     static public int getDefaultCardCodeType(Context context) {
@@ -71,5 +71,13 @@ public class AppPreferenceManager {
      */
     static public boolean isDetailedErrors(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.preferences_detailed_errors_key), context.getResources().getBoolean(R.bool.preferences_detailed_errors_default));
+    }
+
+    static public boolean isLengthHiddenInSecretFields(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.preferences_hide_length_secret_field_key), context.getResources().getBoolean(R.bool.preferences_hide_length_secret_field_default));
+    }
+
+    static public boolean isMonospaceInSecretFields(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.preferences_secret_field_monospace_key), context.getResources().getBoolean(R.bool.preferences_secret_field_monospace_default));
     }
 }

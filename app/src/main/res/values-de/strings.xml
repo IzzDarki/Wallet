@@ -26,8 +26,8 @@
     <string name="show_card_code_image_view_content_description">" Darstellung des Kartencode als Barcode"</string>
     <string name="show_card_visual_code_cannot_be_displayed">Der Kartencode kann nicht als %s dargestellt werden</string>
     <string name="unsupported_type_barcode">Dieser Barcode wird nicht unterstützt</string>
-    <string name="there_are_still_errors">Es sind nochFehler vorhanden</string>
-    <string name="new_card_name">Neue Karte</string>
+    <string name="there_are_still_errors">Es sind noch Fehler vorhanden</string>
+    <string name="new_card">Neue Karte</string>
     <string name="delete">Löschen</string>
     <string name="edit_card_color_button_text">Farbe</string>
     <string name="edit_card_auto_color_button_text">Auto</string>
@@ -51,7 +51,7 @@
     <string name="example_card_code">https://www.instagram.com/mahlermemes/</string>
     <string name="preferences_back_confirm_title">Bestätigung zum Abbrechen</string>
     <string name="preferences_back_confirm_summary">Wähle aus in welchen Situationen du nach einer Bestätigung zum Abbrechen gefragt werden möchtest</string>
-    <string name="preferences_back_confirm_entries_new_card">Wenn du eine neue Karte erstellst</string>
+    <string name="preferences_back_confirm_entries_new_card_or_password">Wenn du eine neue Karte oder ein neues Passwort erstellst</string>
     <string name="preferences_back_confirm_entries_crop">Wenn du ein Bild für eine Karte zuschneidest</string>
     <string name="preferences_advanced_title">Erweitert</string>
     <string name="preferences_default_values_title">Standardwerte für Karten</string>
@@ -94,7 +94,7 @@
     <string name="preferences_app_functions_title">App Funktionen</string>
     <string name="preferences_app_functions_summary">Wähle die App Funktionen, die du benutzen möchtest</string>
     <string name="preferences_app_functions_entries_cards">Karten</string>
-    <string name="preferences_app_functions_entries_passwords">Nur Passwörter</string>
+    <string name="preferences_app_functions_entries_passwords">Passwörter</string>
     <string name="preferences_app_functions_error_too_few_items">Du musst mindestens eine App Funktion auswählen ;)</string>
     <string name="create_new_card">Eine neue Karte erstellen</string>
     <string name="cards">Karten</string>
@@ -104,10 +104,7 @@
     <string name="cancel_image_selection_title">Bildauswahl abbrechen</string>
     <string name="cancel_image_selection_message">Möchtest du die Bildauswahl abbrechen?</string>
     <string name="cancel_create_new_card_title">Neue Karte verwerfen</string>
-    <string name="cancel_create_new_card_message">Es wird nichts gespeichert</string>
-    <string name="preferences_back_confirm_entries_edit_card">Beim Bearbeiten einer Karte</string>
-    <string name="cancel_edit_card_message">Änderungen werden nicht gespeichert</string>
-    <string name="cancel_edit_card_title">Änderungen verwerfen</string>
+    <string name="preferences_back_confirm_entries_edit_card_or_password">Beim Bearbeiten einer Karte oder eines Passworts</string>
     <string name="discard">Verwerfen</string>
     <string name="save">Speichern</string>
     <string name="password_account">Konto</string>
@@ -115,7 +112,7 @@
     <string name="delete_password">Passwort löschen</string>
     <string name="delete_password_dialog_message">Bist du dir sicher, dass du dieses Passwort löschen willst?</string>
     <string name="password_name">Passwort Name</string>
-    <string name="new_password_name">Neues Passwort</string>
+    <string name="new_password">Neues Passwort</string>
     <string name="username">Benutzername</string>
     <string name="email_address">Email-Adresse</string>
     <string name="password_name_empty_error">Passwort Name ist erforderlich</string>
@@ -125,4 +122,12 @@
     <string name="create_new_password_property">Neue Passwort Eigenschaft erstellen</string>
     <string name="no">Nein</string>
     <string name="keep_property_secret">Eigenschaft geheim halten</string>
+    <string name="preferences_hide_length_secret_field_title">Textlänge in geheimen Feldern verbergen</string>
+    <string name="preferences_hide_length_secret_field_summary">Die Textlänge in geheimen Feldern verbergen</string>
+    <string name="cancel_create_new_password_title">Neues Passwort verwerfen</string>
+    <string name="nothing_will_be_saved">Es wird nichts gespeichert</string>
+    <string name="changes_are_not_saved">Änderungen werden nicht gespeichert</string>
+    <string name="discard_changes">Änderungen verwerfen</string>
+    <string name="preferences_secret_field_monospace_title">Monospace Schriftart für geheime Felder</string>
+    <string name="preferences_secret_field_monospace_summary">Zeige geheime Felder in einer Monospace Schriftart</string>
 </resources>
