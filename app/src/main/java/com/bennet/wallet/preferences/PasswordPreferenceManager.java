@@ -20,12 +20,12 @@ public class PasswordPreferenceManager {
 
     static public final String PREFERENCE_ALL_PASSWORD_IDS = "password_ids";
 
-    static public final String PREFERENCE_PASSWORD_NAME = "%d.name"; // String
-    static public final String PREFERENCE_PASSWORD_VALUE = "%d.password"; // String
-    static public final String PREFERENCE_PASSWORD_PROPERTIES_IDS = "%d.password_properties"; // String (PreferenceArrayInt)
-    static public final String PREFERENCE_PASSWORD_PROPERTY_NAME = "%d.%d.property_name"; // String
-    static public final String PREFERENCE_PASSWORD_PROPERTY_VALUE = "%d.%d.property_value"; // String
-    static public final String PREFERENCE_PASSWORD_PROPERTY_SECRET = "%d.%d.property_secret"; // boolean
+    static protected final String PREFERENCE_PASSWORD_NAME = "%d.name"; // String
+    static protected final String PREFERENCE_PASSWORD_VALUE = "%d.password"; // String
+    static protected final String PREFERENCE_PASSWORD_PROPERTIES_IDS = "%d.password_properties"; // String (PreferenceArrayInt)
+    static protected final String PREFERENCE_PASSWORD_PROPERTY_NAME = "%d.%d.property_name"; // String
+    static protected final String PREFERENCE_PASSWORD_PROPERTY_VALUE = "%d.%d.property_value"; // String
+    static protected final String PREFERENCE_PASSWORD_PROPERTY_SECRET = "%d.%d.property_secret"; // boolean
 
     // static variables
     static protected SharedPreferences preferences;
@@ -61,7 +61,7 @@ public class PasswordPreferenceManager {
      * Returns the preference key of the password property with the given id
      * @param ID Id of the password
      * @param passwordPropertyPreferenceKey Password property key for preferences
-     * @return Preference key of the given property with the specific card ID
+     * @return Preference key of the given property with the specific password ID
      */
     static public String getKey(int ID, String passwordPropertyPreferenceKey) {
         return String.format(Locale.ENGLISH, passwordPropertyPreferenceKey, ID);
@@ -87,6 +87,12 @@ public class PasswordPreferenceManager {
         return String.format(Locale.ENGLISH, PREFERENCE_PASSWORD_PROPERTY_VALUE, ID, propertyID);
     }
 
+    /**
+     * Returns the preference key of the secrecy of a specific property of a specific password
+     * @param ID Id of the password
+     * @param propertyID Id of the property
+     * @return Preference key of the secrecy of the specific property of the specific password
+     */
     static public String getPropertySecretKey(int ID, int propertyID) {
         return String.format(Locale.ENGLISH, PREFERENCE_PASSWORD_PROPERTY_SECRET, ID, propertyID);
     }
@@ -155,7 +161,7 @@ public class PasswordPreferenceManager {
      * Reads if password property should be secret. This means the text is displayed like a password (hidden)
      * @param ID Id of the password
      * @param propertyID ID of the property
-     * @return true if the password property should be secret, false otherwise. Also true if not found in preferences
+     * @return true if the property should be secret, false otherwise. Also true if not found in preferences
      */
     static public boolean readPasswordPropertySecret(Context context, int ID, int propertyID) {
         return getPreferences(context).getBoolean(getPropertySecretKey(ID, propertyID), true);
@@ -193,7 +199,7 @@ public class PasswordPreferenceManager {
 
     /**
      * Writes new password property name to preferences
-     * @param ID Id of the card
+     * @param ID Id of the password
      * @param propertyID Id of the property
      * @param passwordPropertyName New name of password property
      */
@@ -215,7 +221,7 @@ public class PasswordPreferenceManager {
      * Writes new password secrecy (secret or not) to preferences
      * @param ID Id of the password
      * @param propertyID Id of the property
-     * @param passwordPropertySecret true if password is secret, false otherwise
+     * @param passwordPropertySecret true if property is secret, false otherwise
      */
     static public void writePasswordPropertySecret(Context context, int ID, int propertyID, boolean passwordPropertySecret) {
         getPreferences(context).edit().putBoolean(getPropertySecretKey(ID, propertyID), passwordPropertySecret).apply();
@@ -299,7 +305,7 @@ public class PasswordPreferenceManager {
     }
 
     /**
-     * Removes all preferences of a password. Also removes password id from all card ids list.
+     * Removes all preferences of a password. Also removes password id from all passwords ids list.
      * @param ID Id of the password
      */
     static public void removePassword(Context context, int ID) {
@@ -332,7 +338,7 @@ public class PasswordPreferenceManager {
      * Adds {@code ID} to list of all passwords ids in preferences but only if it is not yet contained<br>
      *     Note that this reads the list from preferences first and would not recognize if somewhere else the list was read from preferences
      *     and could possibly write the same list again to preferences in which case {@code ID} would still be on the list.
-     *     Only use this function if you are sure, that nowhere else the list of all card ids is edited in that moment
+     *     Only use this function if you are sure, that nowhere else the list of all password ids is edited in that moment
      * @param ID Id of the password
      */
     static public void addToAllPasswordIDs(Context context, int ID) {
@@ -346,12 +352,12 @@ public class PasswordPreferenceManager {
      * Removes {@code ID} from list of all passwords ids in preferences <br>
      *     Note that this reads the list from preferences first and would not recognize if somewhere else the list was read from preferences
      *     and could possibly write the same list again to preferences in which case {@code ID} would still be on the list.
-     *     Only use this function if you are sure, that nowhere else the list of all card ids is edited in that moment
+     *     Only use this function if you are sure, that nowhere else the list of all passwords ids is edited in that moment
      * @param ID Id of the password
      */
     static public void removeFromAllPasswordIDs(Context context, int ID) {
         PreferenceArrayInt passwordIDs = readAllPasswordIDs(context);
-        passwordIDs.remove((Integer) ID); // no need to check if cardIDs contains ID
+        passwordIDs.remove((Integer) ID); // no need to check if passwordIDs contains ID
         writeAllPasswordIDs(context, passwordIDs);
     }
 
