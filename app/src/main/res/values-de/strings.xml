@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="error_occurred">Ein Fehler ist aufgetreten</string>
-    <string name="cancelled">Abgebrochen</string>
     <string name="edit">Bearbeiten</string>
     <string name="done">Fertig</string>
     <string name="go_ahead">Fortfahren</string>
@@ -105,9 +104,6 @@
     <string name="cancel_image_selection_message">Möchtest du die Bildauswahl abbrechen?</string>
     <string name="cancel_create_new_card_title">Neue Karte verwerfen</string>
     <string name="preferences_back_confirm_entries_edit_card_or_password">Beim Bearbeiten einer Karte oder eines Passworts</string>
-    <string name="discard">Verwerfen</string>
-    <string name="save">Speichern</string>
-    <string name="password_account">Konto</string>
     <string name="password">Passwort</string>
     <string name="delete_password">Passwort löschen</string>
     <string name="delete_password_dialog_message">Bist du dir sicher, dass du dieses Passwort löschen willst?</string>

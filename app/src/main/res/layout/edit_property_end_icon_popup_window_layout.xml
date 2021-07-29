@@ -11,14 +11,14 @@
     android:background="@drawable/popup_window_background">
 
     <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/edit_password_property_list_item_end_icon_popup_window_visibility_button"
+        android:id="@+id/edit_property_end_icon_popup_window_visibility_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
         android:background="@android:color/transparent" />
 
     <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/edit_password_property_list_item_end_icon_popup_window_delete_button"
+        android:id="@+id/edit_property_end_icon_popup_window_delete_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"

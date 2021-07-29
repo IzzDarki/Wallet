@@ -40,8 +40,8 @@ public class CreateExampleCardService extends JobIntentService {
         final String cardCode = getString(R.string.example_card_code);
         final int cardCodeType = CardPreferenceManager.CARD_CODE_TYPE_QR;
         final boolean cardCodeTypeText = true;
-        final String cardID = getString(R.string.example_card_card_id);
         final @ColorInt int cardColor = getResources().getColor(R.color.exampleCardColor);
+        final String cardIDValue = getString(R.string.example_card_card_id);
 
         // delete old images if present
         if (CardPreferenceManager.readCardFrontImagePath(this, ID) != null)
@@ -67,8 +67,15 @@ public class CreateExampleCardService extends JobIntentService {
         CardPreferenceManager.writeCardCode(this, ID, cardCode);
         CardPreferenceManager.writeCardCodeType(this, ID, cardCodeType);
         CardPreferenceManager.writeCardCodeTypeText(this, ID, cardCodeTypeText);
-        CardPreferenceManager.writeCardID(this, ID, cardID);
         CardPreferenceManager.writeCardColor(this, ID, cardColor);
+
+        // add card id as a property // TODO test this
+        int propertyID = 1; // This is the only property id for the example card
+        Utility.PreferenceArrayInt propertyIDs = new Utility.PreferenceArrayInt();
+        propertyIDs.add(propertyID);
+        CardPreferenceManager.writeCardPropertyIds(this, ID, propertyIDs);
+        CardPreferenceManager.writeCardPropertyName(this, ID, propertyID, getString(R.string.card_id));
+        CardPreferenceManager.writeCardPropertyValue(this, ID, propertyID, cardIDValue);
 
         CardPreferenceManager.writeCardFrontImage(this, ID, frontImageFile.getAbsolutePath());
         CardPreferenceManager.writeCardBackImage(this, ID, backImageFile.getAbsolutePath());

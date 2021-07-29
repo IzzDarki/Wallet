@@ -9,7 +9,6 @@
         android:title="@string/crop_image_menu_rotate_right"
         app:showAsAction="ifRoom"/>
     <item
-        android:id="@+id/crop_image_menu_flip"
         android:icon="@drawable/flip_icon"
         android:title="@string/crop_image_menu_flip"
         app:showAsAction="ifRoom">

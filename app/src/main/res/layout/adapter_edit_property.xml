@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
-    android:id="@+id/edit_password_property_text_input_layout"
+    android:id="@+id/edit_property_text_input_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/text_input_padding_bottom"
@@ -15,7 +15,7 @@
     app:startIconDrawable="@drawable/edit_icon_30dp">
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/edit_password_property_text_input_edit_text"
+        android:id="@+id/edit_property_text_input_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"

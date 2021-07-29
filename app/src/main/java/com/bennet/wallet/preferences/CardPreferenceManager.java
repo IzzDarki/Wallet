@@ -28,12 +28,14 @@ public class CardPreferenceManager {
     static protected final String PREFERENCE_CARD_CODE_TYPE = "com.bennet.wallet.cards.%d.code_type"; // int (see preference values below)
     static protected final String PREFERENCE_CARD_CODE_TYPE_TEXT = "com.bennet.wallet.cards.%d.code_type_text"; // boolean
     static protected final String PREFERENCE_CARD_ID = "com.bennet.wallet.cards.%d.id"; // String
+    static protected final String PREFERENCE_CARD_ID_SECRET = "%d.id_secret"; // boolean
     static protected final String PREFERENCE_CARD_COLOR = "com.bennet.wallet.cards.%d.color"; // @ColorInt int
     static protected final String PREFERENCE_CARD_FRONT_IMAGE = "com.bennet.wallet.cards.%d.front_image_file_path"; // String
     static protected final String PREFERENCE_CARD_BACK_IMAGE = "com.bennet.wallet.cards.%d.back_image_file_path"; // String
     static protected final String PREFERENCE_CARD_PROPERTIES_IDS = "com.bennet.wallet.cards.%d.card_properties_ids"; // String (PreferenceArrayInt)
     static protected final String PREFERENCE_CARD_PROPERTY_NAME =  "com.bennet.wallet.cards.%d.%d.name"; // String
     static protected final String PREFERENCE_CARD_PROPERTY_VALUE = "com.bennet.wallet.cards.%d.%d.value"; // String
+    static protected final String PREFERENCE_CARD_PROPERTY_SECRET = "com.bennet.wallet.cards.%d.%d.property_secret"; // boolean
 
 
     // preference values
@@ -82,7 +84,7 @@ public class CardPreferenceManager {
         }
     }
 
-    // functions
+    // region helper functions
     static public SharedPreferences getPreferences(Context context) {
         initOnce(context);
         return preferences;
@@ -118,8 +120,19 @@ public class CardPreferenceManager {
         return String.format(Locale.ENGLISH, PREFERENCE_CARD_PROPERTY_VALUE, ID, propertyID);
     }
 
+    /**
+     * Returns the preference key of the secrecy of a specific property of a specific card
+     * @param ID Id of the card
+     * @param propertyID Id of the property
+     * @return Preference key of the secrecy of the specific property of the specific card
+     */
+    static public String getPropertySecretKey(int ID, int propertyID) {
+        return String.format(Locale.ENGLISH, PREFERENCE_CARD_PROPERTY_SECRET, ID, propertyID);
+    }
+    // endregion
 
-    // read functions
+
+    // region read functions
     /**
      * Reads card name from preferences
      * @param ID Id of the card
@@ -157,12 +170,22 @@ public class CardPreferenceManager {
     }
 
     /**
-     * Reads card id from getPreferences(context). The card id is a property if the card. In contrast, the {@code ID} is the id used to identify each card uniquely in getPreferences(context).
+     * Reads card id from preferences. The card id is a property if the card. In contrast, the {@code ID} is the id used to identify each card uniquely in preferences
      * @param ID Id of the card
      * @return Card id or empty string as default value if not found in preferences
+     * @deprecated Card id doesn't exist anymore
      */
     static public String readCardID(Context context, int ID) {
         return getPreferences(context).getString(getKey(ID, PREFERENCE_CARD_ID), "");
+    }
+
+    /**
+     * Reads card id secrecy from preferences
+     * @param ID Id of the card
+     * @return `true` if card id is secret, `false` otherwise. Also `false` when not found in preferences
+     */
+    static public boolean readCardIDSecret(Context context, int ID) {
+        return getPreferences(context).getBoolean(getKey(ID, PREFERENCE_CARD_ID_SECRET), false);
     }
 
     /**
@@ -260,8 +283,19 @@ public class CardPreferenceManager {
         return getPreferences(context).getString(getPropertyValueKey(ID, propertyID), null);
     }
 
+    /**
+     * Reads if the card property should be secret. This means the text is displayed like a password (hidden)
+     * @param ID Id of the card
+     * @param propertyID ID of the property
+     * @return true if the property should be secret, false otherwise. Also false if not found in preferences
+     */
+    static public boolean readCardPropertySecret(Context context, int ID, int propertyID) {
+        return getPreferences(context).getBoolean(getPropertySecretKey(ID, propertyID), false);
+    }
+    // endregion
 
-    // write functions
+
+    // region write functions
     /**
      * Writes New card name to preferences
      * @param ID Id of the card
@@ -302,6 +336,7 @@ public class CardPreferenceManager {
      * Writes new card id to getPreferences(context). The card id is a property if the card. In contrast, the {@code ID} is the id used to identify each card uniquely in getPreferences(context).
      * @param ID Id of the card
      * @param cardID New card id
+     * @deprecated Card id doesn't exist anymore
      */
     static public void writeCardID(Context context, int ID, String cardID) {
         getPreferences(context).edit().putString(getKey(ID, PREFERENCE_CARD_ID), cardID).apply();
@@ -388,7 +423,19 @@ public class CardPreferenceManager {
     }
 
 
-    // remove functions
+    /**
+     * Writes New card property secrecy (secret or not) to preferences
+     * @param ID Id of the card
+     * @param propertyID Id of the property
+     * @param cardPropertySecret true if the property is secret, false otherwise
+     */
+    static public void writeCardPropertySecret(Context context, int ID, int propertyID, boolean cardPropertySecret) {
+        getPreferences(context).edit().putBoolean(getPropertySecretKey(ID, propertyID), cardPropertySecret).apply();
+    }
+    // endregion
+
+
+    // region remove functions
     /**
      * Removes card name from preferences
      * @param ID Id of the card
@@ -424,6 +471,7 @@ public class CardPreferenceManager {
     /**
      * Removes card id from getPreferences(context). The card id is a property if the card. In contrast, the {@code ID} is the id used to identify each card uniquely in getPreferences(context).
      * @param ID Id of the card
+     * @deprecated Card id doesn't exist anymore
      */
     static public void removeCardID(Context context, int ID) {
         getPreferences(context).edit().remove(getKey(ID, PREFERENCE_CARD_ID)).apply();
@@ -438,7 +486,7 @@ public class CardPreferenceManager {
     }
 
     /**
-     * Removes card front image from getPreferences(context). Does <b>not</b> delete the file <br>
+     * Removes card front image from preferences. Does <b>not</b> delete the file <br>
      *     Use {@link #deleteCardFrontImage(Context, int)} instead if you want to delete front image file and remove it's preferences
      * @param ID Id of the card
      */
@@ -447,7 +495,7 @@ public class CardPreferenceManager {
     }
 
     /**
-     * Removes card back image from getPreferences(context). Does <b>not</b> delete the file <br>
+     * Removes card back image from preferences. Does <b>not</b> delete the file <br>
      *     Use {@link #deleteCardBackImage(Context, int)} instead if you want to delete back image file and remove it's preferences
      * @param ID Id of the card
      */
@@ -481,8 +529,18 @@ public class CardPreferenceManager {
         getPreferences(context).edit().remove(getPropertyValueKey(ID, propertyID)).apply();
     }
 
+    /**
+     * Removes card property secrecy(secret or not) from preferences
+     * @param ID Id of the card
+     * @param propertyID Id of the property
+     */
+    static public void removeCardPropertySecret(Context context, int ID, int propertyID) {
+        getPreferences(context).edit().remove(getPropertySecretKey(ID, propertyID)).apply();
+    }
+    // endregion
 
-    // extended remove functions
+
+    // region extended remove functions
     /**
      * Deletes the front image, that is currently stored in preferences and also removes it from preferences <br>
      *     Use {@link #removeCardFrontImage(Context, int)} instead if you want to remove the front image from preferences without deleting it's file
@@ -550,7 +608,6 @@ public class CardPreferenceManager {
         removeCardCode(context, ID);
         removeCardCodeType(context, ID);
         removeCardCodeTypeText(context, ID);
-        removeCardID(context, ID);
         removeCardColor(context, ID);
         removeCardFrontImage(context, ID);
         removeCardBackImage(context, ID);
@@ -568,16 +625,16 @@ public class CardPreferenceManager {
         removeCardCode(context, ID);
         removeCardCodeType(context, ID);
         removeCardCodeTypeText(context, ID);
-        removeCardID(context, ID);
         removeCardColor(context, ID);
         deleteCardFrontImage(context, ID);
         deleteCardBackImage(context, ID);
         removeCardProperties(context, ID);
         removeFromAllCardIDs(context, ID);
     }
+    // endregion
 
 
-    // check functions
+    // region check functions
     /**
      * Checks if preferences contain a certain card property
      * @param ID Id of he card
@@ -587,9 +644,10 @@ public class CardPreferenceManager {
     static public boolean contains(Context context, int ID, String cardPropertyPreferenceKey) {
         return getPreferences(context).contains(getKey(ID, cardPropertyPreferenceKey));
     }
+    // endregion
 
 
-    // read and write all card ids
+    // region read and write all card ids
     /**
      * Reads list of all card ids from preferences
      * @return List of all card ids
@@ -632,4 +690,5 @@ public class CardPreferenceManager {
         cardIDs.remove((Integer) ID); // no need to check if cardIDs contains ID
         writeAllCardIDs(context, cardIDs);
     }
+    // endregion
 }

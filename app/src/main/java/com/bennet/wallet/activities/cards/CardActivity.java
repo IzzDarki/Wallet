@@ -45,16 +45,10 @@ public class CardActivity extends AppCompatActivity {
     protected String cardCode;
     protected int cardCodeType;
     protected boolean cardCodeTypeText;
-    protected String cardID;
     protected @ColorInt int cardColor;
 
     protected File currentFrontImage;
     protected File currentBackImage;
-
-    /**
-     * contains all the ids, that correspond to the properties of this card
-     */
-    protected PreferenceArrayInt cardPropertyIDs;
 
     // decode bitmap task
     protected static class DecodeBitmapTask extends AsyncTask<Void, Void, Bitmap> {
@@ -204,11 +198,9 @@ public class CardActivity extends AppCompatActivity {
             throw new IllegalStateException("CardActivity: missing preference: card code type");
         
         cardCodeTypeText = CardPreferenceManager.readCardCodeTypeText(this, ID);
-        cardID = CardPreferenceManager.readCardID(this, ID);
         cardColor = CardPreferenceManager.readCardColor(this, ID);
         currentFrontImage = CardPreferenceManager.readCardFrontImageFile(this, ID);
         currentBackImage = CardPreferenceManager.readCardBackImageFile(this, ID);
-        cardPropertyIDs = CardPreferenceManager.readCardPropertyIds(this, ID);
     }
 
 

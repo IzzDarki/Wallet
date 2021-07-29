@@ -129,12 +129,9 @@
     <string name="no">No</string>
     <string name="app_name">Wallet</string>
     <string name="error_occurred">An error occurred</string>
-    <string name="cancelled">Cancelled</string>
     <string name="edit">Edit</string>
     <string name="done">Done</string>
     <string name="go_ahead">go ahead</string>
-    <string name="discard">Discard</string>
-    <string name="save">Save</string>
     <string name="discard_changes">Discard changes</string>
     <string name="nothing_will_be_saved">Nothing will be saved</string>
     <string name="changes_are_not_saved">Changes are not saved</string>
@@ -199,7 +196,7 @@
     <string name="code_scanner_camera_permission_denied">Camera permission denied</string>
     <string name="author" translatable="false">Bennet</string>
     <string name="version_name_format">Version %s</string>
-    <string name="version_name" translatable="false">1.4.0-alpha</string> <!-- TODO keep this updated -->
+    <string name="version_name" translatable="false">1.4.1-alpha</string> <!-- TODO keep this updated -->
     <string name="important">Important</string>
     <string name="info">Info</string>
     <string name="mahler_is_cool">Mahler is cool!</string>
@@ -229,7 +226,6 @@
     <string name="cards">Cards</string>
     <string name="passwords">Passwords</string>
     <string name="image_decryption_failed">Image decryption failed</string>
-    <string name="password_account">Account</string>
     <string name="password">Password</string>
     <string name="delete_password">Delete password</string>
     <string name="delete_password_dialog_message">Are you sure you want to delete this password?</string>
