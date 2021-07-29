@@ -196,7 +196,7 @@
     <string name="code_scanner_camera_permission_denied">Camera permission denied</string>
     <string name="author" translatable="false">Bennet</string>
     <string name="version_name_format">Version %s</string>
-    <string name="version_name" translatable="false">1.4.1-alpha</string> <!-- TODO keep this updated -->
+    <string name="version_name" translatable="false">1.4.0-alpha.1</string> <!-- TODO keep this updated -->
     <string name="important">Important</string>
     <string name="info">Info</string>
     <string name="mahler_is_cool">Mahler is cool!</string>
