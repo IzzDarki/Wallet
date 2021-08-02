@@ -62,7 +62,7 @@
 
                     android:hint="@string/card_code"
                     app:endIconMode="custom"
-                    app:endIconDrawable="@drawable/qr_code_scan_icon">
+                    app:endIconDrawable="@drawable/icon_qr_code_scan_24dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_card_code_input"
@@ -140,7 +140,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:contentDescription="@string/create_new_card_property"
-                        app:srcCompat="@drawable/plus_icon"/>
+                        app:srcCompat="@drawable/icon_plus_24dp"/>
 
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
@@ -165,7 +165,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
-                    android:text="@string/edit_card_color_button_text"/>
+                    android:text="@string/edit_color_button_text"/>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="wrap_content"

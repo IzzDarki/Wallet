@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/delete"
-            app:srcCompat="@drawable/delete_icon_36dp"
+            app:srcCompat="@drawable/icon_delete_36dp"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="12dp"/>
 
@@ -63,7 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/choose_image_app_storage"
-            app:srcCompat="@drawable/folder_icon_36dp"
+            app:srcCompat="@drawable/icon_folder_36dp"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="12dp"/>
 
@@ -93,7 +93,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/choose_image_app_camera"
-            app:srcCompat="@drawable/camera_icon_36dp"
+            app:srcCompat="@drawable/icon_camera_plus_36dp"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="12dp"/>
 

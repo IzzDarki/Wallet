@@ -6,14 +6,14 @@
     <item
         android:id="@+id/edit_action_bar_delete"
         android:title="@string/delete"
-        android:icon="@drawable/delete_icon"
+        android:icon="@drawable/icon_delete_24dp"
         android:orderInCategory="4"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/edit_action_bar_done"
         android:title="@string/done"
-        android:icon="@drawable/done_icon"
+        android:icon="@drawable/icon_done_24dp"
         android:orderInCategory="5"
         app:showAsAction="ifRoom"/>
 </menu>

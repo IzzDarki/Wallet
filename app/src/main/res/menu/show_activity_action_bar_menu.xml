@@ -5,14 +5,14 @@
     <item
         android:id="@+id/show_card_or_password_action_bar_delete"
         android:title="@string/delete"
-        android:icon="@drawable/delete_icon"
+        android:icon="@drawable/icon_delete_24dp"
         android:orderInCategory="4"
         app:showAsAction="always"/>
 
     <item
         android:id="@+id/show_card_or_password_action_bar_edit"
         android:title="@string/edit"
-        android:icon="@drawable/edit_icon"
+        android:icon="@drawable/icon_edit_24dp"
         android:orderInCategory="5"
         app:showAsAction="always"/>
 </menu>

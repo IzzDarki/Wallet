@@ -12,7 +12,7 @@
 
     app:errorEnabled="false"
     app:endIconMode="custom"
-    app:startIconDrawable="@drawable/edit_icon_30dp">
+    app:startIconDrawable="@drawable/icon_edit_30dp">
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/edit_property_text_input_edit_text"

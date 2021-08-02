@@ -5,11 +5,11 @@
     <!-- copy paste from crop_image_menu.xml -->
     <item
         android:id="@+id/crop_image_menu_rotate_right"
-        android:icon="@drawable/rotate_right_icon"
+        android:icon="@drawable/icon_rotate_right_24dp"
         android:title="@string/crop_image_menu_rotate_right"
         app:showAsAction="ifRoom"/>
     <item
-        android:icon="@drawable/flip_icon"
+        android:icon="@drawable/icon_flip_24dp"
         android:title="@string/crop_image_menu_flip"
         app:showAsAction="ifRoom">
         <menu>
@@ -26,14 +26,14 @@
     <item
         android:id="@+id/crop_image_menu_lock_card_ration"
         android:title="@string/crop_image_menu_lock_card_ratio"
-        android:icon="@drawable/aspect_ratio_icon"
+        android:icon="@drawable/icon_aspect_ratio_24dp"
         app:showAsAction="always"/>
 
     <!-- copy paste from crop_image_menu.xml, but added icon -->
     <item
         android:id="@+id/crop_image_menu_crop"
         android:title="@string/crop_image_menu_crop"
-        android:icon="@drawable/done_icon"
+        android:icon="@drawable/icon_done_24dp"
         app:showAsAction="always"/>
 
 </menu>

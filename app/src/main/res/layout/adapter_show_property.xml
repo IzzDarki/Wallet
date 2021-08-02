@@ -59,7 +59,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/show_property_text_views_linear_layout"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/visibility_icon_30dp"
+            app:srcCompat="@drawable/icon_visibility_30dp"
             android:background="@android:color/transparent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
