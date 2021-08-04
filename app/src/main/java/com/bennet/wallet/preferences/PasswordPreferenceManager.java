@@ -3,7 +3,10 @@ package com.bennet.wallet.preferences;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKey;
 
@@ -11,6 +14,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Locale;
 
+import com.bennet.wallet.R;
 import com.bennet.wallet.utils.Utility;
 import com.bennet.wallet.utils.Utility.PreferenceArrayInt;
 
@@ -22,6 +26,7 @@ public class PasswordPreferenceManager {
 
     static protected final String PREFERENCE_PASSWORD_NAME = "%d.name"; // String
     static protected final String PREFERENCE_PASSWORD_VALUE = "%d.password"; // String
+    static protected final String PREFERENCE_PASSWORD_COLOR = "%d.color"; // @ColorInt int
     static protected final String PREFERENCE_PASSWORD_PROPERTIES_IDS = "%d.password_properties"; // String (PreferenceArrayInt)
     static protected final String PREFERENCE_PASSWORD_PROPERTY_NAME = "%d.%d.property_name"; // String
     static protected final String PREFERENCE_PASSWORD_PROPERTY_VALUE = "%d.%d.property_value"; // String
@@ -51,7 +56,7 @@ public class PasswordPreferenceManager {
     }
 
 
-    // functions
+    // region functions
     static public SharedPreferences getPreferences(Context context) {
         initOnce(context);
         return preferences;
@@ -96,8 +101,10 @@ public class PasswordPreferenceManager {
     static public String getPropertySecretKey(int ID, int propertyID) {
         return String.format(Locale.ENGLISH, PREFERENCE_PASSWORD_PROPERTY_SECRET, ID, propertyID);
     }
+    // endregion
 
-    // read functions
+
+    // region read functions
     /**
      * Reads password name from preferences
      * @param ID Id of the password
@@ -114,6 +121,15 @@ public class PasswordPreferenceManager {
      */
     static public String readPasswordValue(Context context, int ID) {
         return getPreferences(context).getString(getKey(ID, PREFERENCE_PASSWORD_VALUE), "");
+    }
+
+    /**
+     * Reads password color from preferences
+     * @param ID Id of the password
+     * @return Password color or default color ({@link R.color#passwordDefaultColor}) if not found in preferences
+     */
+    static public @ColorInt int readPasswordColor(Context context, int ID) {
+        return getPreferences(context).getInt(getKey(ID, PREFERENCE_PASSWORD_COLOR), context.getResources().getColor(R.color.passwordDefaultColor));
     }
 
     /**
@@ -135,7 +151,6 @@ public class PasswordPreferenceManager {
     static public PreferenceArrayInt readPasswordPropertyIds(Context context, int ID) {
         return new PreferenceArrayInt(readPasswordPropertyIdsString(context, ID));
     }
-
 
     /**
      * Reads password property name from preferences
@@ -166,10 +181,10 @@ public class PasswordPreferenceManager {
     static public boolean readPasswordPropertySecret(Context context, int ID, int propertyID) {
         return getPreferences(context).getBoolean(getPropertySecretKey(ID, propertyID), true);
     }
+    // endregion
 
 
-    // write functions
-
+    // region write functions
     /**
      * Writes new password name to preferences
      * @param ID Id of the password
@@ -186,6 +201,15 @@ public class PasswordPreferenceManager {
      */
     static public void writePasswordValue(Context context, int ID, String passwordValue) {
         getPreferences(context).edit().putString(getKey(ID, PREFERENCE_PASSWORD_VALUE), passwordValue).apply();
+    }
+
+    /**
+     * Writes new password color to preferences
+     * @param ID Id of the password
+     * @param passwordColor New password color
+     */
+    static public void writePasswordColor(Context context, int ID, @ColorInt int passwordColor) {
+        getPreferences(context).edit().putInt(getKey(ID, PREFERENCE_PASSWORD_COLOR), passwordColor).apply();
     }
 
     /**
@@ -226,9 +250,10 @@ public class PasswordPreferenceManager {
     static public void writePasswordPropertySecret(Context context, int ID, int propertyID, boolean passwordPropertySecret) {
         getPreferences(context).edit().putBoolean(getPropertySecretKey(ID, propertyID), passwordPropertySecret).apply();
     }
+    // endregion
 
 
-    // remove functions
+    // region remove functions
     /**
      * Removes password name from preferences
      * @param ID Id of the password
@@ -245,6 +270,13 @@ public class PasswordPreferenceManager {
         getPreferences(context).edit().remove(getKey(ID, PREFERENCE_PASSWORD_VALUE)).apply();
     }
 
+    /**
+     * Removes password color from preferences
+     * @param ID Id of the password
+     */
+    static public void removePasswordColor(Context context, int ID) {
+        getPreferences(context).edit().remove(getKey(ID, PREFERENCE_PASSWORD_COLOR)).apply();
+    }
 
     /**
      * Removes password property ids list from preferences
@@ -280,8 +312,10 @@ public class PasswordPreferenceManager {
     static public void removePasswordPropertySecret(Context context, int ID, int propertyID) {
         getPreferences(context).edit().remove(getPropertySecretKey(ID, propertyID)).apply();
     }
+    // endregion
 
-    // combined remove functions
+
+    // region combined remove functions
     /**
      * Removes password property from preferences
      * @param ID Id of the password
@@ -311,12 +345,14 @@ public class PasswordPreferenceManager {
     static public void removePassword(Context context, int ID) {
         removePasswordName(context, ID);
         removePasswordValue(context, ID);
+        removePasswordColor(context, ID);
         removePasswordProperties(context, ID);
         removeFromAllPasswordIDs(context, ID);
     }
+    // endregion
 
 
-    // read and write all password ids
+    // region read and write all password ids
     /**
      * Reads list of all password ids from preferences
      * @return List of all password ids
@@ -332,7 +368,6 @@ public class PasswordPreferenceManager {
     static public void writeAllPasswordIDs(Context context, PreferenceArrayInt allPasswordIDs) {
         getPreferences(context).edit().putString(PREFERENCE_ALL_PASSWORD_IDS, Utility.PreferenceArrayInt.toPreference(allPasswordIDs)).apply();
     }
-
 
     /**
      * Adds {@code ID} to list of all passwords ids in preferences but only if it is not yet contained<br>
@@ -360,5 +395,5 @@ public class PasswordPreferenceManager {
         passwordIDs.remove((Integer) ID); // no need to check if passwordIDs contains ID
         writeAllPasswordIDs(context, passwordIDs);
     }
-
+    // endregion
 }

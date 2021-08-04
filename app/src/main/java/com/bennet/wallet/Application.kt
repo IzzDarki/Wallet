@@ -181,6 +181,7 @@ class Application : Application() {
             // read id value
             @Suppress("DEPRECATION")
             val idValue = CardPreferenceManager.readCardID(this, cardID)
+
             if (idValue != "") {
 
                 // create new property

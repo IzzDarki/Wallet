@@ -22,7 +22,7 @@
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/icon_plus_24dp"
+        android:src="@drawable/icon_plus_48dp"
         android:contentDescription="@string/create_new_card" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

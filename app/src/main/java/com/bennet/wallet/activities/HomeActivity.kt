@@ -41,15 +41,15 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var fragmentViewPager: ViewPager2
 
+    private enum class State {
+        CardsAndPasswords, Cards, Passwords
+    }
+
     // adapter for view pager
-    class ScreenSlidePagerAdapter(fragment: FragmentActivity)
+    private inner class ScreenSlidePagerAdapter(fragment: FragmentActivity)
         : FragmentStateAdapter(fragment) {
 
         private var context: Context = fragment
-
-        enum class State {
-            CardsAndPasswords, Cards, Passwords
-        }
 
         private var state: State = (
             if (AppPreferenceManager.isAppFunctionCards(context) && AppPreferenceManager.isAppFunctionPasswords(context))
@@ -117,7 +117,7 @@ class HomeActivity : AppCompatActivity() {
         // toolbar
         setSupportActionBar(toolbar)
         val actionBar = supportActionBar
-        actionBar!!.setHomeAsUpIndicator(R.drawable.menu_icon_24dp)
+        actionBar!!.setHomeAsUpIndicator(R.drawable.icon_menu_24dp)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         // navigation drawer
@@ -146,19 +146,18 @@ class HomeActivity : AppCompatActivity() {
         }
 
         // version number text view
-        versionNumberTextView.setText(
-            String.format(
-                getString(R.string.version_name_format),
-                getString(R.string.version_name)
-            )
+        versionNumberTextView.text = String.format(
+            getString(R.string.version_name_format),
+            getString(R.string.version_name)
         )
 
         // fragment view pager
         fragmentViewPager.registerOnPageChangeCallback(object : OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                if (position == 0) bottomNavigationView.setSelectedItemId(R.id.home_bottom_navigation_menu_cards) else bottomNavigationView.setSelectedItemId(
-                    R.id.home_bottom_navigation_menu_passwords
-                )
+                if (position == 0)
+                    bottomNavigationView.selectedItemId = R.id.home_bottom_navigation_menu_cards
+                else
+                    bottomNavigationView.selectedItemId = R.id.home_bottom_navigation_menu_passwords
             }
         })
 
@@ -180,16 +179,15 @@ class HomeActivity : AppCompatActivity() {
         sideNavigationView.setCheckedItem(R.id.nav_home)
 
         // bottom navigation (could be changed when coming back from SettingsActivity)
-        if (!AppPreferenceManager.isAppFunctionCards(this) || !AppPreferenceManager.isAppFunctionPasswords(
-                this
-            )
-        ) bottomNavigationView.visibility = View.GONE else bottomNavigationView.visibility =
-            View.VISIBLE
+        if (!AppPreferenceManager.isAppFunctionCards(this) || !AppPreferenceManager.isAppFunctionPasswords(this))
+            bottomNavigationView.visibility = View.GONE
+        else
+            bottomNavigationView.visibility = View.VISIBLE
 
         // fragment view pager (reload if settings have changed)
-        val currentAdapter = fragmentViewPager.adapter as ScreenSlidePagerAdapter?
-        if (currentAdapter == null || !currentAdapter.isStateUpToDate) fragmentViewPager.adapter =
-            ScreenSlidePagerAdapter(this)
+        val currentAdapter = fragmentViewPager.adapter as? ScreenSlidePagerAdapter
+        if (currentAdapter == null || !currentAdapter.isStateUpToDate)
+            fragmentViewPager.adapter = ScreenSlidePagerAdapter(this)
     }
 
     override fun onStop() {
@@ -209,7 +207,11 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun onBottomNavigationItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.home_bottom_navigation_menu_cards) setCardsFragment() else if (item.itemId == R.id.home_bottom_navigation_menu_passwords) setPasswordsFragment() else return false
+        when (item.itemId) {
+            R.id.home_bottom_navigation_menu_cards -> setCardsFragment()
+            R.id.home_bottom_navigation_menu_passwords -> setPasswordsFragment()
+            else -> return false
+        }
         return true
     }
 

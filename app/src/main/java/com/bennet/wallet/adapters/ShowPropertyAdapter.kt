@@ -13,7 +13,7 @@ import com.bennet.wallet.utils.ItemProperty
 import com.bennet.wallet.utils.Utility
 import com.google.android.material.textview.MaterialTextView
 
-class ShowPropertyAdapter(properties: List<ItemProperty>, onTextVisibilityChanged: Utility.VoidCallback?)
+class ShowPropertyAdapter(properties: List<ItemProperty>, onTextVisibilityChanged: (() -> Unit)?)
     : RecyclerView.Adapter<ShowPropertyAdapter.ViewHolder>() {
 
     private var properties = properties
@@ -32,12 +32,11 @@ class ShowPropertyAdapter(properties: List<ItemProperty>, onTextVisibilityChange
         init {
             visibilityToggleButton.setOnClickListener {
                 val isCurrentlyHidden: Boolean = isTextHidden
-                onTextVisibilityChanged?.callback()
+                onTextVisibilityChanged?.invoke()
                 if (isCurrentlyHidden)
                     setValueHidden(false)
             }
         }
-
 
         /**
          * Sets the value view to be either hidden (password dots, not selectable) or not hidden (real text, selectable) and also sets the according visibility button drawable (visibility or visibility off)
@@ -55,7 +54,7 @@ class ShowPropertyAdapter(properties: List<ItemProperty>, onTextVisibilityChange
                 }
                 valueView.setTextIsSelectable(false)
                 visibilityToggleButton.setImageDrawable(
-                    AppCompatResources.getDrawable(context, R.drawable.visibility_off_icon_30dp)
+                    AppCompatResources.getDrawable(context, R.drawable.icon_visibility_off_30dp)
                 )
             }
             else {
@@ -63,7 +62,7 @@ class ShowPropertyAdapter(properties: List<ItemProperty>, onTextVisibilityChange
                 valueView.text = properties[adapterPosition].value
                 valueView.setTextIsSelectable(true)
                 visibilityToggleButton.setImageDrawable(
-                    AppCompatResources.getDrawable(context, R.drawable.visibility_icon_30dp)
+                    AppCompatResources.getDrawable(context, R.drawable.icon_visibility_30dp)
                 )
             }
         }

@@ -20,8 +20,7 @@ class ShowPasswordActivity : AppCompatActivity() {
 
     // region intent extras
     companion object {
-        const val EXTRA_PASSWORD_ID =
-            "show_password.extra_password_id" // int (EditPasswordActivity matches this)
+        const val EXTRA_PASSWORD_ID = "show_password.extra_password_id" // int (EditPasswordActivity matches this)
     } // endregion
 
 
@@ -127,7 +126,7 @@ class ShowPasswordActivity : AppCompatActivity() {
 
     // region action bar and menu
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.show_card_or_password_action_bar_menu, menu)
+        menuInflater.inflate(R.menu.show_activity_action_bar_menu, menu)
         return true
     }
 

@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bennet.wallet.preferences.AppPreferenceManager;
 import com.bennet.wallet.R;
-import com.bennet.wallet.adapters.SmallCardAdapter;
+import com.bennet.wallet.adapters.CardAdapter;
 import com.google.android.material.appbar.MaterialToolbar;
 
 import com.theartofdev.edmodo.cropper.CropImageView; // Apache License 2.0 http://www.apache.org/licenses/LICENSE-2.0.txt
@@ -161,7 +161,7 @@ public class CropActivity extends AppCompatActivity implements CropImageView.OnC
 
     protected void lockCardRatio(boolean shouldLock) {
         if (shouldLock) {
-            cropImageView.setAspectRatio(1000, (int) (1000 * SmallCardAdapter.cardWidthToHeightRatio));
+            cropImageView.setAspectRatio(1000, (int) (1000 * CardAdapter.cardWidthToHeightRatio));
             cropImageView.setFixedAspectRatio(true);
             ratioLocked = true;
         }

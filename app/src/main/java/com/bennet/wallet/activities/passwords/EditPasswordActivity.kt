@@ -12,11 +12,14 @@ import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
+import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bennet.colorpickerview.dialog.ColorPickerDialogFragment
 import com.bennet.wallet.R
 import com.bennet.wallet.activities.HomeActivity
 import com.bennet.wallet.adapters.EditPropertyAdapter
@@ -27,15 +30,18 @@ import com.bennet.wallet.utils.Utility
 import com.bennet.wallet.utils.Utility.IDGenerator
 import com.bennet.wallet.utils.Utility.PreferenceArrayInt
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
-class EditPasswordActivity : AppCompatActivity() {
+class EditPasswordActivity
+    : AppCompatActivity(), ColorPickerDialogFragment.ColorPickerDialogListener {
 
-    // region intent extras
+    // region static cast val
     companion object {
         const val EXTRA_PASSWORD_ID = ShowPasswordActivity.EXTRA_PASSWORD_ID // int
         const val EXTRA_CREATE_NEW_PASSWORD = "edit_password.create_new_password" // boolean
+        const val PICK_COLOR_DIALOG_ID = 0
     }
     // endregion
 
@@ -45,6 +51,7 @@ class EditPasswordActivity : AppCompatActivity() {
     private lateinit var nameInputEditText: TextInputEditText
     private lateinit var passwordInputLayout: TextInputLayout
     private lateinit var passwordInputEditText: TextInputEditText
+    private lateinit var passwordColorButton: MaterialButton
     private lateinit var propertiesRecyclerView: RecyclerView
     private lateinit var createNewPasswordPropertyButton: LinearLayoutCompat
     // endregion
@@ -54,6 +61,7 @@ class EditPasswordActivity : AppCompatActivity() {
     private var ID = 0
     private lateinit var passwordName: String
     private lateinit var passwordValue: String
+    private var passwordColor: Int = 0
     private var passwordProperties: MutableList<ItemProperty> = mutableListOf()
     // endregion
 
@@ -74,6 +82,7 @@ class EditPasswordActivity : AppCompatActivity() {
         nameInputEditText = findViewById(R.id.edit_password_name_edit_text)
         passwordInputLayout = findViewById(R.id.edit_password_password_input_layout)
         passwordInputEditText = findViewById(R.id.edit_password_password_edit_text)
+        passwordColorButton = findViewById(R.id.edit_password_color_button)
         propertiesRecyclerView = findViewById(R.id.edit_password_recycler_view)
         createNewPasswordPropertyButton = findViewById(R.id.edit_password_create_new_password_property_button)
 
@@ -127,7 +136,11 @@ class EditPasswordActivity : AppCompatActivity() {
         }
 
         // create new password property button
-        createNewPasswordPropertyButton.setOnClickListener { _: View? -> addNewProperty() }
+        createNewPasswordPropertyButton.setOnClickListener { addNewProperty() }
+
+        // password color
+        passwordColorButton.setOnClickListener { pickColor() }
+        updateColorButtonColor()
 
         // recycler view
         propertiesRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -145,14 +158,15 @@ class EditPasswordActivity : AppCompatActivity() {
         check(ID != -1) { "PasswordActivity: missing intent extra: ID" }
         passwordName = PasswordPreferenceManager.readPasswordName(this, ID)
         passwordValue = PasswordPreferenceManager.readPasswordValue(this, ID)
-        val passwordPropertyIDs: List<Int> =
-            PasswordPreferenceManager.readPasswordPropertyIds(this, ID)
+        passwordColor = PasswordPreferenceManager.readPasswordColor(this, ID)
+
+        val passwordPropertyIDs: List<Int> = PasswordPreferenceManager.readPasswordPropertyIds(this, ID)
         for (propertyID in passwordPropertyIDs) {
             passwordProperties.add(ItemProperty(
-                propertyID = ItemProperty.INVALID_ID,
+                propertyID = propertyID,
                 name = PasswordPreferenceManager.readPasswordPropertyName(this, ID, propertyID),
                 value = PasswordPreferenceManager.readPasswordPropertyValue(this, ID, propertyID),
-                secret = PasswordPreferenceManager.readPasswordPropertySecret(this, ID, propertyID)
+                secret = PasswordPreferenceManager.readPasswordPropertySecret(this, ID, propertyID),
             ))
         }
     }
@@ -161,23 +175,24 @@ class EditPasswordActivity : AppCompatActivity() {
         ID = generateNewPasswordID()
         passwordName = getString(R.string.new_password)
         passwordValue = "" // init as empty
+        passwordColor = resources.getColor(R.color.cardDefaultColor)
 
         // init default properties
         passwordProperties.add(
             ItemProperty(
-                propertyID = ItemProperty.INVALID_ID,
                 name = getString(R.string.username),
                 value = "",
-                secret = false
+                secret = false,
+                propertiesNeededToCreateNewID = passwordProperties
             )
         )
         // password username
         passwordProperties.add(
             ItemProperty(
-                propertyID = ItemProperty.INVALID_ID,
                 name = getString(R.string.email_address),
                 value = "",
-                secret = false
+                secret = false,
+                propertiesNeededToCreateNewID = passwordProperties
             )
         ) // email address
         passwordInputEditText.imeOptions = EditorInfo.IME_ACTION_NEXT
@@ -186,10 +201,10 @@ class EditPasswordActivity : AppCompatActivity() {
     private fun addNewProperty() {
         passwordProperties.add(
             ItemProperty(
-                propertyID = ItemProperty.INVALID_ID,
                 name = getString(R.string.new_password_property_name),
                 value = "",
-                secret = false
+                secret = false,
+                propertiesNeededToCreateNewID = passwordProperties
             )
         )
         propertiesRecyclerView.adapter!!.notifyItemInserted(passwordProperties.size - 1)
@@ -251,6 +266,7 @@ class EditPasswordActivity : AppCompatActivity() {
                 }
                 .setNegativeButton(android.R.string.cancel) { dialog: DialogInterface, _: Int ->
                     dialog.cancel()
+                    hasBeenModified = false // reset to false, on next call to requestCancel hasBeenModified will be evaluated again
                 }
                 .show()
             return false
@@ -268,7 +284,7 @@ class EditPasswordActivity : AppCompatActivity() {
 
     // region action bar and menu
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.edit_action_bar_menu, menu)
+        menuInflater.inflate(R.menu.edit_activity_action_bar_menu, menu)
         return true
     }
 
@@ -304,6 +320,39 @@ class EditPasswordActivity : AppCompatActivity() {
     // endregion
 
 
+    // region color and color picker
+    private fun pickColor() {
+        val dialogFragment = ColorPickerDialogFragment.newInstance(
+            PICK_COLOR_DIALOG_ID,
+            null,
+            null,
+            passwordColor,
+            false
+        )
+        dialogFragment.setStyle(DialogFragment.STYLE_NORMAL, 0)
+        dialogFragment.show(supportFragmentManager, "d")
+    }
+
+    override fun onColorSelected(dialogId: Int, @ColorInt color: Int) {
+        if (dialogId == PICK_COLOR_DIALOG_ID) {
+            hasBeenModified = true
+            passwordColor = color
+            updateColorButtonColor()
+        }
+    }
+
+    override fun onDialogDismissed(dialogId: Int) {}
+
+    private fun updateColorButtonColor() {
+        passwordColorButton.setBackgroundColor(passwordColor)
+        if (Utility.isColorDark(passwordColor))
+            passwordColorButton.setTextColor(resources.getColor(R.color.onDarkTextColor))
+        else
+            passwordColorButton.setTextColor(resources.getColor(R.color.onLightTextColor))
+    }
+    // endregion
+
+
     // region helpers
     private fun cancelDirectly() {
         if (isCreateNewPasswordIntent) {
@@ -331,6 +380,7 @@ class EditPasswordActivity : AppCompatActivity() {
         PasswordPreferenceManager.addToAllPasswordIDs(this, ID) // This should be fine. At this moment no other process should modify this preference list (Note that this only adds the ID if it is not yet contained in the list)
         PasswordPreferenceManager.writePasswordName(this, ID, passwordName)
         PasswordPreferenceManager.writePasswordValue(this, ID, passwordValue)
+        PasswordPreferenceManager.writePasswordColor(this, ID, passwordColor)
 
         val currentPropertyIDs = PreferenceArrayInt() // Collects all current propertyIDs to write into preferences
         PasswordPreferenceManager.removePasswordProperties(this, ID)

@@ -11,7 +11,9 @@
 
   <color name="barcodeForegroundColor">#000000</color>
   <color name="barcodeBackgroundColor">#ffffff</color>
+  <color name="cardViewOutlineColor">#808080</color>
   <color name="cardDefaultColor">#07ec76</color>
+  <color name="passwordDefaultColor">#ec0776</color>
   <color name="exampleCardColor">#ffcf00</color>
 
   <color name="background_floating_material">@color/background_floating_material_dark</color>

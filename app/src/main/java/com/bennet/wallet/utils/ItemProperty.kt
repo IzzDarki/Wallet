@@ -1,5 +1,6 @@
 package com.bennet.wallet.utils
 
+import android.util.Log
 import java.util.*
 
 class ItemProperty {

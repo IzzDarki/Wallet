@@ -132,6 +132,7 @@
     <string name="edit">Edit</string>
     <string name="done">Done</string>
     <string name="go_ahead">go ahead</string>
+    <string name="sort">Sort</string>
     <string name="discard_changes">Discard changes</string>
     <string name="nothing_will_be_saved">Nothing will be saved</string>
     <string name="changes_are_not_saved">Changes are not saved</string>
@@ -172,7 +173,7 @@
     <string name="there_are_still_errors">There are still errors</string>
     <string name="new_card">New card</string>
     <string name="delete">Delete</string>
-    <string name="edit_card_color_button_text">Color</string>
+    <string name="edit_color_button_text">Color</string>
     <string name="edit_card_auto_color_button_text">Auto</string>
     <string name="crop_image_menu_lock_card_ratio">Lock Aspect ratio to card format</string>
     <string name="cancel_image_selection_title">Cancel image selection</string>

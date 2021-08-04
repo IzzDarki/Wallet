@@ -18,19 +18,18 @@ import com.bennet.wallet.R
 import com.bennet.wallet.preferences.AppPreferenceManager
 import com.bennet.wallet.utils.ItemProperty
 import com.bennet.wallet.utils.Utility
-import com.bennet.wallet.utils.Utility.VoidCallback
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import java.util.*
 
-class EditPropertyAdapter(properties: MutableList<ItemProperty>, onPropertyRemovedListener: VoidCallback?)
+class EditPropertyAdapter(properties: MutableList<ItemProperty>, onPropertyRemovedListener: (() -> Unit)?)
     : RecyclerView.Adapter<EditPropertyAdapter.ViewHolder>() {
 
     // properties
     private var properties: MutableList<ItemProperty> = properties
 
-    private var onPropertyRemovedListener: VoidCallback? = onPropertyRemovedListener
+    private var onPropertyRemovedListener: (() -> Unit)? = onPropertyRemovedListener
     private var cursorToReset = Pair(-1, -1) // first: position in adapter (-1 = none), second: cursor position
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -38,7 +37,7 @@ class EditPropertyAdapter(properties: MutableList<ItemProperty>, onPropertyRemov
         var textInputEditText: TextInputEditText = itemView.findViewById(R.id.edit_property_text_input_edit_text)
 
         init {
-            textInputLayout.setStartIconOnClickListener { view: View? ->
+            textInputLayout.setStartIconOnClickListener {
                 onStartIconClick()
             }
             textInputLayout.setEndIconOnClickListener { view: View ->
@@ -110,7 +109,7 @@ class EditPropertyAdapter(properties: MutableList<ItemProperty>, onPropertyRemov
                 setVisibilityImageButton(visibilityButton)
                 Utility.hideKeyboard(itemView) // hide keyboard, because otherwise it closes and reopens when popup window appears (idk why)
                 textInputEditText.requestFocus()
-                textInputLayout.setEndIconDrawable(R.drawable.expand_less_icon_30dp)
+                textInputLayout.setEndIconDrawable(R.drawable.icon_expand_less_30dp)
                 val popupWindow = PopupWindow(
                     popupView,
                     ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -128,7 +127,7 @@ class EditPropertyAdapter(properties: MutableList<ItemProperty>, onPropertyRemov
                     popupWindow.dismiss()
                 }
                 popupWindow.setOnDismissListener {
-                    textInputLayout.setEndIconDrawable(R.drawable.expand_more_icon_30dp)
+                    textInputLayout.setEndIconDrawable(R.drawable.icon_expand_more_30dp)
                 }
             }
             else deleteProperty()
@@ -136,7 +135,7 @@ class EditPropertyAdapter(properties: MutableList<ItemProperty>, onPropertyRemov
 
         private fun deleteProperty() {
             val position = adapterPosition
-            onPropertyRemovedListener?.callback()
+            onPropertyRemovedListener?.invoke()
             properties.removeAt(position)
             notifyItemRemoved(position)
             notifyItemRangeChanged(position, properties.size - position)
@@ -145,9 +144,9 @@ class EditPropertyAdapter(properties: MutableList<ItemProperty>, onPropertyRemov
         // helpers
         private fun setVisibilityImageButton(visibilityButton: ImageButton) {
             if (isTextHidden)
-                visibilityButton.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.visibility_icon_30dp))
+                visibilityButton.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icon_visibility_30dp))
             else
-                visibilityButton.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.visibility_off_icon_30dp))
+                visibilityButton.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icon_visibility_off_30dp))
         }
 
         private fun toggleTextVisibility() {
@@ -192,10 +191,10 @@ class EditPropertyAdapter(properties: MutableList<ItemProperty>, onPropertyRemov
         // text hidden mode, end icon expand (dropdown) for both visibility and delete icons
         if (properties[position].secret) {
             holder.textInputEditText.inputType = Utility.inputTypeTextHiddenPassword
-            holder.textInputLayout.setEndIconDrawable(R.drawable.expand_more_icon_30dp)
+            holder.textInputLayout.setEndIconDrawable(R.drawable.icon_expand_more_30dp)
         } else {
             holder.textInputEditText.inputType = Utility.inputTypeTextNormal
-            holder.textInputLayout.setEndIconDrawable(R.drawable.delete_icon_30dp)
+            holder.textInputLayout.setEndIconDrawable(R.drawable.icon_delete_30dp)
         }
         holder.textInputLayout.hint = properties[position].name
         holder.textInputEditText.setText(properties[position].value)

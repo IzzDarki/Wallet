@@ -28,7 +28,6 @@ import com.bennet.wallet.activities.*
 import com.bennet.wallet.adapters.EditPropertyAdapter
 import com.bennet.wallet.preferences.AppPreferenceManager
 import com.bennet.wallet.preferences.CardPreferenceManager
-import com.bennet.wallet.preferences.PasswordPreferenceManager
 import com.bennet.wallet.services.CreateExampleCardService
 import com.bennet.wallet.utils.ItemProperty
 import com.bennet.wallet.utils.Utility
@@ -48,12 +47,13 @@ import java.security.GeneralSecurityException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class EditCardActivity : CardActivity(), ColorPickerDialogFragment.ColorPickerDialogListener {
+class EditCardActivity
+    : CardActivity(), ColorPickerDialogFragment.ColorPickerDialogListener {
 
     // region static const val
     companion object {
         const val EXTRA_CREATE_NEW_CARD = "com.bennet.wallet.edit_card_activity.create_new_card"
-        const val PICK_COLOR_ID = 0
+        const val PICK_COLOR_DIALOG_ID = 0
     }
     // endregion
 
@@ -349,6 +349,7 @@ class EditCardActivity : CardActivity(), ColorPickerDialogFragment.ColorPickerDi
                 }
                 .setNegativeButton(android.R.string.cancel) { dialog: DialogInterface, _: Int ->
                     dialog.cancel()
+                    hasBeenModified = false // reset to false, on next call to requestCancel hasBeenModified will be evaluated again
                 }
                 .show()
             return false
@@ -444,7 +445,7 @@ class EditCardActivity : CardActivity(), ColorPickerDialogFragment.ColorPickerDi
 
     // region action bar menu
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.edit_action_bar_menu, menu)
+        menuInflater.inflate(R.menu.edit_activity_action_bar_menu, menu)
         return true
     }
 
@@ -452,7 +453,8 @@ class EditCardActivity : CardActivity(), ColorPickerDialogFragment.ColorPickerDi
         if (item.itemId == R.id.edit_action_bar_done) {  // finish if input can be saved (no input errors)
             saveAndShowCard()
             return true
-        } else if (item.itemId == R.id.edit_action_bar_delete) {
+        }
+        else if (item.itemId == R.id.edit_action_bar_delete) {
             AlertDialog.Builder(this)
                 .setTitle(R.string.delete_card)
                 .setMessage(R.string.delete_card_dialog_message)
@@ -574,7 +576,7 @@ class EditCardActivity : CardActivity(), ColorPickerDialogFragment.ColorPickerDi
     // region color and color picker
     private fun pickColor() {
         val dialogFragment = ColorPickerDialogFragment.newInstance(
-            PICK_COLOR_ID,
+            PICK_COLOR_DIALOG_ID,
             null,
             null,
             cardColor,
@@ -589,7 +591,7 @@ class EditCardActivity : CardActivity(), ColorPickerDialogFragment.ColorPickerDi
     }
 
     override fun onColorSelected(dialogId: Int, @ColorInt color: Int) {
-        if (dialogId == PICK_COLOR_ID) {
+        if (dialogId == PICK_COLOR_DIALOG_ID) {
             hasBeenModified = true
             cardColor = color
             updateColorButtonColor()
@@ -619,7 +621,7 @@ class EditCardActivity : CardActivity(), ColorPickerDialogFragment.ColorPickerDi
         else
             Toast.makeText(this, R.string.no_images_to_calc_color, Toast.LENGTH_SHORT).show()
     }
-    // endregion^
+    // endregion
 
 
     // region read and check input fields
@@ -646,7 +648,7 @@ class EditCardActivity : CardActivity(), ColorPickerDialogFragment.ColorPickerDi
         if (cardNameInputLayout.error != null)
             return false
 
-        if (cardName != PasswordPreferenceManager.readPasswordName(this, ID))
+        if (cardName != CardPreferenceManager.readCardName(this, ID))
             hasBeenModified = true
         return true
     }
@@ -679,11 +681,11 @@ class EditCardActivity : CardActivity(), ColorPickerDialogFragment.ColorPickerDi
             holder?.readValue()
 
             val property: ItemProperty = cardProperties[position]
-            if (property.name != PasswordPreferenceManager.readPasswordPropertyName(this, ID, property.propertyID))
+            if (property.name != CardPreferenceManager.readCardPropertyName(this, ID, property.propertyID))
                 hasBeenModified = true // This accounts for newly added properties (because preference manager returns null string)
-            if (property.value != PasswordPreferenceManager.readPasswordPropertyValue(this, ID, property.propertyID))
+            if (property.value != CardPreferenceManager.readCardPropertyValue(this, ID, property.propertyID))
                 hasBeenModified = true
-            if (property.secret != PasswordPreferenceManager.readPasswordPropertySecret(this, ID, property.propertyID))
+            if (property.secret != CardPreferenceManager.readCardPropertySecret(this, ID, property.propertyID))
                 hasBeenModified = true
         }
     }
@@ -996,8 +998,8 @@ class EditCardActivity : CardActivity(), ColorPickerDialogFragment.ColorPickerDi
     }
 
     private fun generateNewCardID(): Int {
-        val passwordIDs: List<Int> = PasswordPreferenceManager.readAllPasswordIDs(this) // this is fine because there can't be an unsaved password with an unsaved ID at this moment
-        return IDGenerator(passwordIDs).generateID()
+        val cardIDs: List<Int> = CardPreferenceManager.readAllCardIDs(this) // this is fine because there can't be an unsaved card with an unsaved ID at this moment
+        return IDGenerator(cardIDs).generateID()
     }
 
     private fun makeMahlerCard() {
