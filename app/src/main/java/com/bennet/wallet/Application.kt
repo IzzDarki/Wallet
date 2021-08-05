@@ -7,6 +7,7 @@ import androidx.preference.PreferenceManager
 import androidx.security.crypto.EncryptedFile
 import androidx.security.crypto.MasterKey
 import com.bennet.wallet.activities.SettingsActivity
+import com.bennet.wallet.preferences.AppPreferenceManager
 import com.bennet.wallet.preferences.CardPreferenceManager
 import com.bennet.wallet.utils.Utility
 import java.io.*
@@ -21,13 +22,13 @@ class Application : Application() {
 
     private fun setThemeFromPreferences() {
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_UNSPECIFIED) {
-            val valueString = PreferenceManager.getDefaultSharedPreferences(this)
-                .getString(getString(R.string.preferences_theme_key), null)
+            val valueString = AppPreferenceManager.getAppDarkMode(this)
 
             val value =
                 if (valueString == null)
                     AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-                else SettingsActivity.SettingsFragment.themePreferenceEntryValueToInt(this, valueString)
+                else
+                    SettingsActivity.SettingsFragment.themePreferenceEntryValueToInt(this, valueString)
 
             AppCompatDelegate.setDefaultNightMode(value)
         }

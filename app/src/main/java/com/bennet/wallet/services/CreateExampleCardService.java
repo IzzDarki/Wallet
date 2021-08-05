@@ -40,7 +40,7 @@ public class CreateExampleCardService extends JobIntentService {
         final String cardCode = getString(R.string.example_card_code);
         final int cardCodeType = CardPreferenceManager.CARD_CODE_TYPE_QR;
         final boolean cardCodeTypeText = true;
-        final @ColorInt int cardColor = getResources().getColor(R.color.exampleCardColor);
+        final @ColorInt int cardColor = getResources().getColor(R.color.example_card_color);
         final String cardIDValue = getString(R.string.example_card_card_id);
 
         // delete old images if present
@@ -69,7 +69,7 @@ public class CreateExampleCardService extends JobIntentService {
         CardPreferenceManager.writeCardCodeTypeText(this, ID, cardCodeTypeText);
         CardPreferenceManager.writeCardColor(this, ID, cardColor);
 
-        // add card id as a property // TODO test this
+        // add card id as a property
         int propertyID = 1; // This is the only property id for the example card
         Utility.PreferenceArrayInt propertyIDs = new Utility.PreferenceArrayInt();
         propertyIDs.add(propertyID);

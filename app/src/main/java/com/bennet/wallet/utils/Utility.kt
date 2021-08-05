@@ -11,6 +11,7 @@ import android.content.Context
 import android.widget.EditText
 import kotlin.jvm.JvmOverloads
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.graphics.Color
 import android.text.InputType
 import android.util.Log
@@ -220,6 +221,47 @@ object Utility {
     @JvmStatic
     fun areColorsSimilar(@ColorInt color1: Int, @ColorInt color2: Int): Boolean {
         return getRelativeColorDistance(color1, color2) < 0.1
+    }
+
+    @JvmStatic
+    @ColorInt
+    fun getLighterColor(@ColorInt color: Int): Int {
+        val factor = 0.4
+
+        val newRed = (255 - color.red) * factor + color.red
+        val newGreen = (255 - color.green) * factor + color.green
+        val newBlue = (255 - color.blue) * factor + color.blue
+        return makeRGB(
+            0xff,
+            newRed.toInt(),
+            newGreen.toInt(),
+            newBlue.toInt()
+        )
+    }
+
+    @JvmStatic
+    @ColorInt
+    fun getDarkerColor(@ColorInt color: Int): Int {
+        val factor = 1 - 0.4
+
+        val newRed = color.red * factor
+        val newGreen = color.green * factor
+        val newBlue = color.blue * factor
+        return makeRGB(
+            0xff,
+            newRed.toInt(),
+            newGreen.toInt(),
+            newBlue.toInt()
+        )
+    }
+
+    @JvmStatic
+    fun isUsingNightModeResources(context: Context): Boolean {
+        return when (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+            Configuration.UI_MODE_NIGHT_YES -> true
+            Configuration.UI_MODE_NIGHT_NO -> false
+            else -> true // just guessing
+        }
     }
 
     @JvmStatic

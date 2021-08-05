@@ -2,7 +2,6 @@ package com.bennet.wallet.adapters
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import com.bennet.wallet.utils.CardOrPasswordPreviewData
 import com.google.android.material.card.MaterialCardView
@@ -63,7 +62,7 @@ class CardAdapter(cards: List<CardOrPasswordPreviewData>)
         ) {
             // draw outline
             holder.cardView.strokeWidth = 4
-            holder.cardView.strokeColor = context.resources.getColor(R.color.cardViewOutlineColor)
+            holder.cardView.strokeColor = context.resources.getColor(R.color.card_view_outline_color)
         } else {
             // remove outline
             holder.cardView.strokeWidth = 0
@@ -71,9 +70,9 @@ class CardAdapter(cards: List<CardOrPasswordPreviewData>)
 
         // text color
         if (Utility.isColorDark(cards[pos].color))
-            holder.textView.setTextColor(context.resources.getColor(R.color.onDarkTextColor))
+            holder.textView.setTextColor(context.resources.getColor(R.color.on_dark_text_color))
         else
-            holder.textView.setTextColor(context.resources.getColor(R.color.onLightTextColor))
+            holder.textView.setTextColor(context.resources.getColor(R.color.on_light_text_color))
 
         // show card on click
         holder.cardView.setOnClickListener {

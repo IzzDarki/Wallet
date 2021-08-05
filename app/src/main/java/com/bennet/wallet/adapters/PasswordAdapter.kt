@@ -1,13 +1,12 @@
 package com.bennet.wallet.adapters
 
 import android.content.Intent
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
 import androidx.recyclerview.selection.ItemDetailsLookup
-import androidx.recyclerview.selection.ItemKeyProvider
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.RecyclerView
 import com.bennet.wallet.R
@@ -44,8 +43,29 @@ class PasswordAdapter(passwords: List<CardOrPasswordPreviewData>)
         }
 
         fun makeSelected() {
-            cardView.strokeWidth = 6
-            cardView.strokeColor = TODO("")
+            val context = cardView.context
+            val strokeColor = ContextCompat.getColor(context, R.color.card_view_outline_color_black_or_white)
+            val cardSelectedColor =
+                if (Utility.isUsingNightModeResources(context))
+                    Utility.getDarkerColor(passwords[adapterPosition].color)
+                else
+                    Utility.getLighterColor(passwords[adapterPosition].color)
+
+
+            cardView.setCardBackgroundColor(cardSelectedColor)
+            cardView.strokeWidth = 12
+
+            // check if stroke color and card color are similar
+            if (!Utility.areColorsSimilar(strokeColor, cardSelectedColor))
+                cardView.strokeColor = strokeColor
+            else {
+                // if they are similar, use normal outline color instead
+                // this should never happen, because in dark mode, the card color gets darker, so that white cards should be
+                // dark enough to be different than the white outline color
+                // and in light mode the other way round
+                // still keep this here for some weird scenarios or future changes
+                cardView.strokeColor = ContextCompat.getColor(context, R.color.card_view_outline_color)
+            }
         }
 
         // needed for selection
@@ -80,7 +100,7 @@ class PasswordAdapter(passwords: List<CardOrPasswordPreviewData>)
         ) {
             // draw outline
             holder.cardView.strokeWidth = 4
-            holder.cardView.strokeColor = context.resources.getColor(R.color.cardViewOutlineColor)
+            holder.cardView.strokeColor = context.resources.getColor(R.color.card_view_outline_color)
         } else {
             // remove outline
             holder.cardView.strokeWidth = 0
@@ -88,9 +108,9 @@ class PasswordAdapter(passwords: List<CardOrPasswordPreviewData>)
 
         // text color
         if (Utility.isColorDark(passwords[pos].color))
-            holder.textView.setTextColor(context.resources.getColor(R.color.onDarkTextColor))
+            holder.textView.setTextColor(context.resources.getColor(R.color.on_dark_text_color))
         else
-            holder.textView.setTextColor(context.resources.getColor(R.color.onLightTextColor))
+            holder.textView.setTextColor(context.resources.getColor(R.color.on_light_text_color))
 
         if (selectionTracker.isSelected(passwords[pos].ID.toLong()))
             holder.makeSelected()

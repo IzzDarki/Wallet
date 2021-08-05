@@ -24,6 +24,7 @@ import com.bennet.wallet.utils.MultiSelectItemDetailsLookup
 import com.bennet.wallet.utils.StableIDKeyProvider
 import com.bennet.wallet.utils.Utility.downUntil
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import org.jetbrains.annotations.TestOnly
 import java.util.*
 import kotlin.math.max
 import kotlin.math.min
@@ -124,8 +125,8 @@ class HomePasswordsFragment()
 
         // plus button
         plusButton.setOnClickListener {
-            checkIfViewHoldersAreCorrect()
-            // TODO createNewPassword()
+            createNewPassword()
+            checkIfViewHoldersAreCorrect() // TODO remove check
         }
     }
 
@@ -227,9 +228,11 @@ class HomePasswordsFragment()
             .contains(true)
     }
 
+    @Deprecated("just for test")
+    @TestOnly
     private fun checkIfViewHoldersAreCorrect() {
         for (i in passwords.indices) {
-            val viewHolderName = (passwordsRecyclerView.findViewHolderForAdapterPosition(i) as PasswordAdapter.ViewHolder).textView.text
+            val viewHolderName = (passwordsRecyclerView.findViewHolderForAdapterPosition(i) as? PasswordAdapter.ViewHolder)?.textView?.text
             if (passwords[i].name != viewHolderName)
                     Log.e("asdf", "Wrong view holder at pos $i: real = ${passwords[i].name} fail = $viewHolderName")
         }

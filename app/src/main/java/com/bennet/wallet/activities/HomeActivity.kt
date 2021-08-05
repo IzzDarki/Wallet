@@ -2,10 +2,7 @@ package com.bennet.wallet.activities
 
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
-import android.os.Handler
-import android.os.PersistableBundle
-import android.os.ResultReceiver
+import android.os.*
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -246,23 +243,18 @@ class HomeActivity : AppCompatActivity() {
 
     private fun createExampleCard() {
         val intent = Intent(this, CreateExampleCardService::class.java)
-        CreateExampleCardService.enqueueWork(this, intent, object : ResultReceiver(Handler()) {
-            override fun onReceiveResult(resultCode: Int, resultData: Bundle) {
-                if (resultCode == RESULT_OK) {
-                    val fragment = supportFragmentManager.findFragmentByTag("f0") // f0 is the Tag of the view at position 0 in the fragmentViewPager // this could be a cause for bugs in the future
-                    if (fragment is HomeCardsFragment) // also checks null
-                        fragment.updateCards()
-                    else if (fragment == null)
-                        Log.e("WalletImportant", "From: HomeActivity.createExampleCard(): Couldn't find HomeCardsFragment")
-                }
-                /*
-                else {
-                    if (BuildConfig.DEBUG)
-                        Log.w("EditCardActivity", "Result code from CreateExampleCardService is not RESULT_OK, instead: " + resultCode);
-                }
-                 */
+        val resultReceiver = object : ResultReceiver(
+            Handler(Looper.getMainLooper())) {
+            override fun onReceiveResult(resultCode: Int, resultData: Bundle?) {
+                val fragment = supportFragmentManager.findFragmentByTag("f0") // f0 is the Tag of the view at position 0 in the fragmentViewPager // this could be a cause for bugs in the future
+                if (fragment is HomeCardsFragment) // also checks null
+                    fragment.updateCards()
+                else if (fragment == null)
+                    Log.e("WalletImportant", "From: HomeActivity.createExampleCard(): Couldn't find HomeCardsFragment")
             }
-        })
+        }
+
+        CreateExampleCardService.enqueueWork(this, intent, resultReceiver)
     }
 
     private fun setCardsFragment() {

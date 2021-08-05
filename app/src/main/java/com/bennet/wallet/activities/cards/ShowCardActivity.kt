@@ -73,8 +73,8 @@ class ShowCardActivity : CardActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         // variables
-        codeForegroundColor = resources.getColor(R.color.barcodeForegroundColor)
-        codeBackgroundColor = resources.getColor(R.color.barcodeBackgroundColor)
+        codeForegroundColor = resources.getColor(R.color.barcode_foreground_color)
+        codeBackgroundColor = resources.getColor(R.color.barcode_background_color)
 
         // card properties recyclerview
         cardPropertiesRecyclerView.layoutManager = LinearLayoutManager(this)

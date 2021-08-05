@@ -273,7 +273,7 @@ class EditCardActivity
         cardCode = ""
         cardCodeType = AppPreferenceManager.getDefaultCardCodeType(this)
         cardCodeTypeText = AppPreferenceManager.getDefaultWithText(this)
-        cardColor = resources.getColor(R.color.cardDefaultColor)
+        cardColor = resources.getColor(R.color.card_default_color)
 
         cardProperties.add(
             ItemProperty(
@@ -603,9 +603,9 @@ class EditCardActivity
     private fun updateColorButtonColor() {
         cardColorButton.setBackgroundColor(cardColor)
         if (Utility.isColorDark(cardColor))
-            cardColorButton.setTextColor(resources.getColor(R.color.onDarkTextColor))
+            cardColorButton.setTextColor(resources.getColor(R.color.on_dark_text_color))
         else
-            cardColorButton.setTextColor(resources.getColor(R.color.onLightTextColor))
+            cardColorButton.setTextColor(resources.getColor(R.color.on_light_text_color))
     }
 
     private fun autoSelectColor() {

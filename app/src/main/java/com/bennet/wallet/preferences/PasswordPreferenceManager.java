@@ -5,8 +5,6 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.core.content.ContextCompat;
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKey;
 
@@ -126,10 +124,10 @@ public class PasswordPreferenceManager {
     /**
      * Reads password color from preferences
      * @param ID Id of the password
-     * @return Password color or default color ({@link R.color#passwordDefaultColor}) if not found in preferences
+     * @return Password color or default color ({@link R.color#password_default_color}) if not found in preferences
      */
     static public @ColorInt int readPasswordColor(Context context, int ID) {
-        return getPreferences(context).getInt(getKey(ID, PREFERENCE_PASSWORD_COLOR), context.getResources().getColor(R.color.passwordDefaultColor));
+        return getPreferences(context).getInt(getKey(ID, PREFERENCE_PASSWORD_COLOR), context.getResources().getColor(R.color.password_default_color));
     }
 
     /**

@@ -175,7 +175,7 @@ class EditPasswordActivity
         ID = generateNewPasswordID()
         passwordName = getString(R.string.new_password)
         passwordValue = "" // init as empty
-        passwordColor = resources.getColor(R.color.cardDefaultColor)
+        passwordColor = resources.getColor(R.color.card_default_color)
 
         // init default properties
         passwordProperties.add(
@@ -346,9 +346,9 @@ class EditPasswordActivity
     private fun updateColorButtonColor() {
         passwordColorButton.setBackgroundColor(passwordColor)
         if (Utility.isColorDark(passwordColor))
-            passwordColorButton.setTextColor(resources.getColor(R.color.onDarkTextColor))
+            passwordColorButton.setTextColor(resources.getColor(R.color.on_dark_text_color))
         else
-            passwordColorButton.setTextColor(resources.getColor(R.color.onLightTextColor))
+            passwordColorButton.setTextColor(resources.getColor(R.color.on_light_text_color))
     }
     // endregion
 

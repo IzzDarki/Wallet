@@ -80,7 +80,7 @@ public class CardPreferenceManager {
                 throw new RuntimeException(e);
             }
 
-            cardDefaultColor = context.getResources().getColor(R.color.cardDefaultColor);
+            cardDefaultColor = context.getResources().getColor(R.color.card_default_color);
         }
     }
 
@@ -192,7 +192,7 @@ public class CardPreferenceManager {
      * Reads card color from preferences
      * @param ID Id of the card
      * @return Card color or {@link #cardDefaultColor} as default value if not found in preferences <br>
-     *     Note that {@link #cardDefaultColor} corresponds to {@link com.bennet.wallet.R.color#cardDefaultColor}.
+     *     Note that {@link #cardDefaultColor} corresponds to {@link com.bennet.wallet.R.color#card_default_color}.
      */
     @ColorInt
     static public int readCardColor(Context context, int ID) {

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="background_floating_material">@color/background_floating_material_light</color>
+    <color name="card_view_outline_color_black_or_white">#000000</color>
 </resources>
