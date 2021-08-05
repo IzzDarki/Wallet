@@ -19,15 +19,12 @@ import com.bennet.wallet.activities.passwords.EditPasswordActivity
 import com.bennet.wallet.adapters.PasswordAdapter
 import com.bennet.wallet.preferences.PasswordPreferenceManager
 import com.bennet.wallet.utils.CardOrPasswordPreviewData
-import com.bennet.wallet.utils.ItemProperty
 import com.bennet.wallet.utils.MultiSelectItemDetailsLookup
 import com.bennet.wallet.utils.StableIDKeyProvider
 import com.bennet.wallet.utils.Utility.downUntil
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.jetbrains.annotations.TestOnly
 import java.util.*
-import kotlin.math.max
-import kotlin.math.min
 
 
 class HomePasswordsFragment()
@@ -111,7 +108,8 @@ class HomePasswordsFragment()
 
         selectionTracker.addObserver(object : SelectionTracker.SelectionObserver<Long>() {
             override fun onSelectionChanged() {
-                activity?.invalidateOptionsMenu()
+                activity?.invalidateOptionsMenu() // reload action bar menu
+
                 checkIfViewHoldersAreCorrect()
                 var str = ""
                 str += ""
@@ -126,8 +124,12 @@ class HomePasswordsFragment()
         // plus button
         plusButton.setOnClickListener {
             createNewPassword()
-            checkIfViewHoldersAreCorrect() // TODO remove check
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        selectionTracker.clearSelection() // When fragment is no longer visible clear selection
     }
 
     override fun onResume() {
@@ -187,10 +189,11 @@ class HomePasswordsFragment()
 
     // action bar
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        if (selectionTracker.isSelectionMode)
-            inflater.inflate(R.menu.home_action_bar_with_item_selected_menu, menu)
-        else
-            inflater.inflate(R.menu.home_action_bar_menu, menu)
+        when {
+            isSingleSelected -> inflater.inflate(R.menu.home_action_bar_with_one_item_selected_menu, menu)
+            isMultipleSelected -> inflater.inflate(R.menu.home_action_bar_with_multiple_items_selected_menu, menu)
+            else -> inflater.inflate(R.menu.home_action_bar_menu, menu)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -198,8 +201,13 @@ class HomePasswordsFragment()
             R.id.home_action_bar_sort -> {
                 // TODO
             }
-            R.id.home_action_bar_edit_selected_item -> {} // TODO editPassword(...id...)
-            R.id.home_action_bar_delete_selected_item -> {} // TODO deletePassword(...multiple ids...)
+            R.id.home_action_bar_edit_selected_item -> {
+                editPassword(passwordID = selectionTracker.selection.first().toInt())
+            }
+            R.id.home_action_bar_delete_selected_item -> {
+                for (passwordID in selectionTracker.selection)
+                    deletePassword(passwordID.toInt())
+            }
             else -> return super.onOptionsItemSelected(item)
         }
         return true
@@ -221,12 +229,8 @@ class HomePasswordsFragment()
 
 
     // helper
-    private val SelectionTracker<Long>.isSelectionMode: Boolean get() {
-        // checks if at least one item is selected
-        return passwords.map { password -> password.ID }
-            .map { passwordID -> selectionTracker.isSelected(passwordID.toLong()) }
-            .contains(true)
-    }
+    private val isSingleSelected: Boolean get() = selectionTracker.selection.size() == 1
+    private val isMultipleSelected: Boolean get() = selectionTracker.selection.size() > 1
 
     @Deprecated("just for test")
     @TestOnly

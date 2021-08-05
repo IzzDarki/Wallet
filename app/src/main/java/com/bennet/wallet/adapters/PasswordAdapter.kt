@@ -113,7 +113,7 @@ class PasswordAdapter(passwords: List<CardOrPasswordPreviewData>)
             holder.textView.setTextColor(context.resources.getColor(R.color.on_light_text_color))
 
         if (selectionTracker.isSelected(passwords[pos].ID.toLong()))
-            holder.makeSelected()
+            holder.makeSelected() // if not selected, outline has already been drawn (or not, if it has no outline)
     }
 
     override fun getItemCount(): Int = passwords.size
