@@ -230,6 +230,8 @@
     <string name="password">Password</string>
     <string name="delete_password">Delete password</string>
     <string name="delete_password_dialog_message">Are you sure you want to delete this password?</string>
+    <string name="delete_x_passwords">Delete %d passwords</string>
+    <string name="delete_x_passwords_dialog_message">Are you sure you want to delete these passwords</string>
     <string name="password_name">Password name</string>
     <string name="new_password">New password</string>
     <string name="username">User name</string>
@@ -241,4 +243,14 @@
     <string name="create_new_password_property">Create new password property</string>
     <string name="keep_property_secret">Keep property secret</string>
     <string name="cancel_create_new_password_title">Discard new password</string>
+    <string name="sort_by_name">By name</string>
+    <string name="sort_by_custom_order">By custom order</string>
+    <string name="sort_by_creation_date">By creation date</string>
+    <string name="sort_by_alteration_date">By alteration date</string>
+    <string name="sort_reverse">Reverse</string>
+    <string name="sort_group_by_labels">Group by labels</string>
+    <string name="label">Label</string>
+    <string name="error_label_cant_be_empty">Label can\'t be empty</string>
+    <string name="error_label_already_added">Label already added</string>
+    <string name="error_label_cant_contain_x">Label can\'t contain %s</string>
 </resources>

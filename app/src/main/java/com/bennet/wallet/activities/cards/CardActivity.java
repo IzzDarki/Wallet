@@ -401,9 +401,9 @@ public class CardActivity extends AppCompatActivity {
             return getString(R.string.card_code_type_text_value_dont_show_text);
     }
 
-    protected void hideKeyboard() {
-        Utility.hideKeyboard(this);
-    }
+    //protected void hideKeyboard() {
+    //    Utility.hideKeyboard(this);
+    //}
 
     protected void hideScrollbar() {
         // scroll view hides scroll bar until scroll changes

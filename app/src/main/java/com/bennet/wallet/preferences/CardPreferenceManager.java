@@ -21,7 +21,8 @@ public class CardPreferenceManager {
     // preferences
     static public final String CARDS_PREFERENCES_NAME_OLD = "com.bennet.wallet.cards";
     static public final String CARDS_PREFERENCES_NAME_ENCRYPTED = "cards_encrypted";
-    static protected final String PREFERENCE_ALL_CARD_IDS = "com.bennet.wallet.home_activity.card_ids"; // PreferenceArrayInt
+    static protected final String PREFERENCE_ALL_CARD_IDS = "com.bennet.wallet.home_activity.card_ids"; // (String) PreferenceArrayInt
+    static public final String PREFERENCE_CUSTOM_SORTING_NO_GROUPING = "custom_sorting_no_grouping"; // String (PreferenceArrayInt)
 
     static protected final String PREFERENCE_CARD_NAME = "com.bennet.wallet.cards.%d.name"; // String
     static protected final String PREFERENCE_CARD_CODE = "com.bennet.wallet.cards.%d.code"; // String
@@ -59,8 +60,6 @@ public class CardPreferenceManager {
 
     // static variables
     static private SharedPreferences preferences = null;
-    static public @ColorInt int cardDefaultColor = Utility.makeRGB(0, 0, 0, 0);
-
 
     // init
     /**
@@ -69,18 +68,7 @@ public class CardPreferenceManager {
      */
     static public void initOnce(Context context) {
         if (preferences == null) {
-            try {
-                MasterKey mainKey = new MasterKey.Builder(context)
-                        .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-                        .build();
-                preferences = EncryptedSharedPreferences.create(context, CARDS_PREFERENCES_NAME_ENCRYPTED, mainKey,
-                        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV, EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM);
-
-            } catch (GeneralSecurityException | IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            cardDefaultColor = context.getResources().getColor(R.color.card_default_color);
+            preferences = Utility.openEncryptedPreferences(context, CARDS_PREFERENCES_NAME_ENCRYPTED);
         }
     }
 
@@ -191,12 +179,11 @@ public class CardPreferenceManager {
     /**
      * Reads card color from preferences
      * @param ID Id of the card
-     * @return Card color or {@link #cardDefaultColor} as default value if not found in preferences <br>
-     *     Note that {@link #cardDefaultColor} corresponds to {@link com.bennet.wallet.R.color#card_default_color}.
+     * @return Card color or {@link R.color#card_default_color} as default value if not found in preferences
      */
     @ColorInt
     static public int readCardColor(Context context, int ID) {
-        return getPreferences(context).getInt(getKey(ID, PREFERENCE_CARD_COLOR), cardDefaultColor);
+        return getPreferences(context).getInt(getKey(ID, PREFERENCE_CARD_COLOR), context.getResources().getColor(R.color.card_default_color));
     }
 
     /**
@@ -689,6 +676,18 @@ public class CardPreferenceManager {
         PreferenceArrayInt cardIDs = readAllCardIDs(context);
         cardIDs.remove((Integer) ID); // no need to check if cardIDs contains ID
         writeAllCardIDs(context, cardIDs);
+    }
+    // endregion
+
+    // region read and write custom sorting
+    static public PreferenceArrayInt readCardsCustomSortingNoGrouping(Context context) {
+        return new PreferenceArrayInt(
+                getPreferences(context).getString(PREFERENCE_CUSTOM_SORTING_NO_GROUPING, "")
+        );
+    }
+
+    static public void writeCardsCustomSortingNoGrouping(Context context, PreferenceArrayInt customSorting) {
+        getPreferences(context).edit().putString(PREFERENCE_CUSTOM_SORTING_NO_GROUPING, customSorting.toPreference()).apply();
     }
     // endregion
 }

@@ -13,19 +13,24 @@ import kotlin.jvm.JvmOverloads
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.graphics.Color
+import android.graphics.Rect
 import android.text.InputType
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.graphics.blue
 import androidx.core.graphics.green
 import androidx.core.graphics.red
+import androidx.core.view.allViews
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import com.bennet.wallet.BuildConfig
 import java.io.*
-import java.lang.AssertionError
-import java.lang.RuntimeException
-import java.lang.StringBuilder
-import java.util.*
+import java.security.GeneralSecurityException
+import java.util.Random
+import kotlin.collections.ArrayList
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
@@ -50,6 +55,26 @@ object Utility {
                 ID = random.nextInt()
             } while (idsList.contains(ID))
             return ID
+        }
+    }
+
+    @JvmStatic
+    fun openEncryptedPreferences(context: Context, preferencesName: String): SharedPreferences {
+        try {
+            val mainKey = MasterKey.Builder(context)
+                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                .build()
+            return EncryptedSharedPreferences.create(
+                context,
+                preferencesName,
+                mainKey,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+        } catch (e: GeneralSecurityException) {
+            throw RuntimeException(e)
+        } catch (e: IOException) {
+            throw RuntimeException(e)
         }
     }
 
@@ -265,6 +290,19 @@ object Utility {
     }
 
     @JvmStatic
+    fun isViewHitByTouchEvent(view: View, ev: MotionEvent): Boolean {
+        val rectPos = IntArray(2)
+        view.getLocationOnScreen(rectPos)
+        val hitRect = Rect(
+            rectPos[0],
+            rectPos[1],
+            rectPos[0] + view.width,
+            rectPos[1] + view.height
+        )
+        return hitRect.contains(ev.x.toInt(), ev.y.toInt())
+    }
+
+    @JvmStatic
     @Throws(IOException::class)
     fun moveFile(fromFile: File, toDirectory: String): File {
         val outputFile = copyFile(fromFile, toDirectory)
@@ -431,22 +469,22 @@ object Utility {
     }
 
     @JvmStatic
-    fun hideKeyboard(activity: Activity) {
-        // from https://stackoverflow.com/questions/1109022/how-do-you-close-hide-the-android-soft-keyboard-using-java
-
-        //Find the currently focused view, so we can grab the correct window token from it
-        var view = activity.currentFocus
-        //If no view currently has focus, create a new one, just so we can grab a window token from it
-        if (view == null) view = View(activity)
-        hideKeyboard(view)
-    }
-
-    @JvmStatic
     fun hideKeyboard(view: View) {
         // from https://stackoverflow.com/questions/1109022/how-do-you-close-hide-the-android-soft-keyboard-using-java
         val imm =
             view.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    fun Activity.hideKeyboard() {
+        // from https://stackoverflow.com/questions/1109022/how-do-you-close-hide-the-android-soft-keyboard-using-java
+
+        // Find the currently focused view, so we can grab the correct window token from it
+        var view = this.currentFocus
+        // If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null)
+            view = View(this)
+        hideKeyboard(view)
     }
 
     @JvmStatic
@@ -460,7 +498,13 @@ object Utility {
     fun showKeyboard(view: View) {
         val imm =
             view.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput(view, InputMethodManager.SHOW_FORCED)
+        imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    @JvmStatic
+    fun clearFocusFromAll(viewGroup: ViewGroup) {
+        for (child in viewGroup.allViews)
+            child.clearFocus()
     }
 
     @JvmStatic
@@ -516,11 +560,36 @@ object Utility {
      * Array class, that can be saved and extracted from preferences
      * @param T type of the elements
      */
-    open class PreferenceArray<T>(
-        preferenceString: String?,
-        protected var operations: Operations<T>,
-        private var separator: String = DEFAULT_SEPARATOR
-    ) : ArrayList<T>() {
+    open class PreferenceArray<T> : ArrayList<T> {
+
+        protected var operations: Operations<T>
+        public var separator: String
+
+        constructor(
+            preferenceString: String?,
+            operations: Operations<T>,
+            separator: String = DEFAULT_SEPARATOR
+        ) {
+            this.operations = operations
+            this.separator = separator
+            if (preferenceString != null && preferenceString != "") {
+                for (string in preferenceString.split(separator).toTypedArray())
+                    add(operations.stringToElement(string))
+            }
+        }
+
+        constructor(
+            iterator: Iterator<T>,
+            operations: Operations<T>,
+            separator: String = DEFAULT_SEPARATOR
+        ) {
+            this.operations = operations
+            this.separator = separator
+            for (item in iterator) {
+                add(item)
+            }
+        }
+
         interface Operations<T> {
             /**
              * method used to encode element
@@ -538,11 +607,12 @@ object Utility {
 
             /**
              * method used to check if element is ok to be encoded and saved in preferences <br></br>
-             * When calling [.toPreference] or [.toPreference] this method is used to check if all elements are ok
-             * @param  element to be checked
+             * When calling [toPreference] or [.toPreference] this method is used to check if all elements are ok
+             * @param element to be checked
+             * @param separator same as [PreferenceArray.separator] (can be used when [PreferenceArray.separator] is not accessible before superclass constructor has been called)
              * @return true if element can be encoded and saved in preferences, false otherwise
              */
-            fun isElementOK(element: T): Boolean
+            fun isElementOK(element: T, separator: String): Boolean
         }
 
         class ElementNotOkException internal constructor(
@@ -551,7 +621,7 @@ object Utility {
         ) : RuntimeException("Wrong element \"" + preferenceArray[position] + "\" at position " + position + " in " + preferenceArray)
 
         companion object {
-            var DEFAULT_SEPARATOR = ";%&"
+            var DEFAULT_SEPARATOR = "&§ß$"
 
             /**
              * Returns String representation of array, that can be used to construct another array
@@ -564,28 +634,23 @@ object Utility {
             }
         }
 
-        init {
-            if (preferenceString != null && preferenceString != "") {
-                for (string in preferenceString.split(separator.toRegex()).toTypedArray())
-                    add(operations.stringToElement(string))
-            }
-        }
-
         /**
          * Returns String representation of array, that can be used to construct another array <br></br>
          * Alternative method [.toPreference] will also work with null instances
          */
         @Throws(ElementNotOkException::class)
         fun toPreference(): String? {
-            val stringBuilder = StringBuilder()
             if (size > 0) {
+                val stringBuilder = StringBuilder()
                 for (element in this) {
-                    if (operations.isElementOK(element))
-                        stringBuilder.append(operations.elementToString(element)).append(
-                            separator
-                        ) else throw ElementNotOkException(this, indexOf(element))
+                    if (operations.isElementOK(element, separator))
+                        stringBuilder
+                            .append(operations.elementToString(element))
+                            .append(separator)
+                    else
+                        throw ElementNotOkException(this, indexOf(element))
                 }
-                return stringBuilder.substring(0, stringBuilder.length - 1)
+                return stringBuilder.substring(0, stringBuilder.length - separator.length)
             } else
                 return null
         }
@@ -599,23 +664,65 @@ object Utility {
         }
     }
 
+    class PreferenceArrayString : PreferenceArray<String> {
+        @JvmOverloads
+        constructor(preferenceString: String? = null) : super(
+            preferenceString,
+            object : Operations<String> {
+                override fun elementToString(element: String): String = element
+                override fun stringToElement(string: String): String = string
+                override fun isElementOK(element: String, separator: String): Boolean = !element.contains(separator)
+            }
+        )
+
+        constructor(iterator: Iterator<String>) : super(
+            iterator,
+            object : Operations<String> {
+                override fun elementToString(element: String): String = element
+                override fun stringToElement(string: String): String = string
+                override fun isElementOK(element: String, separator: String): Boolean = !element.contains(separator)
+            }
+        )
+    }
+
     /**
      * Wrapper around an [ArrayList<Int>]. Has functionality for converting the list to a String and creating the list from a String
      */
-    class PreferenceArrayInt @JvmOverloads constructor(preferenceString: String? = null) :
-        PreferenceArray<Int>(preferenceString, object : Operations<Int> {
-            override fun elementToString(element: Int): String {
-                return element.toString()
-            }
+    class PreferenceArrayInt : PreferenceArray<Int> {
 
-            override fun stringToElement(string: String): Int {
-                return string.toInt()
-            }
+        @JvmOverloads
+        constructor(preferenceString: String? = null) : super(
+            preferenceString,
+            object : Operations<Int> {
+                override fun elementToString(element: Int): String {
+                    return element.toString()
+                }
 
-            override fun isElementOK(element: Int): Boolean {
-                return true
-            }
-        }, ",")
+                override fun stringToElement(string: String): Int {
+                    return string.toInt()
+                }
+
+                override fun isElementOK(element: Int, separator: String): Boolean = true
+            },
+            ","
+        )
+
+        constructor(iterator: Iterator<Int>) : super(
+            iterator,
+            object : Operations<Int> {
+                override fun elementToString(element: Int): String {
+                    return element.toString()
+                }
+
+                override fun stringToElement(string: String): Int {
+                    return string.toInt()
+                }
+
+                override fun isElementOK(element: Int, separator: String): Boolean = true
+            },
+            ","
+        )
+    }
 
     /* AutoSavePreferenceArray not used currently
     open class AutoSavePreferenceArray<T> : PreferenceArray<T> {

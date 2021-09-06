@@ -34,7 +34,6 @@
                     android:id="@+id/edit_card_name_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/text_input_padding_bottom"
 
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
 

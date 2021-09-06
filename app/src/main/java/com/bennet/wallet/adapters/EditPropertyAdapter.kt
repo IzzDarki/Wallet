@@ -23,13 +23,13 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import java.util.*
 
-class EditPropertyAdapter(properties: MutableList<ItemProperty>, onPropertyRemovedListener: (() -> Unit)?)
+class EditPropertyAdapter(properties: MutableList<ItemProperty>, onPropertyRemovalListener: (() -> Unit)?)
     : RecyclerView.Adapter<EditPropertyAdapter.ViewHolder>() {
 
     // properties
     private var properties: MutableList<ItemProperty> = properties
 
-    private var onPropertyRemovedListener: (() -> Unit)? = onPropertyRemovedListener
+    private var onPropertyRemovalListener: (() -> Unit)? = onPropertyRemovalListener
     private var cursorToReset = Pair(-1, -1) // first: position in adapter (-1 = none), second: cursor position
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -135,7 +135,7 @@ class EditPropertyAdapter(properties: MutableList<ItemProperty>, onPropertyRemov
 
         private fun deleteProperty() {
             val position = adapterPosition
-            onPropertyRemovedListener?.invoke()
+            onPropertyRemovalListener?.invoke()
             properties.removeAt(position)
             notifyItemRemoved(position)
             notifyItemRangeChanged(position, properties.size - position)
@@ -192,7 +192,8 @@ class EditPropertyAdapter(properties: MutableList<ItemProperty>, onPropertyRemov
         if (properties[position].secret) {
             holder.textInputEditText.inputType = Utility.inputTypeTextHiddenPassword
             holder.textInputLayout.setEndIconDrawable(R.drawable.icon_expand_more_30dp)
-        } else {
+        }
+        else {
             holder.textInputEditText.inputType = Utility.inputTypeTextNormal
             holder.textInputLayout.setEndIconDrawable(R.drawable.icon_delete_30dp)
         }
@@ -204,9 +205,8 @@ class EditPropertyAdapter(properties: MutableList<ItemProperty>, onPropertyRemov
         }
         if (position == properties.size - 1)
             holder.setImeOptions(EditorInfo.IME_ACTION_DONE)
-        else holder.setImeOptions(
-            EditorInfo.IME_ACTION_NEXT
-        )
+        else
+            holder.setImeOptions(EditorInfo.IME_ACTION_NEXT)
     }
 
     override fun getItemCount(): Int {

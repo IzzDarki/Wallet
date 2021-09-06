@@ -33,6 +33,7 @@ import com.bennet.wallet.utils.ItemProperty
 import com.bennet.wallet.utils.Utility
 import com.bennet.wallet.utils.Utility.PreferenceArrayInt
 import com.bennet.wallet.utils.Utility.IDGenerator
+import com.bennet.wallet.utils.Utility.hideKeyboard
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
@@ -89,7 +90,7 @@ class EditCardActivity
     // endregion
 
 
-    // region lifecycle
+    // region overrides
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -235,15 +236,14 @@ class EditCardActivity
         // recycler view
         propertiesRecyclerView.layoutManager = LinearLayoutManager(this)
         val adapter = EditPropertyAdapter(cardProperties) {
-            // clear focus from all elements because otherwise the onFocusChangeListeners will get called with wrong or invalid getAdapterPosition()
-            for (pos in cardProperties.indices) {
-                val holder = propertiesRecyclerView.findViewHolderForAdapterPosition(pos) as EditPropertyAdapter.ViewHolder?
-                holder!!.clearFocus()
-            }
-            if (cardProperties.size == 0)
-                setIMEOptionDone()
+            onPropertyRemoval()
         }
         propertiesRecyclerView.adapter = adapter
+    }
+
+    override fun finish() {
+        hideKeyboard()
+        super.finish()
     }
     // endregion
 
@@ -264,6 +264,13 @@ class EditCardActivity
                     secret = CardPreferenceManager.readCardPropertySecret(this, ID, propertyID)
                 )
             )
+        }
+        if (cardProperties.isEmpty()) {
+            // set IME options on last input field to done
+            if (cardCodeInputEditText.visibility != View.GONE)
+                Utility.setImeOptionsAndRestart(cardCodeInputEditText, EditorInfo.IME_ACTION_DONE)
+            else
+                Utility.setImeOptionsAndRestart(cardCodeTypeTextInput, EditorInfo.IME_ACTION_DONE)
         }
     }
 
@@ -293,8 +300,9 @@ class EditCardActivity
         cardProperties.add(
             ItemProperty(name, value, secret, propertiesNeededToCreateNewID = cardProperties)
         )
-        propertiesRecyclerView.adapter!!.notifyItemInserted(cardProperties.size - 1)
-        propertiesRecyclerView.adapter!!.notifyItemRangeChanged(cardProperties.size - 1, 1)
+        propertiesRecyclerView.adapter?.notifyItemInserted(cardProperties.size - 1)
+        val secondLastViewHolder = propertiesRecyclerView.findViewHolderForAdapterPosition(cardProperties.size - 2) as? EditPropertyAdapter.ViewHolder
+        secondLastViewHolder?.setImeOptions(EditorInfo.IME_ACTION_NEXT)
 
         // set IME options on other input fields to next (only these 2 could be set to done)
         Utility.setImeOptionsAndRestart(cardCodeInputEditText, EditorInfo.IME_ACTION_NEXT)
@@ -896,7 +904,6 @@ class EditCardActivity
     }
 
     private fun finishAndShowCard() {
-        hideKeyboard()
         finish() // finish first
 
         val intent = Intent(this, ShowCardActivity::class.java)
@@ -990,11 +997,23 @@ class EditCardActivity
                 SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(Date())
     }
 
-    private fun setIMEOptionDone() {
-        if (cardCodeTypeTextInput.visibility == VISIBLE)
-            Utility.setImeOptionsAndRestart(cardCodeTypeTextInput, EditorInfo.IME_ACTION_DONE)
-        else
-            Utility.setImeOptionsAndRestart(cardCodeInputEditText, EditorInfo.IME_ACTION_DONE)
+    private fun onPropertyRemoval() {
+        hideKeyboard()
+        // clear focus from all elements because otherwise the onFocusChangeListeners will get called with wrong or invalid getAdapterPosition()
+        for (pos in cardProperties.indices) {
+            val holder = propertiesRecyclerView.findViewHolderForAdapterPosition(pos) as? EditPropertyAdapter.ViewHolder
+            holder?.clearFocus()
+        }
+        if (cardProperties.size == 1) {
+            if (cardCodeTypeTextInput.visibility == VISIBLE)
+                Utility.setImeOptionsAndRestart(cardCodeTypeTextInput, EditorInfo.IME_ACTION_DONE)
+            else
+                Utility.setImeOptionsAndRestart(cardCodeInputEditText, EditorInfo.IME_ACTION_DONE)
+        }
+        else {
+            val lastViewHolder = propertiesRecyclerView.findViewHolderForAdapterPosition(cardProperties.size - 2) as? EditPropertyAdapter.ViewHolder
+            lastViewHolder?.setImeOptions(EditorInfo.IME_ACTION_DONE)
+        }
     }
 
     private fun generateNewCardID(): Int {

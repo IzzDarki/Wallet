@@ -17,13 +17,16 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bennet.wallet.R
 import com.bennet.wallet.activities.passwords.EditPasswordActivity
 import com.bennet.wallet.adapters.PasswordAdapter
+import com.bennet.wallet.preferences.AppPreferenceManager
+import com.bennet.wallet.preferences.AppPreferenceManager.SortingType
+import com.bennet.wallet.preferences.AppPreferenceManager.isAppFunctionPasswords
 import com.bennet.wallet.preferences.PasswordPreferenceManager
 import com.bennet.wallet.utils.CardOrPasswordPreviewData
 import com.bennet.wallet.utils.MultiSelectItemDetailsLookup
 import com.bennet.wallet.utils.StableIDKeyProvider
+import com.bennet.wallet.utils.Utility
 import com.bennet.wallet.utils.Utility.downUntil
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import org.jetbrains.annotations.TestOnly
 import java.util.*
 
 
@@ -88,6 +91,13 @@ class HomePasswordsFragment()
                     }
                     recyclerView.adapter?.notifyItemMoved(fromPos, toPos) // calling notifyItemMoved is enough
 
+                    AppPreferenceManager.setPasswordsSortingType(requireContext(), SortingType.CustomSorting) // change sorting type to custom
+                    AppPreferenceManager.setPasswordsSortReverse(requireContext(), false) // the current sorting is not reverse (even if it was reverse before moving an item)
+                    PasswordPreferenceManager.writePasswordsCustomSortingNoGrouping(
+                        requireContext(),
+                        Utility.PreferenceArrayInt(passwords.map { it.ID }.iterator())
+                    ) // save the custom sorting to preferences
+
                     return false
                 }
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
@@ -109,15 +119,6 @@ class HomePasswordsFragment()
         selectionTracker.addObserver(object : SelectionTracker.SelectionObserver<Long>() {
             override fun onSelectionChanged() {
                 activity?.invalidateOptionsMenu() // reload action bar menu
-
-                checkIfViewHoldersAreCorrect()
-                var str = ""
-                str += ""
-                for (passwordID in passwords.map { it.ID }) {
-                    if (selectionTracker.isSelected(passwordID.toLong()))
-                        str += "${passwords.find { it.ID == passwordID }?.name}, "
-                }
-                //Log.d("asdf", str)
             }
         })
 
@@ -157,6 +158,18 @@ class HomePasswordsFragment()
                 )
             )
         }
+        sortPasswordsArray(AppPreferenceManager.getPasswordsSortingType(requireContext())) // sort the list according to saved sorting type
+        passwordsRecyclerView.adapter?.notifyDataSetChanged()
+    }
+
+    /**
+     * Sorts the passwords list, notifies the adapter and saves the new sorting type to preferences
+     */
+    private fun sortPasswords(sortingType: SortingType) {
+        // Doesn't care about grouping by label at the moment
+
+        AppPreferenceManager.setPasswordsSortingType(requireContext(), sortingType) // updates sorting type in preferences
+        sortPasswordsArray(sortingType)
         passwordsRecyclerView.adapter?.notifyDataSetChanged()
     }
 
@@ -166,18 +179,29 @@ class HomePasswordsFragment()
         startActivity(intent)
     }
 
-    private fun deletePassword(passwordID: Int) {
+    private fun deleteSinglePassword(passwordID: Int) {
         AlertDialog.Builder(ContextThemeWrapper(context, R.style.RoundedCornersDialog))
             .setTitle(R.string.delete_password)
             .setMessage(R.string.delete_password_dialog_message)
             .setCancelable(true)
             .setPositiveButton(R.string.delete) { dialog, _ ->
-                PasswordPreferenceManager.removePassword(context, passwordID)
+                deletePasswordDirectly(passwordID)
+                dialog.dismiss()
+            }
+            .setNegativeButton(android.R.string.cancel) { dialog: DialogInterface, _: Int ->
+                dialog.cancel()
+            }
+            .show()
+    }
 
-                val indexRemoved = passwords.indexOfFirst { it.ID == passwordID }
-                passwords.removeAt(indexRemoved)
-                passwordsRecyclerView.adapter?.notifyItemRemoved(indexRemoved)
-
+    private fun deleteMultiplePasswords(passwordIDs: List<Int>) {
+        AlertDialog.Builder(ContextThemeWrapper(context, R.style.RoundedCornersDialog))
+            .setTitle(getString(R.string.delete_x_passwords).format(passwordIDs.size))
+            .setMessage(R.string.delete_x_passwords_dialog_message)
+            .setCancelable(true)
+            .setPositiveButton(R.string.delete) { dialog, _ ->
+                for (passwordID in passwordIDs)
+                    deletePasswordDirectly(passwordID)
                 dialog.dismiss()
             }
             .setNegativeButton(android.R.string.cancel) { dialog: DialogInterface, _: Int ->
@@ -194,24 +218,60 @@ class HomePasswordsFragment()
             isMultipleSelected -> inflater.inflate(R.menu.home_action_bar_with_multiple_items_selected_menu, menu)
             else -> inflater.inflate(R.menu.home_action_bar_menu, menu)
         }
+
+        // Set checkboxes
+        when (AppPreferenceManager.getPasswordsSortingType(requireContext())) {
+            SortingType.ByName -> menu.findItem(R.id.home_action_bar_sort_by_name)?.isChecked = true
+            SortingType.CustomSorting -> menu.findItem(R.id.home_action_bar_sort_custom_order)?.isChecked = true
+            SortingType.ByCreationDate -> menu.findItem(R.id.home_action_bar_sort_by_creation_date)?.isChecked = true
+            SortingType.ByAlterationDate -> menu.findItem(R.id.home_action_bar_sort_by_alteration_date)?.isChecked = true
+        }
+        menu.findItem(R.id.home_action_bar_sort_reverse)?.isChecked = AppPreferenceManager.isPasswordsSortReverse(requireContext())
+        menu.findItem(R.id.home_action_bar_group_by_label)?.isChecked = AppPreferenceManager.isPasswordsGroupByLabels(requireContext())
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.home_action_bar_sort -> {
-                // TODO
+            R.id.home_action_bar_sort_by_name -> {
+                item.isChecked = true
+                sortPasswords(SortingType.ByName)
+            }
+            R.id.home_action_bar_sort_custom_order -> {
+                item.isChecked = true
+                sortPasswords(SortingType.CustomSorting)
+            }
+            R.id.home_action_bar_sort_by_creation_date -> {
+                item.isChecked = true
+                sortPasswords(SortingType.ByCreationDate)
+            }
+            R.id.home_action_bar_sort_by_alteration_date -> {
+                item.isChecked = true
+                sortPasswords(SortingType.ByAlterationDate)
+            }
+            R.id.home_action_bar_sort_reverse -> {
+                item.isChecked = !item.isChecked // toggle checkbox
+                AppPreferenceManager.setPasswordsSortReverse(requireContext(), item.isChecked)
+                sortPasswords(AppPreferenceManager.getPasswordsSortingType(requireContext())) // sort again
+            }
+            R.id.home_action_bar_group_by_label -> {
+                item.isChecked = !item.isChecked // toggle checkbox
+                AppPreferenceManager.setPasswordsGroupByLabels(requireContext(), item.isChecked)
             }
             R.id.home_action_bar_edit_selected_item -> {
                 editPassword(passwordID = selectionTracker.selection.first().toInt())
             }
             R.id.home_action_bar_delete_selected_item -> {
-                for (passwordID in selectionTracker.selection)
-                    deletePassword(passwordID.toInt())
+                if (selectionTracker.selection.size() == 1)
+                    deleteSinglePassword(selectionTracker.selection.first().toInt())
+                else
+                    deleteMultiplePasswords(selectionTracker.selection.map { it.toInt() })
             }
             else -> return super.onOptionsItemSelected(item)
         }
         return true
     }
+
+    // TODO onBackPressed: https://stackoverflow.com/questions/5448653/how-to-implement-onbackpressed-in-fragments
 
 
     // screen orientation change
@@ -232,14 +292,30 @@ class HomePasswordsFragment()
     private val isSingleSelected: Boolean get() = selectionTracker.selection.size() == 1
     private val isMultipleSelected: Boolean get() = selectionTracker.selection.size() > 1
 
-    @Deprecated("just for test")
-    @TestOnly
-    private fun checkIfViewHoldersAreCorrect() {
-        for (i in passwords.indices) {
-            val viewHolderName = (passwordsRecyclerView.findViewHolderForAdapterPosition(i) as? PasswordAdapter.ViewHolder)?.textView?.text
-            if (passwords[i].name != viewHolderName)
-                    Log.e("asdf", "Wrong view holder at pos $i: real = ${passwords[i].name} fail = $viewHolderName")
+    private fun deletePasswordDirectly(passwordID: Int) {
+        PasswordPreferenceManager.removePassword(context, passwordID)
+
+        val indexRemoved = passwords.indexOfFirst { it.ID == passwordID }
+        passwords.removeAt(indexRemoved)
+        passwordsRecyclerView.adapter?.notifyItemRemoved(indexRemoved)
+    }
+
+    /**
+     * Helper for [sortPasswords] and used in [updatePasswords]
+     */
+    private fun sortPasswordsArray(sortingType: SortingType) {
+        when (sortingType) {
+            SortingType.ByName -> passwords.sortBy { it.name }
+            SortingType.CustomSorting -> {
+                val savedCustomSortingIDs = PasswordPreferenceManager.readPasswordsCustomSortingNoGrouping(requireContext())
+                passwords.sortBy { savedCustomSortingIDs.indexOf(it.ID) }
+            }
+            SortingType.ByCreationDate -> passwords.sortBy { PasswordPreferenceManager.readPasswordCreationDate(context, it.ID) }
+            SortingType.ByAlterationDate -> passwords.sortBy { PasswordPreferenceManager.readPasswordAlterationDate(context, it.ID) }
         }
+
+        if (AppPreferenceManager.isPasswordsSortReverse(requireContext()))
+            passwords.reverse()
     }
 
 }

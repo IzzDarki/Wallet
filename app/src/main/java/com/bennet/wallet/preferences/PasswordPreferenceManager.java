@@ -10,6 +10,7 @@ import androidx.security.crypto.MasterKey;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.Date;
 import java.util.Locale;
 
 import com.bennet.wallet.R;
@@ -21,10 +22,14 @@ public class PasswordPreferenceManager {
     static public final String PASSWORDS_PREFERENCES_NAME = "passwords";
 
     static public final String PREFERENCE_ALL_PASSWORD_IDS = "password_ids";
+    static public final String PREFERENCE_CUSTOM_SORTING_NO_GROUPING = "custom_sorting_no_grouping"; // String (PreferenceArrayInt)
 
     static protected final String PREFERENCE_PASSWORD_NAME = "%d.name"; // String
     static protected final String PREFERENCE_PASSWORD_VALUE = "%d.password"; // String
     static protected final String PREFERENCE_PASSWORD_COLOR = "%d.color"; // @ColorInt int
+    static protected final String PREFERENCE_PASSWORD_CREATION_DATE = "%d.creation_date"; // long (Date)
+    static protected final String PREFERENCE_PASSWORD_ALTERATION_DATE = "%d.alteration_date"; // long (Date)
+    static protected final String PREFERENCE_PASSWORD_LABELS = "%d.labels"; // String (PreferenceArrayString)
     static protected final String PREFERENCE_PASSWORD_PROPERTIES_IDS = "%d.password_properties"; // String (PreferenceArrayInt)
     static protected final String PREFERENCE_PASSWORD_PROPERTY_NAME = "%d.%d.property_name"; // String
     static protected final String PREFERENCE_PASSWORD_PROPERTY_VALUE = "%d.%d.property_value"; // String
@@ -40,16 +45,7 @@ public class PasswordPreferenceManager {
      */
     static public void initOnce(Context context) {
         if (preferences == null) {
-            try {
-                MasterKey mainKey = new MasterKey.Builder(context)
-                        .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-                        .build();
-                preferences = EncryptedSharedPreferences.create(context, PASSWORDS_PREFERENCES_NAME, mainKey,
-                        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV, EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM);
-
-            } catch (IOException | GeneralSecurityException e) {
-                throw new RuntimeException(e);
-            }
+            preferences = Utility.openEncryptedPreferences(context, PASSWORDS_PREFERENCES_NAME);
         }
     }
 
@@ -128,6 +124,36 @@ public class PasswordPreferenceManager {
      */
     static public @ColorInt int readPasswordColor(Context context, int ID) {
         return getPreferences(context).getInt(getKey(ID, PREFERENCE_PASSWORD_COLOR), context.getResources().getColor(R.color.password_default_color));
+    }
+
+    /**
+     * Reads password creation date from preferences
+     * @param ID Id of the password
+     * @return Password creation date or (January 1, 1970, 00:00:00 GMT) if not found in preferences
+     */
+    static public Date readPasswordCreationDate(Context context, int ID) {
+        long time = getPreferences(context).getLong(getKey(ID, PREFERENCE_PASSWORD_CREATION_DATE), 0);
+        return new Date(time);
+    }
+
+    /**
+     * Reads password creation date from preferences
+     * @param ID Id of the password
+     * @return Password alteration date or (January 1, 1970, 00:00:00 GMT) if not found in preferences
+     */
+    static public Date readPasswordAlterationDate(Context context, int ID) {
+        long time = getPreferences(context).getLong(getKey(ID, PREFERENCE_PASSWORD_ALTERATION_DATE), 0);
+        return new Date(time);
+    }
+
+    /**
+     * Reads password labels from preferences
+     * @param ID Id of the password
+     * @return Password labels or empty {@link com.bennet.wallet.utils.Utility.PreferenceArrayString} if not found in preferences
+     */
+    static public Utility.PreferenceArrayString readPasswordLabels(Context context, int ID) {
+        String preferenceString = getPreferences(context).getString(getKey(ID, PREFERENCE_PASSWORD_LABELS), "");
+        return new Utility.PreferenceArrayString(preferenceString);
     }
 
     /**
@@ -211,6 +237,33 @@ public class PasswordPreferenceManager {
     }
 
     /**
+     * Writes new password creation date to preferences
+     * @param ID Id of the password
+     * @param passwordCreationDate New password creation date
+     */
+    static public void writePasswordCreationDate(Context context, int ID, Date passwordCreationDate) {
+        getPreferences(context).edit().putLong(getKey(ID, PREFERENCE_PASSWORD_CREATION_DATE), passwordCreationDate.getTime()).apply();
+    }
+
+    /**
+     * Writes new password creation date to preferences
+     * @param ID Id of the password
+     * @param passwordAlterationDate New password creation date
+     */
+    static public void writePasswordAlterationDate(Context context, int ID, Date passwordAlterationDate) {
+        getPreferences(context).edit().putLong(getKey(ID, PREFERENCE_PASSWORD_ALTERATION_DATE), passwordAlterationDate.getTime()).apply();
+    }
+
+    /**
+     * Writes new password labels to preferences
+     * @param ID Id of the password
+     * @param passwordLabels New password labels
+     */
+    static public void writePasswordLabels(Context context, int ID, Utility.PreferenceArrayString passwordLabels) {
+        getPreferences(context).edit().putString(getKey(ID, PREFERENCE_PASSWORD_LABELS), passwordLabels.toPreference()).apply();
+    }
+
+    /**
      * Writes new list of all password property ids to preferences
      * @param ID Id of the password
      * @param passwordPropertyIds New list of all password property ids
@@ -274,6 +327,30 @@ public class PasswordPreferenceManager {
      */
     static public void removePasswordColor(Context context, int ID) {
         getPreferences(context).edit().remove(getKey(ID, PREFERENCE_PASSWORD_COLOR)).apply();
+    }
+
+    /**
+     * Removes password creation date from preferences
+     * @param ID Id of the password
+     */
+    static public void removePasswordCreationDate(Context context, int ID) {
+        getPreferences(context).edit().remove(getKey(ID, PREFERENCE_PASSWORD_CREATION_DATE)).apply();
+    }
+
+    /**
+     * Removes password alteration date from preferences
+     * @param ID Id of the password
+     */
+    static public void removePasswordAlterationDate(Context context, int ID) {
+        getPreferences(context).edit().remove(getKey(ID, PREFERENCE_PASSWORD_ALTERATION_DATE)).apply();
+    }
+
+    /**
+     * Removes password labels from preferences
+     * @param ID Id of the password
+     */
+    static public void removePasswordLabels(Context context, int ID) {
+        getPreferences(context).edit().remove(getKey(ID, PREFERENCE_PASSWORD_LABELS)).apply();
     }
 
     /**
@@ -344,6 +421,9 @@ public class PasswordPreferenceManager {
         removePasswordName(context, ID);
         removePasswordValue(context, ID);
         removePasswordColor(context, ID);
+        removePasswordCreationDate(context, ID);
+        removePasswordAlterationDate(context, ID);
+        removePasswordLabels(context, ID);
         removePasswordProperties(context, ID);
         removeFromAllPasswordIDs(context, ID);
     }
@@ -392,6 +472,18 @@ public class PasswordPreferenceManager {
         PreferenceArrayInt passwordIDs = readAllPasswordIDs(context);
         passwordIDs.remove((Integer) ID); // no need to check if passwordIDs contains ID
         writeAllPasswordIDs(context, passwordIDs);
+    }
+    // endregion
+
+    // region read and write custom sorting
+    static public PreferenceArrayInt readPasswordsCustomSortingNoGrouping(Context context) {
+        return new PreferenceArrayInt(
+                getPreferences(context).getString(PREFERENCE_CUSTOM_SORTING_NO_GROUPING, "")
+        );
+    }
+
+    static public void writePasswordsCustomSortingNoGrouping(Context context, PreferenceArrayInt customSorting) {
+        getPreferences(context).edit().putString(PREFERENCE_CUSTOM_SORTING_NO_GROUPING, customSorting.toPreference()).apply();
     }
     // endregion
 }

@@ -6,5 +6,56 @@
         android:title="@string/sort"
         android:icon="@drawable/icon_sort_24dp"
         android:orderInCategory="1"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom">
+
+        <!-- this submenu is also in the other home action bar menu files -->
+        <menu>
+
+            <group android:checkableBehavior="single">
+
+                <item
+                    android:id="@+id/home_action_bar_sort_by_name"
+                    android:title="@string/sort_by_name"
+                    android:icon="@drawable/icon_sort_alphabetically_24dp"
+                    android:checked="false"/>
+
+                <item
+                    android:id="@+id/home_action_bar_sort_custom_order"
+                    android:title="@string/sort_by_custom_order"
+                    android:icon="@drawable/icon_custom_order_24dp"
+                    android:checked="false"/>
+
+                <item
+                    android:id="@+id/home_action_bar_sort_by_creation_date"
+                    android:title="@string/sort_by_creation_date"
+                    android:icon="@drawable/icon_calendar_created_24dp"
+                    android:checked="false"/>
+
+                <item
+                    android:id="@+id/home_action_bar_sort_by_alteration_date"
+                    android:title="@string/sort_by_alteration_date"
+                    android:icon="@drawable/icon_calendar_edited_24dp"
+                    android:checked="false"/>
+
+            </group>
+
+            <group android:checkableBehavior="all">
+
+                <item
+                    android:id="@+id/home_action_bar_sort_reverse"
+                    android:title="@string/sort_reverse"
+                    android:icon="@drawable/icon_sort_reverse_24dp"
+                    android:checkable="true"/>
+
+                <item
+                    android:id="@+id/home_action_bar_group_by_label"
+                    android:title="@string/sort_group_by_labels"
+                    android:icon="@drawable/ic_label_black_24dp"
+                    android:checkable="true" />
+
+            </group>
+
+        </menu>
+
+    </item>
 </menu>

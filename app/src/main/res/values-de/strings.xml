@@ -127,4 +127,16 @@
     <string name="preferences_secret_field_monospace_title">Monospace Schriftart für geheime Felder</string>
     <string name="preferences_secret_field_monospace_summary">Zeige geheime Felder in einer Monospace Schriftart</string>
     <string name="sort">Sortieren</string>
+    <string name="delete_x_passwords">%d Passwörter löschen</string>
+    <string name="delete_x_passwords_dialog_message">Bist du dir sicher, dass du diese Passwörter löschen willst?</string>
+    <string name="sort_by_name">Nach Name</string>
+    <string name="sort_by_creation_date">Nach Erstellungsdatum</string>
+    <string name="sort_by_alteration_date">Nach Änderungsdatum</string>
+    <string name="sort_reverse">Umgekehrt</string>
+    <string name="sort_group_by_labels">Nach Label gruppieren</string>
+    <string name="sort_by_custom_order">Nach eigener Reihenfolge</string>
+    <string name="label">Label</string>
+    <string name="error_label_cant_be_empty">Label kann nicht leer sein</string>
+    <string name="error_label_cant_contain_x">Wie kommst du auf die Idee ein Label so zu nenen? Label darf %s nicht enthalten</string>
+    <string name="error_label_already_added">Label bereits hinzugefügt</string>
 </resources>
