@@ -56,10 +56,7 @@ class ShowPasswordActivity : AppCompatActivity() {
 
         // password properties recycler view
         passwordPropertiesView.layoutManager = LinearLayoutManager(this)
-        passwordPropertiesView.adapter = ShowPropertyAdapter(passwordProperties) {
-            // hide all secret values in adapter each time the user presses any of the visibility buttons
-            hideAllSecretValuesInAdapter()
-        }
+        passwordPropertiesView.adapter = createShowPropertyAdapter()
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -67,7 +64,7 @@ class ShowPasswordActivity : AppCompatActivity() {
 
         // re-init and notify adapter
         initFromPreferences()
-        passwordPropertiesView.adapter!!.notifyDataSetChanged()
+        passwordPropertiesView.adapter = createShowPropertyAdapter() // because passwordProperties has been reassigned, a new adapter, that holds the new passwordProperties is needed
 
         // toolbar
         setActionBarName()
@@ -96,28 +93,20 @@ class ShowPasswordActivity : AppCompatActivity() {
         ID = intent.getIntExtra(EXTRA_PASSWORD_ID, -1)
         check(ID != -1) { "ShowPasswordActivity: missing intent extra: ID" }
 
-        passwordName = PasswordPreferenceManager.readPasswordName(this, ID)
+        passwordName = PasswordPreferenceManager.readName(this, ID)
         passwordValue = PasswordPreferenceManager.readPasswordValue(this, ID)
+        passwordProperties = PasswordPreferenceManager.readProperties(this, ID)
 
         if (passwordValue != "") {
             // Add password value to password properties (will also be part of recycler view)
             passwordProperties.add(
-                ItemProperty(
+                index = 0,
+                element = ItemProperty(
                     propertyID = ItemProperty.INVALID_ID,
                     name = getString(R.string.password),
                     value = passwordValue,
                     secret = true
                 )
-            )
-        }
-
-        val passwordPropertyIDs = PasswordPreferenceManager.readPasswordPropertyIds(this, ID)
-        for (propertyID in passwordPropertyIDs) {
-            val propertyName = PasswordPreferenceManager.readPasswordPropertyName(this, ID, propertyID)
-            val propertyValue = PasswordPreferenceManager.readPasswordPropertyValue(this, ID, propertyID)
-            val propertySecret = PasswordPreferenceManager.readPasswordPropertySecret(this, ID, propertyID)
-            passwordProperties.add(
-                ItemProperty(ItemProperty.INVALID_ID, propertyName, propertyValue, propertySecret)
             )
         }
     }
@@ -143,7 +132,7 @@ class ShowPasswordActivity : AppCompatActivity() {
                     .setMessage(R.string.delete_password_dialog_message)
                     .setCancelable(true)
                     .setPositiveButton(R.string.delete) { dialog, _ ->
-                        PasswordPreferenceManager.removePassword(this, ID)
+                        PasswordPreferenceManager.removeComplete(this, ID)
                         finish()
                         dialog.dismiss()
                     }
@@ -172,6 +161,13 @@ class ShowPasswordActivity : AppCompatActivity() {
         for (position in passwordProperties.indices) {
             val holder = passwordPropertiesView.findViewHolderForAdapterPosition(position) as? ShowPropertyAdapter.ViewHolder
             holder?.setValueHidden(passwordProperties[position].secret)
+        }
+    }
+
+    private fun createShowPropertyAdapter(): ShowPropertyAdapter {
+        return ShowPropertyAdapter(passwordProperties) {
+            // hide all secret values in adapter each time the user presses any of the visibility buttons
+            hideAllSecretValuesInAdapter()
         }
     }
 

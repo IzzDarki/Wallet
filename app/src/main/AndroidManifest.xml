@@ -73,9 +73,6 @@
         <service
             android:name=".services.CreateExampleCardService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service
-            android:name=".services.DeleteCardService"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

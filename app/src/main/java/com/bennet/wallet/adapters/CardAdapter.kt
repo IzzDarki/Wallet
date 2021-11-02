@@ -3,7 +3,6 @@ package com.bennet.wallet.adapters
 import android.content.Context
 import android.content.Intent
 import androidx.recyclerview.widget.RecyclerView
-import com.bennet.wallet.utils.CardOrPasswordPreviewData
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textview.MaterialTextView
 import com.bennet.wallet.R
@@ -11,13 +10,15 @@ import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
 import androidx.core.view.doOnPreDraw
+import androidx.recyclerview.selection.ItemDetailsLookup
+import androidx.recyclerview.selection.SelectionTracker
 import com.bennet.wallet.activities.cards.CardActivity
 import com.bennet.wallet.activities.cards.ShowCardActivity
-import com.bennet.wallet.utils.ScrollAnimationImageView
-import com.bennet.wallet.utils.Utility
+import com.bennet.wallet.utils.*
 
 class CardAdapter(cards: List<CardOrPasswordPreviewData>)
-    : RecyclerView.Adapter<CardAdapter.ViewHolder>() {
+    : RecyclerView.Adapter<CardAdapter.ViewHolder>()
+{
 
     companion object {
         const val cardWidthToHeightRatio = 85.6 / 53.98
@@ -25,10 +26,18 @@ class CardAdapter(cards: List<CardOrPasswordPreviewData>)
     }
 
     private var cards: List<CardOrPasswordPreviewData> = cards
+    lateinit var selectionTracker: SelectionTracker<Long>
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), MultiSelectAdapterViewHolder {
         var cardView: MaterialCardView = itemView.findViewById(R.id.small_card_item_card_view)
         var textView: MaterialTextView = itemView.findViewById(R.id.small_card_item_text_view)
+
+        // needed for selection
+        override val itemDetails: ItemDetailsLookup.ItemDetails<Long>
+            get() = object : ItemDetailsLookup.ItemDetails<Long>() {
+                override fun getPosition(): Int = adapterPosition
+                override fun getSelectionKey(): Long = cards[adapterPosition].ID.toLong()
+            }
     }
 
     private fun showCard(context: Context, cardID: Int) {
@@ -61,7 +70,7 @@ class CardAdapter(cards: List<CardOrPasswordPreviewData>)
             )
         ) {
             // draw outline
-            holder.cardView.strokeWidth = 4
+            holder.cardView.strokeWidth = context.resources.getDimension(R.dimen.outline_for_similar_colors_stroke_width).toInt()
             holder.cardView.strokeColor = context.resources.getColor(R.color.card_view_outline_color)
         } else {
             // remove outline
@@ -78,6 +87,9 @@ class CardAdapter(cards: List<CardOrPasswordPreviewData>)
         holder.cardView.setOnClickListener {
             showCard(context, cards[pos].ID)
         }
+
+        if (selectionTracker.isSelected(cards[pos].ID.toLong()))
+            AppUtility.makeCardViewSelected(holder.cardView)  // if not selected, outline has already been drawn (or not, if it has no outline)
     }
 
     override fun getItemCount(): Int {

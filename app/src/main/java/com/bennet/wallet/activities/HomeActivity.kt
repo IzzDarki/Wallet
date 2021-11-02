@@ -27,6 +27,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.textview.MaterialTextView
 
+// TODO clean up
+// TODO fix selection
+// TODO test & fix drag and drop
+// TODO impl Sorting and saving it
+// TODO save expanded for labels
+// TODO save label order and make labels rearrangeable
 class HomeActivity : AppCompatActivity() {
     // UI
     private lateinit var constraintLayout: ConstraintLayout
@@ -92,12 +98,9 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-        override fun getItemCount(): Int {
-            return if (state == State.CardsAndPasswords) 2 else 1
-        }
+        override fun getItemCount() = if (state == State.CardsAndPasswords) 2 else 1
     }
 
-    // lifecycle
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -213,9 +216,10 @@ class HomeActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (drawerLayout.isDrawerVisible(sideNavigationView)) drawerLayout.closeDrawer(
-            sideNavigationView
-        ) else super.onBackPressed()
+        if (drawerLayout.isDrawerVisible(sideNavigationView))
+            drawerLayout.closeDrawer(sideNavigationView)
+        else
+            super.onBackPressed()
     }
 
     private fun clearCachedCardImages() {
@@ -250,7 +254,7 @@ class HomeActivity : AppCompatActivity() {
                 if (fragment is HomeCardsFragment) // also checks null
                     fragment.updateCards()
                 else if (fragment == null)
-                    Log.e("WalletImportant", "From: HomeActivity.createExampleCard(): Couldn't find HomeCardsFragment")
+                    Log.e("Wallet", "From: HomeActivity.createExampleCard(): Couldn't find HomeCardsFragment")
             }
         }
 

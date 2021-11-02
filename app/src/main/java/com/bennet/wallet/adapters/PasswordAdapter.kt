@@ -42,32 +42,6 @@ class PasswordAdapter(passwords: List<CardOrPasswordPreviewData>)
             cardView.context.startActivity(intent)
         }
 
-        fun makeSelected() {
-            val context = cardView.context
-            val strokeColor = ContextCompat.getColor(context, R.color.card_view_outline_color_black_or_white)
-            val cardSelectedColor =
-                if (Utility.isUsingNightModeResources(context))
-                    Utility.getDarkerColor(passwords[adapterPosition].color)
-                else
-                    Utility.getLighterColor(passwords[adapterPosition].color)
-
-
-            cardView.setCardBackgroundColor(cardSelectedColor)
-            cardView.strokeWidth = 12
-
-            // check if stroke color and card color are similar
-            if (!Utility.areColorsSimilar(strokeColor, cardSelectedColor))
-                cardView.strokeColor = strokeColor
-            else {
-                // if they are similar, use normal outline color instead
-                // this should never happen, because in dark mode, the card color gets darker, so that white cards should be
-                // dark enough to be different than the white outline color
-                // and in light mode the other way round
-                // still keep this here for some weird scenarios or future changes
-                cardView.strokeColor = ContextCompat.getColor(context, R.color.card_view_outline_color)
-            }
-        }
-
         // needed for selection
         override val itemDetails: ItemDetailsLookup.ItemDetails<Long>
             get() = object : ItemDetailsLookup.ItemDetails<Long>() {
@@ -99,7 +73,7 @@ class PasswordAdapter(passwords: List<CardOrPasswordPreviewData>)
                 passwords[pos].color)
         ) {
             // draw outline
-            holder.cardView.strokeWidth = 4
+            holder.cardView.strokeWidth = context.resources.getDimension(R.dimen.outline_for_similar_colors_stroke_width).toInt()
             holder.cardView.strokeColor = context.resources.getColor(R.color.card_view_outline_color)
         } else {
             // remove outline
@@ -113,7 +87,7 @@ class PasswordAdapter(passwords: List<CardOrPasswordPreviewData>)
             holder.textView.setTextColor(context.resources.getColor(R.color.on_light_text_color))
 
         if (selectionTracker.isSelected(passwords[pos].ID.toLong()))
-            holder.makeSelected() // if not selected, outline has already been drawn (or not, if it has no outline)
+            AppUtility.makeCardViewSelected(holder.cardView) // if not selected, outline has already been drawn (or not, if it has no outline)
     }
 
     override fun getItemCount(): Int = passwords.size

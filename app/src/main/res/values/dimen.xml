@@ -6,4 +6,5 @@
     <dimen name="list_item_start_margin">10dp</dimen>
     <dimen name="text_input_padding_bottom">10dp</dimen>
     <dimen name="create_new_property_top_and_bottom_padding">6dp</dimen>
+    <dimen name="outline_for_similar_colors_stroke_width">1dp</dimen>
 </resources>

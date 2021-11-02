@@ -3,17 +3,14 @@ package com.bennet.wallet.utils
 import androidx.annotation.ColorInt
 import android.util.TypedValue
 import com.bennet.wallet.R
-import android.graphics.Bitmap
 import kotlin.Throws
-import android.graphics.BitmapFactory
 import android.app.Activity
 import android.content.Context
 import android.widget.EditText
 import kotlin.jvm.JvmOverloads
 import android.content.SharedPreferences
 import android.content.res.Configuration
-import android.graphics.Color
-import android.graphics.Rect
+import android.graphics.*
 import android.text.InputType
 import android.util.Log
 import android.view.MotionEvent
@@ -24,12 +21,15 @@ import androidx.core.graphics.blue
 import androidx.core.graphics.green
 import androidx.core.graphics.red
 import androidx.core.view.allViews
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.bennet.wallet.BuildConfig
+import com.google.android.material.datepicker.OnSelectionChangedListener
 import java.io.*
 import java.security.GeneralSecurityException
-import java.util.Random
+import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.max
 import kotlin.math.min
@@ -79,6 +79,46 @@ object Utility {
     }
 
     @JvmStatic
+    fun<E> attachDragAndDropToRecyclerView(
+        recyclerView: RecyclerView,
+        items: List<E>,
+        onDragAndDropListener: () -> Unit
+    ): ItemTouchHelper {
+        val it = ItemTouchHelper(
+            object: ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.START or ItemTouchHelper.END,
+                0
+            ) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    val fromPos = viewHolder.adapterPosition
+                    val toPos = target.adapterPosition
+
+                    // move item in the list, by swapping with neighbour until the destination position is reached (Moves all the items between one up or down)
+                    if (fromPos < toPos) {
+                        for (i in fromPos until toPos)
+                            Collections.swap(items, i, i + 1)
+                    }
+                    else {
+                        for (i in fromPos downUntil toPos)
+                            Collections.swap(items, i, i - 1)
+                    }
+                    recyclerView.adapter?.notifyItemMoved(fromPos, toPos) // calling notifyItemMoved is enough
+
+                    onDragAndDropListener()
+                    return false
+                }
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
+            }
+        )
+        it.attachToRecyclerView(recyclerView)
+        return it
+    }
+
+    @JvmStatic
     @ColorInt
     fun getDefaultBackgroundColor(context: Context): Int {
         val value = TypedValue()
@@ -88,6 +128,14 @@ object Utility {
             true
         ) // kind of works
         return value.data
+    }
+
+    fun List<String>.toPair(): Pair<String, String> {
+        return when (this.size) {
+            2 -> Pair(this[0], this[1])
+            1 -> Pair(this[0], "")
+            else -> throw IllegalArgumentException("List is not of length 2 or 1")
+        }
     }
 
     infix fun Int.downUntil(to: Int): IntProgression {

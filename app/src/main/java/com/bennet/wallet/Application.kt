@@ -1,7 +1,6 @@
 package com.bennet.wallet
 
 import android.app.Application
-import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
 import androidx.security.crypto.EncryptedFile
@@ -177,27 +176,27 @@ class Application : Application() {
      * Removes all card ids and instead creates a property for the card id
      */
     private fun changeCardIdsToProperty() {
-        for (cardID in CardPreferenceManager.readAllCardIDs(this)) {
+        for (cardID in CardPreferenceManager.readAllIDs(this)) {
 
             // read id value
             @Suppress("DEPRECATION")
-            val idValue = CardPreferenceManager.readCardID(this, cardID)
+            val idValue = CardPreferenceManager.readID(this, cardID)
 
-            if (idValue != "") {
+            if (idValue != null && idValue != "") {
 
                 // create new property
-                val cardPropertyIDs = CardPreferenceManager.readCardPropertyIds(this, cardID)
+                val cardPropertyIDs = CardPreferenceManager.readPropertyIds(this, cardID)
                 val propertyID = Utility.IDGenerator(cardPropertyIDs).generateID()
                 cardPropertyIDs.add(propertyID)
 
-                CardPreferenceManager.writeCardPropertyIds(this, cardID, cardPropertyIDs)
-                CardPreferenceManager.writeCardPropertyName(this, cardID, propertyID, getString(R.string.card_id))
-                CardPreferenceManager.writeCardPropertyValue(this, cardID, propertyID, idValue)
-                CardPreferenceManager.writeCardPropertySecret(this, cardID, propertyID, false)
+                CardPreferenceManager.writePropertyIds(this, cardID, cardPropertyIDs)
+                CardPreferenceManager.writePropertyName(this, cardID, propertyID, getString(R.string.card_id))
+                CardPreferenceManager.writePropertyValue(this, cardID, propertyID, idValue)
+                CardPreferenceManager.writePropertySecret(this, cardID, propertyID, false)
 
                 // remove old id
                 @Suppress("DEPRECATION")
-                CardPreferenceManager.removeCardID(this, cardID)
+                CardPreferenceManager.removeID(this, cardID)
             }
         }
     }

@@ -99,7 +99,7 @@ class EditPropertyAdapter(properties: MutableList<ItemProperty>, onPropertyRemov
         }
 
         private fun onEndIconClick(view: View) {
-            if (properties[adapterPosition].secret) {
+            if (properties[layoutPosition].secret) {
                 val popupView: View =
                     LayoutInflater.from(view.context).inflate(R.layout.edit_property_end_icon_popup_window_layout,null)
                 val visibilityButton =

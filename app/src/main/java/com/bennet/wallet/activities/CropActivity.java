@@ -136,7 +136,7 @@ public class CropActivity extends AppCompatActivity implements CropImageView.OnC
      */
     protected boolean requestCancel() {
         if (AppPreferenceManager.isBackConfirmCrop(this)) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.RoundedCornersDialog));
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.cancel_image_selection_title);
             builder.setMessage(R.string.cancel_image_selection_message);
             builder.setCancelable(true);

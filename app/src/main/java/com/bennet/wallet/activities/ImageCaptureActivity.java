@@ -82,7 +82,7 @@ public class ImageCaptureActivity extends GetImageActivity {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) // Ensure that the app has CAMERA permission
                 startCamera();
             else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-                AlertDialog.Builder build = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.RoundedCornersDialog));
+                AlertDialog.Builder build = new AlertDialog.Builder(this);
                 build.setTitle(R.string.camera_permission_dialogue_title)
                         .setMessage(R.string.camera_permission_dialogue_image_capture_message)
                         .setNegativeButton(android.R.string.cancel, (dialog, which) -> {

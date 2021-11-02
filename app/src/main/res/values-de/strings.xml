@@ -31,10 +31,9 @@
     <string name="edit_color_button_text">Farbe</string>
     <string name="edit_card_auto_color_button_text">Auto</string>
     <string name="crop_image_menu_lock_card_ratio">Seitenverhältnis auf Kartenformat festlegen</string>
-    <string name="example_card_name">Bespielkarte</string>
+    <string name="example_card_name">Beispielkarte</string>
     <string name="example_card_card_id">Beispiel-ID</string>
     <string name="new_card_property_name">Neue Karten Eigenschaft</string>
-    <string name="create_new_card_property">Neue Karten Eigenschaft erstellen</string>
     <string name="text_input_dialog_property_name">Eigenschafts-Name</string>
     <string name="file_too_big">Die ausgewählte Datei ist zu groß</string>
     <string name="open_navigation_drawer">Navigationsleiste öffnen</string>
@@ -115,16 +114,15 @@
     <string name="edit_password">Passwort bearbeiten</string>
     <string name="edit_card">Karte bearbeiten</string>
     <string name="new_password_property_name">Neue Passwort Eigenschaft</string>
-    <string name="create_new_password_property">Neue Passwort Eigenschaft erstellen</string>
     <string name="no">Nein</string>
     <string name="keep_property_secret">Eigenschaft geheim halten</string>
-    <string name="preferences_hide_length_secret_field_title">Textlänge in geheimen Feldern verbergen</string>
+    <string name="preferences_hide_length_secret_field_title">Textlänge verbergen</string>
     <string name="preferences_hide_length_secret_field_summary">Die Textlänge in geheimen Feldern verbergen</string>
     <string name="cancel_create_new_password_title">Neues Passwort verwerfen</string>
     <string name="nothing_will_be_saved">Es wird nichts gespeichert</string>
     <string name="changes_are_not_saved">Änderungen werden nicht gespeichert</string>
     <string name="discard_changes">Änderungen verwerfen</string>
-    <string name="preferences_secret_field_monospace_title">Monospace Schriftart für geheime Felder</string>
+    <string name="preferences_secret_field_monospace_title">Monospace Schriftart</string>
     <string name="preferences_secret_field_monospace_summary">Zeige geheime Felder in einer Monospace Schriftart</string>
     <string name="sort">Sortieren</string>
     <string name="delete_x_passwords">%d Passwörter löschen</string>
@@ -139,4 +137,11 @@
     <string name="error_label_cant_be_empty">Label kann nicht leer sein</string>
     <string name="error_label_cant_contain_x">Wie kommst du auf die Idee ein Label so zu nenen? Label darf %s nicht enthalten</string>
     <string name="error_label_already_added">Label bereits hinzugefügt</string>
+    <string name="password_property">Passwort Eigenschaft</string>
+    <string name="card_property">Karten Eigenschaft</string>
+    <string name="new_label">Neues Label</string>
+    <string name="delete_x_cards">%d Karten löschen</string>
+    <string name="delete_x_cards_dialog_message">Bist du dir sicher, dass du diese Karten löschen willst?</string>
+    <string name="all_passwords">Alle Passwörter</string>
+    <string name="all_cards">Alle Karten</string>
 </resources>

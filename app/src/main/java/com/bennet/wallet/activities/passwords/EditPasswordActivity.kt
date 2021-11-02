@@ -2,21 +2,18 @@ package com.bennet.wallet.activities.passwords
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.*
 import android.view.View.OnFocusChangeListener
 import android.view.inputmethod.EditorInfo
-import android.widget.AutoCompleteTextView
-import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.view.allViews
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,18 +23,16 @@ import com.bennet.wallet.activities.HomeActivity
 import com.bennet.wallet.adapters.EditPropertyAdapter
 import com.bennet.wallet.preferences.AppPreferenceManager
 import com.bennet.wallet.preferences.PasswordPreferenceManager
+import com.bennet.wallet.components.EditLabelsComponent
 import com.bennet.wallet.utils.ItemProperty
 import com.bennet.wallet.utils.Utility
 import com.bennet.wallet.utils.Utility.IDGenerator
 import com.bennet.wallet.utils.Utility.PreferenceArrayInt
 import com.bennet.wallet.utils.Utility.PreferenceArrayString
 import com.bennet.wallet.utils.Utility.hideKeyboard
-import com.bennet.wallet.utils.Utility.isViewHitByTouchEvent
 import com.bennet.wallet.utils.Utility.setImeOptionsAndRestart
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import java.util.*
@@ -56,15 +51,14 @@ class EditPasswordActivity
 
     // region UI
     private lateinit var mainLinearLayout: LinearLayoutCompat
-    private lateinit var labelsChipGroup: ChipGroup
-    private lateinit var labelsAddChip: Chip
     private lateinit var nameInputLayout: TextInputLayout
     private lateinit var nameInputEditText: TextInputEditText
     private lateinit var passwordInputLayout: TextInputLayout
     private lateinit var passwordInputEditText: TextInputEditText
-    private lateinit var passwordColorButton: MaterialButton
+    private lateinit var passwordColorChip: Chip
     private lateinit var propertiesRecyclerView: RecyclerView
-    private lateinit var createNewPasswordPropertyButton: LinearLayoutCompat
+    private lateinit var addPasswordPropertyChip: Chip
+    private lateinit var editLabelsComponent: EditLabelsComponent
     // endregion
 
 
@@ -72,9 +66,11 @@ class EditPasswordActivity
     private var ID = 0
     private lateinit var passwordName: String
     private lateinit var passwordValue: String
-    private lateinit var passwordLabels: PreferenceArrayString // will not be kept up to date (only readAndCheckLabels updates passwordLabels)
+    private lateinit var labels: PreferenceArrayString // will not be kept up to date (only readAndCheckLabels updates labels)
     private var passwordColor: Int = 0
     private var passwordProperties: MutableList<ItemProperty> = mutableListOf()
+    private var passwordCreationDate = Date(0)
+    private var passwordAlterationDate = Date(0)
     // endregion
 
 
@@ -91,15 +87,14 @@ class EditPasswordActivity
 
         // hooks
         mainLinearLayout = findViewById(R.id.edit_password_main_linear_layout)
-        labelsChipGroup = findViewById(R.id.edit_password_labels_chip_group)
-        labelsAddChip = findViewById(R.id.edit_password_labels_add_chip)
         nameInputLayout = findViewById(R.id.edit_password_name_input_layout)
         nameInputEditText = findViewById(R.id.edit_password_name_edit_text)
         passwordInputLayout = findViewById(R.id.edit_password_password_input_layout)
         passwordInputEditText = findViewById(R.id.edit_password_password_edit_text)
-        passwordColorButton = findViewById(R.id.edit_password_color_button)
+        passwordColorChip = findViewById(R.id.edit_password_color_chip)
         propertiesRecyclerView = findViewById(R.id.edit_password_recycler_view)
-        createNewPasswordPropertyButton = findViewById(R.id.edit_password_create_new_password_property_button)
+        addPasswordPropertyChip = findViewById(R.id.edit_password_add_password_property_chip)
+        editLabelsComponent = EditLabelsComponent(this, R.id.edit_password_labels_chip_group, R.id.edit_password_labels_add_chip, mainLinearLayout)
 
         // toolbar
         val toolbar: MaterialToolbar = findViewById(R.id.toolbar)
@@ -150,20 +145,14 @@ class EditPasswordActivity
             }
         }
 
+        // create new password property button
+        addPasswordPropertyChip.setOnClickListener { addNewProperty() }
 
         // labels chip group
-        updateLabelViews()
-
-        // labels add chip
-        labelsAddChip.setOnClickListener {
-            addNewLabel()
-        }
-
-        // create new password property button
-        createNewPasswordPropertyButton.setOnClickListener { addNewProperty() }
+        editLabelsComponent.displayLabels(labels)
 
         // password color
-        passwordColorButton.setOnClickListener { pickColor() }
+        passwordColorChip.setOnClickListener { pickColor() }
         updateColorButtonColor()
 
         // recycler view
@@ -176,27 +165,10 @@ class EditPasswordActivity
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         // Every touch event goes through this function
-        // This function finishes editing of a label in certain situations
-
-        if (ev?.actionMasked == MotionEvent.ACTION_DOWN) {
-
-            // Check if touch event hits the edited label => don't finish editing it (the user wants to interact with the edited label)
-            val editText = getEditTextFromChipGroup()
-                ?: return super.dispatchTouchEvent(ev) // if there is no EditText, touch events can be dispatched as usual
-
-            if (!isViewHitByTouchEvent(editText, ev)) {
-                getEditTextHitByTouchEvent(ev)?.requestFocus() // request focus to EditText if the touch event hits any EditText (before the focus gets cleared by finishEditingChip)
-                finishEditingChip(editText)
-            }
-
-            // Check if touch event hits one of the chips => consume the touch event
-            for (view in labelsChipGroup.allViews) {
-                if (view is Chip && isViewHitByTouchEvent(view, ev)) {
-                    return true // consume the touch event (finishing editing while also triggering other chip related UI is too much for a single touch)
-                }
-            }
-        }
-        return super.dispatchTouchEvent(ev) // dispatch touch event as usual
+        if (editLabelsComponent.dispatchTouchEvent(ev))
+            return true
+        else
+            return super.dispatchTouchEvent(ev)
     }
     // endregion
 
@@ -205,21 +177,15 @@ class EditPasswordActivity
     private fun initFromPreferences() {
         ID = intent.getIntExtra(EXTRA_PASSWORD_ID, -1)
         check(ID != -1) { "PasswordActivity: missing intent extra: ID" }
-        passwordName = PasswordPreferenceManager.readPasswordName(this, ID)
+        passwordName = PasswordPreferenceManager.readName(this, ID)
         passwordValue = PasswordPreferenceManager.readPasswordValue(this, ID)
-        passwordLabels = PasswordPreferenceManager.readPasswordLabels(this, ID)
-        passwordColor = PasswordPreferenceManager.readPasswordColor(this, ID)
+        labels = PasswordPreferenceManager.readLabels(this, ID)
+        passwordColor = PasswordPreferenceManager.readColor(this, ID)
+        passwordCreationDate = PasswordPreferenceManager.readCreationDate(this, ID)
+        passwordAlterationDate = PasswordPreferenceManager.readAlterationDate(this, ID)
+        passwordProperties = PasswordPreferenceManager.readProperties(this, ID)
 
-        val passwordPropertyIDs: List<Int> = PasswordPreferenceManager.readPasswordPropertyIds(this, ID)
-        for (propertyID in passwordPropertyIDs) {
-            passwordProperties.add(ItemProperty(
-                propertyID = propertyID,
-                name = PasswordPreferenceManager.readPasswordPropertyName(this, ID, propertyID),
-                value = PasswordPreferenceManager.readPasswordPropertyValue(this, ID, propertyID),
-                secret = PasswordPreferenceManager.readPasswordPropertySecret(this, ID, propertyID),
-            ))
-        }
-        if (passwordPropertyIDs.isEmpty())
+        if (passwordProperties.isEmpty())
             passwordInputEditText.imeOptions =  EditorInfo.IME_ACTION_DONE
     }
 
@@ -227,7 +193,7 @@ class EditPasswordActivity
         ID = generateNewPasswordID()
         passwordName = getString(R.string.new_password)
         passwordValue = "" // init as empty
-        passwordLabels = PreferenceArrayString()
+        labels = PreferenceArrayString()
         passwordColor = resources.getColor(R.color.card_default_color)
 
         // init default properties
@@ -266,12 +232,8 @@ class EditPasswordActivity
         setImeOptionsAndRestart(passwordInputEditText, EditorInfo.IME_ACTION_NEXT)
     }
 
-    private fun addNewLabel() {
-        addEditTextToLabels("New label")
-    }
-
     private fun saveAndShowPassword() {
-        val propertyIDs: List<Int> = PasswordPreferenceManager.readPasswordPropertyIds(this, ID)
+        val propertyIDs: List<Int> = PasswordPreferenceManager.readPropertyIds(this, ID)
 
         // Check if the password was modified (hasBeenModified will be set true)
         if (!readAndCheckAllInput(propertyIDs)) {
@@ -291,7 +253,7 @@ class EditPasswordActivity
      */
     private fun requestCancel(): Boolean {
         readAndCheckAllInput(
-            PasswordPreferenceManager.readPasswordPropertyIds(this, ID)
+            PasswordPreferenceManager.readPropertyIds(this, ID)
         ) // Read input to figure out if password has been modified (member variable hasBeenModified)
 
         if (AppPreferenceManager.isBackConfirmNewCardOrPassword(this) && isCreateNewPasswordIntent
@@ -309,7 +271,7 @@ class EditPasswordActivity
                 dialogMessage = getString(R.string.changes_are_not_saved)
             }
 
-            AlertDialog.Builder(ContextThemeWrapper(this, R.style.RoundedCornersDialog))
+            AlertDialog.Builder(this)
                 .setTitle(dialogTitle)
                 .setMessage(dialogMessage)
                 .setCancelable(true)
@@ -329,7 +291,7 @@ class EditPasswordActivity
     }
 
     private fun deleteAndReturnToHome() {
-        PasswordPreferenceManager.removePassword(this, ID)
+        PasswordPreferenceManager.removeComplete(this, ID)
         finishAndReturnToHome()
     }
     // endregion
@@ -397,11 +359,100 @@ class EditPasswordActivity
     override fun onDialogDismissed(dialogId: Int) {}
 
     private fun updateColorButtonColor() {
-        passwordColorButton.setBackgroundColor(passwordColor)
+        passwordColorChip.chipBackgroundColor = ColorStateList.valueOf(passwordColor)
         if (Utility.isColorDark(passwordColor))
-            passwordColorButton.setTextColor(resources.getColor(R.color.on_dark_text_color))
+            passwordColorChip.setTextColor(resources.getColor(R.color.on_dark_text_color))
         else
-            passwordColorButton.setTextColor(resources.getColor(R.color.on_light_text_color))
+            passwordColorChip.setTextColor(resources.getColor(R.color.on_light_text_color))
+
+        if (Utility.areColorsSimilar(
+                Utility.getDefaultBackgroundColor(this),
+                passwordColor
+            )
+        ) {
+            // draw outline
+            passwordColorChip.chipStrokeWidth = resources.getDimension(R.dimen.outline_for_similar_colors_stroke_width)
+            passwordColorChip.chipStrokeColor = ColorStateList.valueOf(resources.getColor(R.color.card_view_outline_color))
+        } else {
+            // remove outline
+            passwordColorChip.chipStrokeWidth = 0F
+        }
+    }
+    // endregion
+
+
+    // region read and check input fields
+    /**
+     * Reads all the user input and checks if the password has been modified ([.hasBeenModified] will be set true)
+     * @param propertyIDs List of all property Ids
+     * @return true if there are no errors, false otherwise
+     */
+    private fun readAndCheckAllInput(propertyIDs: List<Int>): Boolean {
+        readAndCheckPasswordValue()
+        readAndCheckLabels()
+        readAndCheckAllProperties()
+        checkIfPropertyWasRemoved(propertyIDs)
+        return readAndCheckName()
+    }
+
+    /**
+     * Checks if there are errors in the name input.
+     * Updates [.hasBeenModified]
+     * @return true if there are no errors in the users input, false otherwise
+     */
+    private fun readAndCheckName(): Boolean {
+        passwordName = nameInputEditText.text.toString().trim()
+        if (nameInputLayout.error != null)
+            return false
+        if (passwordName != PasswordPreferenceManager.readName(this, ID))
+            hasBeenModified = true
+        return true
+    }
+
+    private fun readAndCheckPasswordValue() {
+        passwordValue = passwordInputEditText.text.toString().trim()
+        if (passwordValue != PasswordPreferenceManager.readPasswordValue(this, ID))
+            hasBeenModified = true
+    }
+
+    private fun readAndCheckLabels() {
+        val oldLabels = PasswordPreferenceManager.readLabels(this, ID)
+        labels = PreferenceArrayString(editLabelsComponent.readAllLabels().iterator())
+        if (!oldLabels.containsAll(labels) || !labels.containsAll(oldLabels))
+            hasBeenModified = true
+    }
+
+    /**
+     * Checks if any property was modified. Also checks if a new property was added.
+     * Then sets [.hasBeenModified] to true
+     */
+    private fun readAndCheckAllProperties() {
+        for (position in passwordProperties.indices) {
+            val holder = propertiesRecyclerView.findViewHolderForAdapterPosition(position) as? EditPropertyAdapter.ViewHolder
+            holder?.readValue()
+
+            val property = passwordProperties[position]
+            if (property.name != PasswordPreferenceManager.readPropertyName(this, ID, property.propertyID))
+                hasBeenModified = true
+            if (property.value != PasswordPreferenceManager.readPropertyValue(this, ID, property.propertyID))
+                hasBeenModified = true
+            if (property.secret != PasswordPreferenceManager.readPropertySecret(this, ID, property.propertyID))
+                hasBeenModified = true
+        }
+    }
+
+    /**
+     * Checks if a property got removed.
+     * Then sets [.hasBeenModified] to true
+     * @param propertyIDs The list of all property IDs of this password currently in preferences
+     */
+    private fun checkIfPropertyWasRemoved(propertyIDs: List<Int>) {
+        for (propertyID in propertyIDs) {
+            if (!doesPropertyIDExist(propertyID)) { // if propertyID doesn't exist anymore after editing
+                hasBeenModified = true
+                return
+            }
+        }
     }
     // endregion
 
@@ -430,21 +481,17 @@ class EditPasswordActivity
     }
 
     private fun writeToPreferences() {
-        PasswordPreferenceManager.addToAllPasswordIDs(this, ID) // This should be fine. At this moment no other process should modify this preference list (Note that this only adds the ID if it is not yet contained in the list)
-        PasswordPreferenceManager.writePasswordName(this, ID, passwordName)
-        PasswordPreferenceManager.writePasswordValue(this, ID, passwordValue)
-        PasswordPreferenceManager.writePasswordLabels(this, ID, passwordLabels)
-        PasswordPreferenceManager.writePasswordColor(this, ID, passwordColor)
-
-        val currentPropertyIDs = PreferenceArrayInt() // Collects all current propertyIDs to write into preferences
-        PasswordPreferenceManager.removePasswordProperties(this, ID)
-        for (property in passwordProperties) {
-            currentPropertyIDs.add(property.propertyID)
-            PasswordPreferenceManager.writePasswordPropertyName(this, ID, property.propertyID, property.name)
-            PasswordPreferenceManager.writePasswordPropertyValue(this, ID, property.propertyID, property.value)
-            PasswordPreferenceManager.writePasswordPropertySecret(this, ID, property.propertyID, property.secret)
-        }
-        PasswordPreferenceManager.writePasswordPropertyIds(this, ID, currentPropertyIDs)
+        PasswordPreferenceManager.writeComplete(
+            this,
+            ID,
+            passwordName,
+            passwordValue,
+            passwordColor,
+            passwordCreationDate, // TODO (newIntent)
+            passwordAlterationDate, // TODO
+            labels,
+            passwordProperties
+        )
     }
 
     private fun onPropertyRemoval() {
@@ -454,172 +501,11 @@ class EditPasswordActivity
             val holder = propertiesRecyclerView.findViewHolderForAdapterPosition(pos) as? EditPropertyAdapter.ViewHolder?
             holder?.clearFocus()
         }
-        if (passwordProperties.size == 1)
+        if (passwordProperties.size == 1) // the last item is going to be removed
             setImeOptionsAndRestart(passwordInputEditText, EditorInfo.IME_ACTION_DONE)
         else {
             val lastViewHolder = propertiesRecyclerView.findViewHolderForAdapterPosition(passwordProperties.size - 2) as? EditPropertyAdapter.ViewHolder
             lastViewHolder?.setImeOptions(EditorInfo.IME_ACTION_DONE)
-        }
-    }
-
-    private fun updateLabelViews() {
-        for (label in passwordLabels) {
-            addChipToLabels(label)
-        }
-    }
-
-    private fun addChipToLabels(text: String, index: Int = 0) {
-        val chip = Chip(this)
-        chip.text = text
-        chip.isCloseIconVisible = true
-        chip.setOnCloseIconClickListener {
-            labelsChipGroup.removeView(chip)
-        }
-        chip.setOnLongClickListener {
-            startEditingChip(chip)
-            return@setOnLongClickListener true // consumed long click
-        }
-        labelsChipGroup.addView(chip, index)
-    }
-
-    private fun addEditTextToLabels(text: String, index: Int = 0) {
-        val editText = AutoCompleteTextView(this)
-        editText.isSingleLine = true
-        editText.setText(text)
-        editText.setSelectAllOnFocus(true)
-        editText.imeOptions = EditorInfo.IME_ACTION_NEXT
-        editText.setOnEditorActionListener { _, _, _ ->
-            passwordInputEditText.requestFocus() // focus should jump to the next field when pressing done
-            // when action (done) triggered, finish editing
-            finishEditingChip(editText)
-            return@setOnEditorActionListener true // consumed the action
-        }
-
-        labelsChipGroup.addView(editText, index)
-        editText.requestFocus()
-        Utility.showKeyboard(editText)
-    }
-
-    private fun startEditingChip(chip: Chip) {
-        val index = labelsChipGroup.indexOfChild(chip)
-        labelsChipGroup.removeView(chip)
-        addEditTextToLabels(chip.text.toString(), index)
-    }
-
-    private fun finishEditingChip(editText: AutoCompleteTextView) {
-        // clear focus and remove editText
-        editText.clearFocus()
-        val index = labelsChipGroup.indexOfChild(editText)
-        labelsChipGroup.removeView(editText)
-
-        editText.setText(editText.text.toString().trim())
-
-        val newLabel = editText.text.toString()
-        if (newLabel == "") {
-            Toast.makeText(this, R.string.error_label_cant_be_empty, Toast.LENGTH_SHORT).show()
-            return
-        }
-        if (newLabel.contains(Utility.PreferenceArray.DEFAULT_SEPARATOR)) {
-            val errorMessage = String.format(
-                getString(R.string.error_label_cant_contain_x),
-                Utility.PreferenceArray.DEFAULT_SEPARATOR
-            )
-            Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
-            return
-        }
-        if (newLabel in getAllLabels()) {
-            Toast.makeText(this, R.string.error_label_already_added, Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        // label is ok => add it as chip
-        addChipToLabels(editText.text.toString(), index)
-    }
-
-    /**
-     * Reads all the user input and checks if the password has been modified ([.hasBeenModified] will be set true)
-     * @param propertyIDs List of all property Ids
-     * @return true if there are no errors, false otherwise
-     */
-    private fun readAndCheckAllInput(propertyIDs: List<Int>): Boolean {
-        readAndCheckPasswordValue()
-        readAndCheckLabels()
-        readAndCheckAllProperties()
-        checkIfPropertyWasRemoved(propertyIDs)
-        return readAndCheckName()
-    }
-
-    /**
-     * Checks if there are errors in the name input.
-     * Updates [.hasBeenModified]
-     * @return true if there are no errors in the users input, false otherwise
-     */
-    private fun readAndCheckName(): Boolean {
-        passwordName = nameInputEditText.text.toString().trim()
-        if (nameInputLayout.error != null)
-            return false
-        if (passwordName != PasswordPreferenceManager.readPasswordName(this, ID))
-            hasBeenModified = true
-        return true
-    }
-
-    private fun readAndCheckPasswordValue() {
-        passwordValue = passwordInputEditText.text.toString().trim()
-        if (passwordValue != PasswordPreferenceManager.readPasswordValue(this, ID))
-            hasBeenModified = true
-    }
-
-    private fun readAndCheckLabels() {
-        val oldLabels = PasswordPreferenceManager.readPasswordLabels(this, ID)
-        passwordLabels = PreferenceArrayString(getAllLabels().iterator())
-        if (!oldLabels.containsAll(passwordLabels) || !passwordLabels.containsAll(oldLabels))
-            hasBeenModified = true
-    }
-
-    /**
-     * Checks if any property was modified. Also checks if a new property was added.
-     * Then sets [.hasBeenModified] to true
-     */
-    private fun readAndCheckAllProperties() {
-        for (position in passwordProperties.indices) {
-            val holder = propertiesRecyclerView.findViewHolderForAdapterPosition(position) as? EditPropertyAdapter.ViewHolder
-            holder?.readValue()
-
-            val property = passwordProperties[position]
-            if (property.name != PasswordPreferenceManager.readPasswordPropertyName(this, ID, property.propertyID))
-                hasBeenModified = true
-            if (property.value != PasswordPreferenceManager.readPasswordPropertyValue(this, ID, property.propertyID))
-                hasBeenModified = true
-            if (property.secret != PasswordPreferenceManager.readPasswordPropertySecret(this, ID, property.propertyID))
-                hasBeenModified = true
-        }
-        // Note: PasswordPreferenceManager.readPasswordPropertyName will return null if property.propertyID is not in preferences = if the property was added (String.equals accepts null and returns false)
-    }
-
-    /**
-     * Get all labels by reading text from the views in labelsChipGroup
-     */
-    private fun getAllLabels(): Sequence<String> {
-        return labelsChipGroup.allViews
-            .filter { view -> view is Chip && view !== labelsAddChip as View }
-            .map {
-                val chip = it as Chip
-                chip.text.toString()
-            }
-            .sortedByDescending { it }
-    }
-
-    /**
-     * Checks if a property got removed.
-     * Then sets [.hasBeenModified] to true
-     * @param propertyIDs The list of all property IDs of this password currently in preferences
-     */
-    private fun checkIfPropertyWasRemoved(propertyIDs: List<Int>) {
-        for (propertyID in propertyIDs) {
-            if (!doesPropertyIDExist(propertyID)) { // if propertyID doesn't exist anymore after editing
-                hasBeenModified = true
-                return
-            }
         }
     }
 
@@ -632,16 +518,8 @@ class EditPasswordActivity
     }
 
     private fun generateNewPasswordID(): Int {
-        val passwordIDs = PasswordPreferenceManager.readAllPasswordIDs(this) // this is fine because there can't be an unsaved password with an unsaved ID at this moment
+        val passwordIDs = PasswordPreferenceManager.readAllIDs(this) // this is fine because there can't be an unsaved password with an unsaved ID at this moment
         return IDGenerator(passwordIDs).generateID()
-    }
-
-    private fun getEditTextFromChipGroup(): AutoCompleteTextView? {
-        return labelsChipGroup.allViews.firstOrNull { it is AutoCompleteTextView } as? AutoCompleteTextView
-    }
-
-    private fun getEditTextHitByTouchEvent(ev: MotionEvent): EditText? {
-        return mainLinearLayout.allViews.firstOrNull { it is EditText && isViewHitByTouchEvent(it, ev) } as? EditText
     }
     // endregion
 }

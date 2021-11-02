@@ -129,7 +129,7 @@ object AppPreferenceManager {
         val defaultTypeString = PreferenceManager.getDefaultSharedPreferences(context).getString(
             context.getString(R.string.preferences_default_values_barcode_key),
             context.getString(R.string.preferences_default_values_barcode_default)
-        )
+        )!!
         return CardActivity.codeTypeStringToInt(context, defaultTypeString)
     }
 

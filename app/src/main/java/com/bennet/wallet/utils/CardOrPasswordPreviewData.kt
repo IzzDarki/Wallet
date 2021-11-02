@@ -12,7 +12,7 @@ class CardOrPasswordPreviewData(
 /**
  * KeyProvider for selection
  */
-class StableIDKeyProvider(private val list: List<CardOrPasswordPreviewData>)
+class CardOrPasswordStableIDKeyProvider(private val list: List<CardOrPasswordPreviewData>)
     : ItemKeyProvider<Long>(SCOPE_MAPPED)
 {
     override fun getKey(position: Int): Long = list[position].ID.toLong()

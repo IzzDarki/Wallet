@@ -126,29 +126,14 @@
                     android:orientation="vertical"
                     android:clipToPadding="false"/>
 
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/edit_card_create_new_card_property_button"
-                    android:layout_width="match_parent"
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/edit_card_add_new_property_chip"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingTop="@dimen/create_new_property_top_and_bottom_padding"
-                    android:paddingBottom="@dimen/create_new_property_top_and_bottom_padding">
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:contentDescription="@string/create_new_card_property"
-                        app:srcCompat="@drawable/icon_plus_48dp"/>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="@string/create_new_card_property"
-                        android:textSize="17sp"/>
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
+                    app:chipIcon="@drawable/icon_plus_24dp"
+                    android:text="@string/card_property"
+                    style="@style/Widget.MaterialComponents.Chip.Action"
+                    app:chipBackgroundColor="@color/accentColor"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -157,38 +142,21 @@
                     android:layout_marginBottom="@dimen/horizontal_divider_padding"
                     android:background="?android:attr/listDivider"/>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/edit_card_color_button"
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/edit_card_labels_chip_group"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:text="@string/edit_color_button_text"/>
+                    android:layout_height="wrap_content">
 
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_gravity="center_horizontal">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/edit_card_front_image_button"
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/edit_card_labels_add_chip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginEnd="4dp"
-                        android:text="@string/front_image"/>
+                        app:chipIcon="@drawable/icon_plus_24dp"
+                        android:text="@string/label"
+                        style="@style/Widget.MaterialComponents.Chip.Action"
+                        app:chipBackgroundColor="@color/accentColor"/>
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/edit_card_back_image_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginEnd="4dp"
-                        android:text="@string/back_image"/>
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
+                </com.google.android.material.chip.ChipGroup>
 
                 <View
                     android:layout_width="match_parent"
@@ -196,6 +164,38 @@
                     android:layout_marginTop="@dimen/horizontal_divider_padding"
                     android:layout_marginBottom="@dimen/horizontal_divider_padding"
                     android:background="?android:attr/listDivider"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/edit_card_color_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/edit_color_button_text"
+                    style="@style/Widget.MaterialComponents.Chip.Action"/>
+
+                <com.google.android.material.chip.ChipGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/edit_card_front_image_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/front_image"
+                        style="@style/Widget.MaterialComponents.Chip.Action"
+                        app:chipBackgroundColor="@color/accentColor"
+                        app:chipIcon="@drawable/icon_image_24dp"/>
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/edit_card_back_image_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/back_image"
+                        style="@style/Widget.MaterialComponents.Chip.Action"
+                        app:chipBackgroundColor="@color/accentColor"
+                        app:chipIcon="@drawable/icon_image_24dp"/>
+
+                </com.google.android.material.chip.ChipGroup>
 
                 <!-- extra space -->
                 <View

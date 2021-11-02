@@ -76,7 +76,7 @@ public class CodeScannerActivity extends AppCompatActivity implements ZXingScann
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
             scannerView.startCamera();
         else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.RoundedCornersDialog));
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.camera_permission_dialogue_title)
                     .setMessage(R.string.camera_permission_dialogue_qr_code_message)
                     .setNegativeButton(android.R.string.cancel, (dialog, which) -> {

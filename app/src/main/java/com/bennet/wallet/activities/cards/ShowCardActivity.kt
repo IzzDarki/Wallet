@@ -4,7 +4,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.view.ContextThemeWrapper
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -19,9 +18,7 @@ import com.bennet.wallet.R
 import com.bennet.wallet.adapters.ShowPropertyAdapter
 import com.bennet.wallet.preferences.AppPreferenceManager
 import com.bennet.wallet.preferences.CardPreferenceManager
-import com.bennet.wallet.services.DeleteCardService
 import com.bennet.wallet.utils.ItemProperty
-import com.bennet.wallet.utils.Utility
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textview.MaterialTextView
 import com.google.zxing.MultiFormatWriter
@@ -44,7 +41,7 @@ class ShowCardActivity : CardActivity() {
     // region variables
     @ColorInt private var codeForegroundColor = 0
     @ColorInt private var codeBackgroundColor = 0
-    private var cardProperties: MutableList<ItemProperty> = mutableListOf()
+    private lateinit var cardProperties: MutableList<ItemProperty>
     // endregion
 
 
@@ -78,15 +75,8 @@ class ShowCardActivity : CardActivity() {
 
         // card properties recyclerview
         cardPropertiesRecyclerView.layoutManager = LinearLayoutManager(this)
-        updateProperties()
-        cardPropertiesRecyclerView.adapter = ShowPropertyAdapter(cardProperties) {
-            // hide all secret values in adapter each time the user presses any of the visibility buttons
-            for (position in cardProperties.indices) {
-                val holder = cardPropertiesRecyclerView.findViewHolderForAdapterPosition(position) as? ShowPropertyAdapter.ViewHolder
-                holder?.setValueHidden(cardProperties[position].secret)
-            }
-        }
-        init()
+        cardPropertiesRecyclerView.adapter = createShowPropertyAdapter()
+        show()
 
         // card view
         createCardView()
@@ -98,10 +88,10 @@ class ShowCardActivity : CardActivity() {
         cardView.removeFrontImage() // hides old image, new image will be loaded later
         cardView.removeBackImage() // hides old image, new image will be loaded later
         initFromPreferences()
-        updateProperties()
-        init()
 
-        // card view
+        // update
+        cardPropertiesRecyclerView.adapter = createShowPropertyAdapter() // because cardProperties has been reassigned, a new adapter, that holds the new cardProperties is needed
+        show()
         updateFrontImage()
         updateBackImage()
     }
@@ -123,18 +113,18 @@ class ShowCardActivity : CardActivity() {
             return true
         } else if (itemId == R.id.show_card_or_password_action_bar_delete) {
             val builder =
-                AlertDialog.Builder(ContextThemeWrapper(this, R.style.RoundedCornersDialog))
+                AlertDialog.Builder(this)
             builder.setTitle(R.string.delete_card)
             builder.setMessage(R.string.delete_card_dialog_message)
             builder.setCancelable(true)
-            builder.setPositiveButton(R.string.delete) { dialog, which ->
+            builder.setPositiveButton(R.string.delete) { dialog, _ ->
                 finish() // ALWAYS FINISH BEFORE STARTING OTHER ACTIVITY
-                deleteCard()
+                CardPreferenceManager.removeComplete(this, ID)
                 dialog.dismiss()
             }
             builder.setNegativeButton(
                 android.R.string.cancel
-            ) { dialog: DialogInterface, which: Int -> dialog.cancel() }
+            ) { dialog: DialogInterface, _: Int -> dialog.cancel() }
             builder.show()
             return true
         }
@@ -148,25 +138,17 @@ class ShowCardActivity : CardActivity() {
     // endregion
 
 
-    private fun init() {
-        // scroll view
-        hideScrollbar()
+    override fun initFromPreferences() {
+        super.initFromPreferences()
+        cardProperties = CardPreferenceManager.readProperties(this, ID)
+    }
+
+    private fun show() {
+        // hide scrollbar (TODO feature was removed, because it didn't do anything)
+        //hideScrollbar()
 
         // card properties
         supportActionBar!!.title = cardName
-        showCardProperties()
-    }
-
-    private fun deleteCard() {
-        CardPreferenceManager.removeFromAllCardIDs(
-            this,
-            ID
-        ) // to make sure that HomeActivity doesn't display the card in the case DeleteCardService hasn't already finished deleting it
-        val intent = Intent(this, DeleteCardService::class.java)
-        DeleteCardService.enqueueWork(this, intent, ID)
-    }
-
-    private fun showCardProperties() {
         // code
         if (cardCode != "") {
             if (!cardCodeTypeText)
@@ -233,14 +215,13 @@ class ShowCardActivity : CardActivity() {
             dividerCardImages.visibility = View.GONE
     }
 
-    private fun updateProperties() {
-        cardProperties.clear()
-        for (propertyID in CardPreferenceManager.readCardPropertyIds(this, ID)) {
-            val name = CardPreferenceManager.readCardPropertyName(this, ID, propertyID)
-            val value = CardPreferenceManager.readCardPropertyValue(this, ID, propertyID)
-            val secret = CardPreferenceManager.readCardPropertySecret(this, ID, propertyID)
-
-            cardProperties.add(ItemProperty(propertyID, name, value, secret))
+    private fun createShowPropertyAdapter(): ShowPropertyAdapter {
+        return ShowPropertyAdapter(cardProperties) {
+            // hide all secret values in adapter each time the user presses any of the visibility buttons
+            for (position in cardProperties.indices) {
+                val holder = cardPropertiesRecyclerView.findViewHolderForAdapterPosition(position) as? ShowPropertyAdapter.ViewHolder
+                holder?.setValueHidden(cardProperties[position].secret)
+            }
         }
     }
 
@@ -335,14 +316,5 @@ class ShowCardActivity : CardActivity() {
 
             else -> throw IllegalStateException("Unexpected value: $cardCodeType")
         }
-    }
-
-    private fun getCardPropertyIDs(): Utility.PreferenceArrayInt {
-        // collect all property IDs from cardProperties list
-        val array = Utility.PreferenceArrayInt()
-        for (property in cardProperties)
-            array.add(property.propertyID)
-
-        return array
     }
 }
