@@ -61,7 +61,7 @@
 
         <Preference
             android:title="@string/preferences_credits"
-            android:key="@string/preferences_credits_key"/>
+            android:key="@string/preferences_credits_key" />
 
         <Preference
             android:key="@string/preferences_app_info_key"

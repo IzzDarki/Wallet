@@ -3,6 +3,8 @@ package com.bennet.wallet.fragments
 import android.content.Context
 import androidx.preference.PreferenceFragmentCompat
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import com.bennet.wallet.R
 import androidx.appcompat.app.AppCompatDelegate
 import android.widget.Toast

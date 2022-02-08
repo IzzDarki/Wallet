@@ -31,10 +31,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     // adapter for view pager
-    private inner class ScreenSlidePagerAdapter(fragmentActivity: FragmentActivity)
-        : FragmentStateAdapter(fragmentActivity) {
+    private inner class ScreenSlidePagerAdapter(fragment: Fragment)
+        : FragmentStateAdapter(fragment) {
 
-        private var context: Context = fragmentActivity
+        private var context: Context = fragment.requireContext()
 
         private var state = getNewState(context)
 
@@ -99,7 +99,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     bottomNavigationView.selectedItemId = R.id.home_bottom_navigation_menu_passwords
             }
         })
-        fragmentViewPager.adapter = ScreenSlidePagerAdapter(context as MainActivity)
+        fragmentViewPager.adapter = ScreenSlidePagerAdapter(this)
 
         // init for first run
         initFirstRun()
