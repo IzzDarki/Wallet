@@ -27,6 +27,8 @@ import com.bennet.wallet.preferences.PasswordPreferenceManager
 import com.bennet.wallet.utils.*
 import com.bennet.wallet.utils.Utility.attachDragAndDropToRecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.util.*
+import kotlin.random.Random
 
 class HomePasswordsFragment()
     : Fragment(R.layout.fragment_home_passwords) {
@@ -40,14 +42,11 @@ class HomePasswordsFragment()
     // UI
     private lateinit var recyclerView: RecyclerView
     private lateinit var plusButton: FloatingActionButton
-    private lateinit var recyclerViewContainer: FrameLayout
 
     // variables
     private val passwords: MutableList<CardOrPasswordPreviewData> = mutableListOf()
-    private val labelsList: MutableList<ExpandingListAdapter.GroupInfo> = mutableListOf()
-    private var selectionTracker: SelectionTracker<Long>? = null
+    private lateinit var selectionTracker: SelectionTracker<Long>
     private var init = false
-    private val isGroupByLabels get() = AppPreferenceManager.isPasswordsGroupByLabels(requireContext())
 
     // lifecycle
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,29 +59,65 @@ class HomePasswordsFragment()
 
         // hooks
         plusButton = view.findViewById(R.id.fragment_home_passwords_plus_button)
-        recyclerViewContainer = view.findViewById(R.id.fragment_home_passwords_recycler_view_container)
+        recyclerView = view.findViewById(R.id.fragment_home_passwords_recycler_view)
 
         // plus button
         plusButton.setOnClickListener {
             createNewPassword()
         }
 
-        updateRecyclerViewGrouping()
+        updatePasswords()
+
+        recyclerView.layoutManager = getPasswordGridLayoutManager()
+
+        val adapter = PasswordAdapter(passwords)
+        recyclerView.adapter = adapter
+
+        // drag and drop
+        attachDragAndDropToRecyclerView(
+            recyclerView,
+            passwords
+        ) {
+            AppPreferenceManager.setPasswordsSortingType(requireContext(), SortingType.CustomSorting) // change sorting type to custom
+            AppPreferenceManager.setPasswordsSortReverse(requireContext(), false) // the current sorting is not reverse (even if it was reverse before moving an item)
+            PasswordPreferenceManager.writeCustomSortingNoGrouping(
+                requireContext(),
+                Utility.PreferenceArrayInt(passwords.map { it.ID }.iterator())
+            ) // save the custom sorting to preferences
+            selectionTracker.clearSelection()
+        }
+
+        // selection tracker
+        selectionTracker = SelectionTracker.Builder(
+            SELECTION_ID,
+            recyclerView,
+            CardOrPasswordStableIDKeyProvider(passwords),
+            MultiSelectItemDetailsLookup(recyclerView),
+            StorageStrategy.createLongStorage()
+        ).withSelectionPredicate(
+            SelectionPredicates.createSelectAnything()
+        ).build()
+        adapter.selectionTracker = selectionTracker
+
+
+        selectionTracker.addObserver(object : SelectionTracker.SelectionObserver<Long>() {
+            override fun onSelectionChanged() {
+                activity?.invalidateOptionsMenu() // reload action bar menu
+            }
+        })
     }
 
     override fun onPause() {
         super.onPause()
-        selectionTracker?.clearSelection() // When fragment is no longer visible clear selection
+        selectionTracker.clearSelection() // When fragment is no longer visible clear selection
     }
 
     override fun onResume() {
         super.onResume()
 
         if (init) {
+            // This code does not run if this is the first time that onResume is being called
             updatePasswords()
-            if (isGroupByLabels)
-                updateLabelsList()
-
             recyclerView.adapter?.notifyDataSetChanged()
         }
         else
@@ -145,120 +180,13 @@ class HomePasswordsFragment()
             .show()
     }
 
-    private fun enableGrouping() {
-        updatePasswords()
-        updateLabelsList()
-
-        selectionTracker = null
-        createRecyclerView()
-
-        recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        recyclerView.adapter = ExpandingListAdapter<PasswordAdapter>(
-            groups = labelsList,
-            childLayoutManagerFactory = this::getPasswordGridLayoutManager
-        ) { holder, pos ->
-
-            val passwordsWithLabel = if (pos != labelsList.size - 1) {
-                holder.groupHeader.setTypeface(null, Typeface.BOLD)
-
-                passwords.filter {
-                    PasswordPreferenceManager.readLabels(requireContext(), it.ID)
-                        .contains(labelsList[pos].name)
-                }
-            } else {
-                holder.groupHeader.setTypeface(null, Typeface.BOLD_ITALIC)
-                passwords
-            }
-
-            val adapter = PasswordAdapter(passwordsWithLabel)
-            holder.contentsRecyclerView.adapter = adapter
-
-            // selection tracker
-            val selectionTracker = SelectionTracker.Builder(
-                "$SELECTION_ID-$pos",
-                holder.contentsRecyclerView,
-                CardOrPasswordStableIDKeyProvider(passwordsWithLabel),
-                MultiSelectItemDetailsLookup(holder.contentsRecyclerView),
-                StorageStrategy.createLongStorage()
-            ).withSelectionPredicate(
-                SelectionPredicates.createSelectAnything()
-            ).build()
-            adapter.selectionTracker = selectionTracker
-
-            // drag and drop
-            attachDragAndDropToRecyclerView(
-                holder.contentsRecyclerView,
-                passwordsWithLabel
-            ) {
-                AppPreferenceManager.setPasswordsSortingType(requireContext(), SortingType.CustomSorting) // change sorting type to custom
-                AppPreferenceManager.setPasswordsSortReverse(requireContext(), false) // the current sorting is not reverse (even if it was reverse before moving an item)
-                PasswordPreferenceManager.writeCustomSortingNoGrouping(
-                    requireContext(),
-                    Utility.PreferenceArrayInt(passwordsWithLabel.map { it.ID }.iterator())
-                ) // save the custom sorting to preferences
-                selectionTracker.clearSelection()
-            }
-
-            selectionTracker.addObserver(object : SelectionTracker.SelectionObserver<Long>() {
-                override fun onSelectionChanged() {
-                    if (selectionTracker !== this@HomePasswordsFragment.selectionTracker) {
-                        this@HomePasswordsFragment.selectionTracker?.clearSelection()
-                        this@HomePasswordsFragment.selectionTracker = selectionTracker
-                    }
-                    activity?.invalidateOptionsMenu() // reload action bar menu
-                }
-            })
-        }
-    }
-
-    private fun disableGrouping() {
-        updatePasswords()
-
-        createRecyclerView()
-        recyclerView.layoutManager = getPasswordGridLayoutManager()
-
-        val adapter = PasswordAdapter(passwords)
-        recyclerView.adapter = adapter
-
-        // selection tracker
-        selectionTracker = SelectionTracker.Builder(
-            SELECTION_ID,
-            recyclerView,
-            CardOrPasswordStableIDKeyProvider(passwords),
-            MultiSelectItemDetailsLookup(recyclerView),
-            StorageStrategy.createLongStorage()
-        ).withSelectionPredicate(
-            SelectionPredicates.createSelectAnything()
-        ).build()
-        adapter.selectionTracker = selectionTracker!!
-
-        // drag and drop
-        attachDragAndDropToRecyclerView(
-            recyclerView,
-            passwords
-        ) {
-            AppPreferenceManager.setPasswordsSortingType(requireContext(), SortingType.CustomSorting) // change sorting type to custom
-            AppPreferenceManager.setPasswordsSortReverse(requireContext(), false) // the current sorting is not reverse (even if it was reverse before moving an item)
-            PasswordPreferenceManager.writeCustomSortingNoGrouping(
-                requireContext(),
-                Utility.PreferenceArrayInt(passwords.map { it.ID }.iterator())
-            ) // save the custom sorting to preferences
-            selectionTracker?.clearSelection()
-        }
-
-        selectionTracker?.addObserver(object : SelectionTracker.SelectionObserver<Long>() {
-            override fun onSelectionChanged() {
-                activity?.invalidateOptionsMenu() // reload action bar menu
-            }
-        })
-    }
-
 
     // action bar
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear() // Needed because HomeCardsFragment also accesses this menu
         when {
-            selectionTracker != null && selectionTracker!!.selection.size() == 1 -> inflater.inflate(R.menu.home_action_bar_with_one_item_selected_menu, menu)
-            selectionTracker != null && selectionTracker!!.selection.size() > 1 -> inflater.inflate(R.menu.home_action_bar_with_multiple_items_selected_menu, menu)
+            selectionTracker.selection.size() == 1 -> inflater.inflate(R.menu.home_action_bar_with_one_item_selected_menu, menu)
+            selectionTracker.selection.size() > 1 -> inflater.inflate(R.menu.home_action_bar_with_multiple_items_selected_menu, menu)
             else -> inflater.inflate(R.menu.home_action_bar_menu, menu)
         }
 
@@ -270,7 +198,6 @@ class HomePasswordsFragment()
             SortingType.ByAlterationDate -> menu.findItem(R.id.home_action_bar_sort_by_alteration_date)?.isChecked = true
         }
         menu.findItem(R.id.home_action_bar_sort_reverse)?.isChecked = AppPreferenceManager.isPasswordsSortReverse(requireContext())
-        menu.findItem(R.id.home_action_bar_group_by_label)?.isChecked = AppPreferenceManager.isPasswordsGroupByLabels(requireContext())
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -296,16 +223,11 @@ class HomePasswordsFragment()
                 AppPreferenceManager.setPasswordsSortReverse(requireContext(), item.isChecked)
                 sortPasswords(AppPreferenceManager.getPasswordsSortingType(requireContext())) // sort again
             }
-            R.id.home_action_bar_group_by_label -> {
-                item.isChecked = !item.isChecked // toggle checkbox
-                AppPreferenceManager.setPasswordsGroupByLabels(requireContext(), item.isChecked)
-                updateRecyclerViewGrouping()
-            }
             R.id.home_action_bar_edit_selected_item -> {
-                editPassword(passwordID = selectionTracker!!.selection.first().toInt())
+                editPassword(passwordID = selectionTracker.selection.first().toInt())
             }
             R.id.home_action_bar_delete_selected_item -> {
-                selectionTracker?.let { selectionTracker ->
+                selectionTracker.let { selectionTracker ->
                     if (selectionTracker.selection.size() == 1)
                         deleteSinglePassword(selectionTracker.selection.first().toInt())
                     else
@@ -322,15 +244,7 @@ class HomePasswordsFragment()
 
     // screen orientation change
     override fun onConfigurationChanged(newConfig: Configuration) {
-        if (isGroupByLabels) {
-            for (index in 0..passwords.size) {
-                val viewHolder = recyclerView.findViewHolderForAdapterPosition(index) as ExpandingListAdapter<*>.ViewHolder
-                viewHolder.contentsRecyclerView.layoutManager = getPasswordGridLayoutManager()
-            }
-        }
-        else {
-            recyclerView.layoutManager = getPasswordGridLayoutManager()
-        }
+        recyclerView.layoutManager = getPasswordGridLayoutManager()
         super.onConfigurationChanged(newConfig)
     }
 
@@ -340,35 +254,6 @@ class HomePasswordsFragment()
         passwords.clear()
         passwords.addAll(PasswordPreferenceManager.readAll(requireContext()))
         sortPasswordsArray(AppPreferenceManager.getPasswordsSortingType(requireContext())) // sort the list according to saved sorting type
-    }
-
-    private fun updateLabelsList() {
-        labelsList.clear()
-        labelsList.addAll(
-            PasswordPreferenceManager.collectAllLabels(requireContext()).toMutableList()
-                .map { ExpandingListAdapter.GroupInfo(it) }
-        )
-        labelsList.add(ExpandingListAdapter.GroupInfo(
-            getString(R.string.all_passwords),
-            false
-        ))
-    }
-
-    private fun updateRecyclerViewGrouping() {
-        Log.d("asdf", "Enable/disable grouping")
-        // Enable/disable grouping
-        if (isGroupByLabels)
-            enableGrouping()
-        else
-            disableGrouping()
-    }
-
-    private fun createRecyclerView() {
-        recyclerView = RecyclerView(requireContext())
-        recyclerView.layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.MATCH_PARENT)
-        recyclerView.clipToPadding = false
-        recyclerViewContainer.removeAllViews()
-        recyclerViewContainer.addView(recyclerView)
     }
 
     private fun getPasswordGridLayoutManager(): StaggeredGridLayoutManager {
@@ -383,12 +268,6 @@ class HomePasswordsFragment()
 
         val indexRemoved = passwords.indexOfFirst { it.ID == passwordID }
         passwords.removeAt(indexRemoved)
-        if (!isGroupByLabels)
-            recyclerView.adapter?.notifyItemRemoved(indexRemoved)
-        else {
-            updateLabelsList()
-            recyclerView.adapter?.notifyDataSetChanged()
-        }
     }
 
     /**
@@ -401,8 +280,14 @@ class HomePasswordsFragment()
                 val savedCustomSortingIDs = PasswordPreferenceManager.readCustomSortingNoGrouping(requireContext())
                 passwords.sortBy { savedCustomSortingIDs.indexOf(it.ID) }
             }
-            SortingType.ByCreationDate -> passwords.sortBy { PasswordPreferenceManager.readCreationDate(requireContext(), it.ID) }
-            SortingType.ByAlterationDate -> passwords.sortBy { PasswordPreferenceManager.readAlterationDate(requireContext(), it.ID) }
+            SortingType.ByCreationDate -> passwords.sortBy {
+                val x = PasswordPreferenceManager.readCreationDate(requireContext(), it.ID)
+                x
+            }
+            SortingType.ByAlterationDate -> passwords.sortBy {
+                val x = PasswordPreferenceManager.readAlterationDate(requireContext(), it.ID)
+                x
+            }
         }
 
         if (AppPreferenceManager.isPasswordsSortReverse(requireContext()))

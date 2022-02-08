@@ -16,8 +16,11 @@
         <entry key="app/src/main/res/drawable/flip_icon.xml" value="0.3675925925925926" />
         <entry key="app/src/main/res/drawable/folder_icon_36dp.xml" value="0.3675925925925926" />
         <entry key="app/src/main/res/drawable/home_icon_24dp.xml" value="0.3675925925925926" />
+        <entry key="app/src/main/res/drawable/ic_email_24dp.xml" value="0.3723958333333333" />
+        <entry key="app/src/main/res/drawable/ic_label_24dp.xml" value="0.3723958333333333" />
         <entry key="app/src/main/res/drawable/ic_label_black_24dp.xml" value="0.2" />
         <entry key="app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.3675925925925926" />
+        <entry key="app/src/main/res/drawable/ic_person_24dp.xml" value="0.3723958333333333" />
         <entry key="app/src/main/res/drawable/icon_aspect_ratio_24dp.xml" value="0.3675925925925926" />
         <entry key="app/src/main/res/drawable/icon_calendar_created_24dp.xml" value="0.2" />
         <entry key="app/src/main/res/drawable/icon_calendar_edited_24dp.xml" value="0.2" />
@@ -45,6 +48,7 @@
         <entry key="app/src/main/res/drawable/key_icon.xml" value="0.3675925925925926" />
         <entry key="app/src/main/res/drawable/key_icon_24dp.xml" value="0.3675925925925926" />
         <entry key="app/src/main/res/drawable/menu_icon_24dp.xml" value="0.3675925925925926" />
+        <entry key="app/src/main/res/drawable/navbar_header_background.xml" value="0.3723958333333333" />
         <entry key="app/src/main/res/drawable/password_icon_24dp.xml" value="0.3675925925925926" />
         <entry key="app/src/main/res/drawable/plus_icon.xml" value="0.3675925925925926" />
         <entry key="app/src/main/res/drawable/qr_code_scan_icon.xml" value="0.3675925925925926" />
@@ -56,6 +60,8 @@
         <entry key="app/src/main/res/layout/activity_edit_card.xml" value="0.39739583333333334" />
         <entry key="app/src/main/res/layout/activity_edit_password.xml" value="0.39739583333333334" />
         <entry key="app/src/main/res/layout/activity_home.xml" value="0.3572916666666667" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.35572916666666665" />
+        <entry key="app/src/main/res/layout/activity_settings.xml" value="0.3507692307692308" />
         <entry key="app/src/main/res/layout/adapter_card.xml" value="0.19947916666666668" />
         <entry key="app/src/main/res/layout/adapter_edit_property.xml" value="0.16145833333333334" />
         <entry key="app/src/main/res/layout/adapter_expandable_list.xml" value="0.25" />
@@ -63,12 +69,19 @@
         <entry key="app/src/main/res/layout/adapter_password.xml" value="0.3567708333333333" />
         <entry key="app/src/main/res/layout/adapter_password_list.xml" value="0.3567708333333333" />
         <entry key="app/src/main/res/layout/adapter_small_card_item.xml" value="0.3314814814814815" />
+        <entry key="app/src/main/res/layout/content_main.xml" value="0.3507692307692308" />
         <entry key="app/src/main/res/layout/edit_property_end_icon_popup_window_layout.xml" value="0.16145833333333334" />
         <entry key="app/src/main/res/layout/expandable_list.xml" value="0.3572916666666667" />
         <entry key="app/src/main/res/layout/expandable_list_header.xml" value="0.3572916666666667" />
-        <entry key="app/src/main/res/layout/fragment_home_cards.xml" value="0.19947916666666668" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_home_cards.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_home_passwords.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_slideshow.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/image_chooser_dialog.xml" value="0.19947916666666668" />
+        <entry key="app/src/main/res/layout/nav_header_main.xml" value="0.35625" />
+        <entry key="app/src/main/res/layout/navbar_header.xml" value="0.33" />
+        <entry key="app/src/main/res/menu/activity_main_drawer.xml" value="0.18177083333333333" />
+        <entry key="app/src/main/res/menu/activity_main_navbar_menu.xml" value="0.35625" />
         <entry key="app/src/main/res/menu/crop_activity_crop_image_menu.xml" value="0.3572916666666667" />
         <entry key="app/src/main/res/menu/edit_action_bar_menu.xml" value="0.3572916666666667" />
         <entry key="app/src/main/res/menu/edit_activity_action_bar_menu.xml" value="0.3572916666666667" />
@@ -79,8 +92,11 @@
         <entry key="app/src/main/res/menu/home_action_bar_with_multiple_items_selected_menu.xml" value="0.3572916666666667" />
         <entry key="app/src/main/res/menu/home_action_bar_with_one_item_selected_menu.xml" value="0.3572916666666667" />
         <entry key="app/src/main/res/menu/home_bottom_navigation_menu.xml" value="0.325" />
-        <entry key="app/src/main/res/menu/navbar_menu.xml" value="0.1984375" />
+        <entry key="app/src/main/res/menu/navbar_menu.xml" value="0.33" />
         <entry key="app/src/main/res/menu/show_card_or_password_action_bar_menu.xml" value="0.325" />
+        <entry key="app/src/main/res/xml/app_info_preferences.xml" value="0.35625" />
+        <entry key="app/src/main/res/xml/credits_preferences.xml" value="0.35625" />
+        <entry key="app/src/main/res/xml/preferences.xml" value="0.3507692307692308" />
       </map>
     </option>
   </component>

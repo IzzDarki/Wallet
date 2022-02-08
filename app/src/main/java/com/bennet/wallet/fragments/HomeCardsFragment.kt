@@ -29,7 +29,8 @@ import com.bennet.wallet.utils.CardOrPasswordStableIDKeyProvider
 import com.bennet.wallet.utils.MultiSelectItemDetailsLookup
 import com.bennet.wallet.utils.Utility.attachDragAndDropToRecyclerView
 
-class HomeCardsFragment : Fragment(R.layout.fragment_home_cards) {
+class HomeCardsFragment
+    : Fragment(R.layout.fragment_home_cards) {
 
     companion object {
         const val CARD_SPAN_COUNT_PORTRAIT = 2
@@ -44,6 +45,7 @@ class HomeCardsFragment : Fragment(R.layout.fragment_home_cards) {
     // variables
     private var cards: MutableList<CardOrPasswordPreviewData> = mutableListOf()
     private lateinit var selectionTracker: SelectionTracker<Long>
+    private var init = false
 
     // preferences
     private lateinit var cardIDs: PreferenceArrayInt
@@ -57,11 +59,15 @@ class HomeCardsFragment : Fragment(R.layout.fragment_home_cards) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // hooks
         cardGridRecyclerView = view.findViewById(R.id.fragment_home_cards_card_grid_recycler_view)
         plusButton = view.findViewById(R.id.fragment_home_cards_plus_button)
 
+        updateCards()
+
         // card grid recycler view
-        setCardGridLayoutManager()
+        cardGridRecyclerView.layoutManager = getCardGridLayoutManager()
         val adapter = CardAdapter(cards)
         cardGridRecyclerView.adapter = adapter
         plusButton.setOnClickListener {
@@ -109,7 +115,12 @@ class HomeCardsFragment : Fragment(R.layout.fragment_home_cards) {
     
     override fun onResume() {
         super.onResume()
-        updateCards()
+        if (init) {
+            // This code does not run if this is the first time that onResume is being called
+            updateCardsAndNotifyAdapter()
+        }
+        else
+            init = true
     }
 
 
@@ -130,8 +141,13 @@ class HomeCardsFragment : Fragment(R.layout.fragment_home_cards) {
         sortCardsArray(sortingType)
         cardGridRecyclerView.adapter?.notifyDataSetChanged()
     }
-    
-    fun updateCards() {
+
+    fun updateCardsAndNotifyAdapter() {
+        updateCards()
+        cardGridRecyclerView.adapter?.notifyDataSetChanged()
+    }
+
+    private fun updateCards() {
         cardIDs = CardPreferenceManager.readAllIDs(requireContext())
         cards.clear()
         for (cardID in cardIDs) {
@@ -144,7 +160,6 @@ class HomeCardsFragment : Fragment(R.layout.fragment_home_cards) {
             )
         }
         sortCardsArray(AppPreferenceManager.getCardsSortingType(requireContext())) // sort the list according to saved sorting type
-        cardGridRecyclerView.adapter?.notifyDataSetChanged()
     }
 
     private fun editCard(ID: Int) {
@@ -187,6 +202,7 @@ class HomeCardsFragment : Fragment(R.layout.fragment_home_cards) {
 
     // action bar
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear() // Needed because HomePasswordsFragment also accesses this menu
         when {
             selectionTracker.selection.size() == 1 -> inflater.inflate(R.menu.home_action_bar_with_one_item_selected_menu, menu)
             selectionTracker.selection.size() > 1 -> inflater.inflate(R.menu.home_action_bar_with_multiple_items_selected_menu, menu)
@@ -201,7 +217,6 @@ class HomeCardsFragment : Fragment(R.layout.fragment_home_cards) {
             SortingType.ByAlterationDate -> menu.findItem(R.id.home_action_bar_sort_by_alteration_date)?.isChecked = true
         }
         menu.findItem(R.id.home_action_bar_sort_reverse)?.isChecked = AppPreferenceManager.isCardsSortReverse(requireContext())
-        menu.findItem(R.id.home_action_bar_group_by_label)?.isChecked = AppPreferenceManager.isCardsGroupByLabels(requireContext())
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -227,10 +242,6 @@ class HomeCardsFragment : Fragment(R.layout.fragment_home_cards) {
                 AppPreferenceManager.setCardsSortReverse(requireContext(), item.isChecked)
                 sortCards(AppPreferenceManager.getCardsSortingType(requireContext())) // sort again
             }
-            R.id.home_action_bar_group_by_label -> {
-                item.isChecked = !item.isChecked // toggle checkbox
-                AppPreferenceManager.setCardsGroupByLabels(requireContext(), item.isChecked)
-            }
             R.id.home_action_bar_edit_selected_item -> {
                 editCard(ID = selectionTracker.selection.first().toInt())
             }
@@ -250,18 +261,19 @@ class HomeCardsFragment : Fragment(R.layout.fragment_home_cards) {
 
     // screen orientation change
     override fun onConfigurationChanged(newConfig: Configuration) {
-        setCardGridLayoutManager() // update layout manager, because span count is different in landscape and portrait
+        // update layout manager, because span count is different in landscape and portrait
+        cardGridRecyclerView.layoutManager = getCardGridLayoutManager()
         super.onConfigurationChanged(newConfig)
     }
 
 
     // helper
-    private fun setCardGridLayoutManager() {
+    private fun getCardGridLayoutManager(): GridLayoutManager  {
         val portrait = resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
         var spanCount = CARD_SPAN_COUNT_PORTRAIT
         if (!portrait) spanCount = CARD_SPAN_COUNT_LANDSCAPE
         CardAdapter.cardWidth = calcCardWidth(spanCount) // update card width, because it changes when spanCount changes
-        cardGridRecyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
+        return GridLayoutManager(requireContext(), spanCount)
     }
 
     private fun deleteCardDirectly(ID: Int) {

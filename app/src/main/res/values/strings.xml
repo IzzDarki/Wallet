@@ -73,7 +73,7 @@
         <item>@string/preferences_back_confirm_entries_edit_card_or_password</item>
     </string-array>
 
-
+    <string name="preferences_default_values_key" translatable="false">preferences.default_values</string>
     <string name="preferences_default_values_title">Default card values</string>
     <string name="preferences_default_values_summary">Edit the default values when creating a new card</string>
 
@@ -95,7 +95,7 @@
         <item>@string/card_code_type_value_upc_e</item>
     </string-array>
     <string name="preferences_default_values_barcode_title">Barcode</string>
-    <string name="preference_default_values_barcode_summary">Choose which type of barcode should be used by default</string>
+    <string name="preferences_default_values_barcode_summary">Choose which type of barcode should be used by default</string>
 
     <string name="preferences_default_values_code_text_key" translatable="false">default_values_preferences.code_text_key</string>
     <string name="preferences_default_values_code_text_entry_values_with_text" translatable="false">1</string>
@@ -115,7 +115,7 @@
     <string name="preferences_detailed_errors_key" translatable="false">preferences.detailed_errors_key</string>
     <string name="preferences_detailed_errors_title">Detailed error messages</string>
     <string name="preferences_detailed_errors_summary">Display detailed but sometimes cryptic error messages</string>
-    
+
     <string name="preferences_hide_length_secret_field_key" translatable="false">preferences.hide_length_secret_field</string>
     <string name="preferences_hide_length_secret_field_title">Hide length</string>
     <string name="preferences_hide_length_secret_field_summary">Hide the text length of secret fields</string>
@@ -124,6 +124,18 @@
     <string name="preferences_secret_field_monospace_title">Monospaced font</string>
     <string name="preferences_secret_field_monospace_summary">Display secret fields with a monospaced font</string>
 
+    <string name="preferences_credits_key" translatable="false">preferences.credits_key</string>
+    <string name="preferences_credits">Credits</string>
+
+    <string name="preferences_app_info">App info</string>
+    <string name="preferences_app_info_key" translatable="false">preferences.app_info</string>
+    <string name="preferences_author_title">Author</string>
+    <string name="preferences_author_name" translatable="false">IzzDarki</string>
+    <string name="preferences_email_title">E-mail</string>
+    <string name="preferences_email_content" translatable="false">izzdarki.dev@gmail.com</string>
+    <string name="preferences_mailto_link" translatable="false">mailto:izzdarki.dev@gmail.com?subject=Wallet</string>
+    <string name="preferences_version_title">Version</string>
+    <string name="version_name" translatable="false">1.4.0-alpha.1</string> <!-- TODO keep this updated -->
 
     <!-- language -->
     <string name="no">No</string>
@@ -197,14 +209,10 @@
     <string name="cancel">Cancel</string>
     <string name="image_capture_camera_permission_denied">Camera permission denied</string>
     <string name="code_scanner_camera_permission_denied">Camera permission denied</string>
-    <string name="author" translatable="false">Bennet</string>
-    <string name="version_name_format">Version %s</string>
-    <string name="version_name" translatable="false">1.4.0-alpha.1</string> <!-- TODO keep this updated -->
     <string name="important">Important</string>
     <string name="info">Info</string>
     <string name="mahler_is_cool">Mahler is cool!</string>
     <string name="listen_to_mahler_9">Listen to Mahler 9!</string>
-    <string name="credits">Credits</string>
     <string name="images_and_icons">Images and icons</string>
     <string name="app_icon_title">App icon</string>
     <string name="app_icon_summary">Icon made by Freepik from www.flaticon.com</string>

@@ -7,7 +7,7 @@
     <ListPreference
         android:key="@string/preferences_default_values_barcode_key"
         android:title="@string/preferences_default_values_barcode_title"
-        android:summary="@string/preference_default_values_barcode_summary"
+        android:summary="@string/preferences_default_values_barcode_summary"
         android:defaultValue="@string/preferences_default_values_barcode_default"
         android:entries="@array/preferences_default_values_barcode_entries"
         android:entryValues="@array/preferences_default_values_barcode_entries"/>

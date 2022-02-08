@@ -58,12 +58,6 @@
                     android:icon="@drawable/icon_sort_reverse_24dp"
                     android:checkable="true"/>
 
-                <item
-                    android:id="@id/home_action_bar_group_by_label"
-                    android:title="@string/sort_group_by_labels"
-                    android:icon="@drawable/ic_label_black_24dp"
-                    android:checkable="true" />
-
             </group>
 
         </menu>

@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
 import androidx.security.crypto.EncryptedFile
 import androidx.security.crypto.MasterKey
-import com.bennet.wallet.activities.SettingsActivity
+import com.bennet.wallet.fragments.SettingsFragment
 import com.bennet.wallet.preferences.AppPreferenceManager
 import com.bennet.wallet.preferences.CardPreferenceManager
 import com.bennet.wallet.utils.Utility
@@ -27,7 +27,7 @@ class Application : Application() {
                 if (valueString == null)
                     AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
                 else
-                    SettingsActivity.SettingsFragment.themePreferenceEntryValueToInt(this, valueString)
+                    SettingsFragment.themePreferenceEntryValueToInt(this, valueString)
 
             AppCompatDelegate.setDefaultNightMode(value)
         }

@@ -19,7 +19,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bennet.colorpickerview.dialog.ColorPickerDialogFragment
 import com.bennet.wallet.R
-import com.bennet.wallet.activities.HomeActivity
+import com.bennet.wallet.activities.MainActivity
+import com.bennet.wallet.fragments.HomeFragment
 import com.bennet.wallet.adapters.EditPropertyAdapter
 import com.bennet.wallet.preferences.AppPreferenceManager
 import com.bennet.wallet.preferences.PasswordPreferenceManager
@@ -27,7 +28,6 @@ import com.bennet.wallet.components.EditLabelsComponent
 import com.bennet.wallet.utils.ItemProperty
 import com.bennet.wallet.utils.Utility
 import com.bennet.wallet.utils.Utility.IDGenerator
-import com.bennet.wallet.utils.Utility.PreferenceArrayInt
 import com.bennet.wallet.utils.Utility.PreferenceArrayString
 import com.bennet.wallet.utils.Utility.hideKeyboard
 import com.bennet.wallet.utils.Utility.setImeOptionsAndRestart
@@ -475,7 +475,7 @@ class EditPasswordActivity
 
     private fun finishAndReturnToHome() {
         finish()
-        val intent = Intent(this, HomeActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP) // will clear back stack until instance of HomeActivity // It looks like this is needed although HomeActivity is singleTop
         startActivity(intent)
     }

@@ -1,19 +1,22 @@
 <androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="176dp"
     android:orientation="vertical"
-    android:layout_gravity="bottom"
-    android:padding="20dp">
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="32dp"/>
+    android:gravity="bottom"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:background="@drawable/navbar_header_background"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
-        android:textSize="24sp"/>
+        android:textSize="24sp"
+        android:layout_marginBottom="16dp"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"/>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

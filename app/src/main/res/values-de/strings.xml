@@ -62,7 +62,6 @@
     <string name="cancel">Abbrechen</string>
     <string name="image_capture_camera_permission_denied">Kein Kamerazugriff</string>
     <string name="code_scanner_camera_permission_denied">Kein Kamerazugriff</string>
-    <string name="version_name_format">Version %s</string>
     <string name="important">Wichtig</string>
     <string name="mahler_is_cool">Mahler ist cool!</string>
     <string name="listen_to_mahler_9">Hör dir Mahler 9 an!</string>
@@ -77,8 +76,8 @@
     <string name="image_crop_library_title">Zuschneiden von Bildern</string>
     <string name="color_picker_library_title">Farbauswahl</string>
     <string name="image_crop_library_summary">Library von ArthurHub\nVon Github unter Apache License 2.0</string>
-    <string name="credits">Quellenangabe</string>
-    <string name="preference_default_values_barcode_summary">Wähle welcher Barcode-Typ standardmäßig verwendet werden soll</string>
+    <string name="preferences_credits">Quellenangabe</string>
+    <string name="preferences_default_values_barcode_summary">Wähle welcher Barcode-Typ standardmäßig verwendet werden soll</string>
     <string name="no_images_to_calc_color">Keine Bilder vorhanden um die Farbe zu berechnen</string>
     <string name="barcode_library_title">Barcode</string>
     <string name="barcode_library_summary">ZXing ("Zebra Crossing")\nVon Github unter Apache License 2.0</string>
@@ -144,4 +143,8 @@
     <string name="delete_x_cards_dialog_message">Bist du dir sicher, dass du diese Karten löschen willst?</string>
     <string name="all_passwords">Alle Passwörter</string>
     <string name="all_cards">Alle Karten</string>
+    <string name="preferences_app_info">App info</string>
+    <string name="preferences_author_title">Autor</string>
+    <string name="preferences_email_title">E-Mail</string>
+    <string name="preferences_version_title">Version</string>
 </resources>

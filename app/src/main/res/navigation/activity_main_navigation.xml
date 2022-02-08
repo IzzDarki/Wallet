@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.bennet.wallet.fragments.HomeFragment"
+        android:label="@string/home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="com.bennet.wallet.fragments.SettingsFragment"
+        android:label="@string/settings" >
+        <action
+            android:id="@+id/action_nav_settings_to_default_values"
+            app:destination="@id/nav_settings_default_values" />
+        <action
+            android:id="@+id/action_nav_settings_to_credits"
+            app:destination="@id/nav_settings_credits" />
+        <action
+            android:id="@+id/action_nav_settings_to_app_info"
+            app:destination="@id/nav_settings_app_info" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_settings_default_values"
+        android:name="com.bennet.wallet.fragments.DefaultValuesSettingsFragment"
+        android:label="@string/preferences_default_values_title" />
+
+    <fragment
+        android:id="@+id/nav_settings_credits"
+        android:name="com.bennet.wallet.fragments.CreditsSettingsFragment"
+        android:label="@string/preferences_credits">
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_settings_app_info"
+        android:name="com.bennet.wallet.fragments.AppInfoSettingsFragment"
+        android:label="@string/preferences_app_info">
+    </fragment>
+
+</navigation>

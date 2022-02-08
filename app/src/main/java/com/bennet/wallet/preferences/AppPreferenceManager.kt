@@ -33,13 +33,7 @@ object AppPreferenceManager {
     @JvmStatic
     fun isPasswordsSortReverse(context: Context): Boolean {
         return PreferenceManager.getDefaultSharedPreferences(context)
-            .getBoolean(PREFERENCE_PASSWORDS_SORT_REVERSE_KEY, false);
-    }
-
-    @JvmStatic
-    fun isPasswordsGroupByLabels(context: Context): Boolean {
-        return PreferenceManager.getDefaultSharedPreferences(context)
-            .getBoolean(PREFERENCE_PASSWORDS_GROUP_BY_LABELS_KEY, true)
+            .getBoolean(PREFERENCE_PASSWORDS_SORT_REVERSE_KEY, false)
     }
 
     @JvmStatic
@@ -49,13 +43,7 @@ object AppPreferenceManager {
     @JvmStatic
     fun isCardsSortReverse(context: Context): Boolean {
         return PreferenceManager.getDefaultSharedPreferences(context)
-            .getBoolean(PREFERENCE_CARDS_SORT_REVERSE_KEY, false);
-    }
-
-    @JvmStatic
-    fun isCardsGroupByLabels(context: Context): Boolean {
-        return PreferenceManager.getDefaultSharedPreferences(context)
-            .getBoolean(PREFERENCE_CARDS_GROUP_BY_LABELS_KEY, true)
+            .getBoolean(PREFERENCE_CARDS_SORT_REVERSE_KEY, false)
     }
 
     @JvmStatic
@@ -202,7 +190,7 @@ object AppPreferenceManager {
 
     private fun getSortingType(context: Context, preferenceKey: String): SortingType {
         val sortingTypeInt = PreferenceManager.getDefaultSharedPreferences(context)
-            .getInt(preferenceKey, 0);
+            .getInt(preferenceKey, 0)
 
         return when (sortingTypeInt) {
             3 -> SortingType.ByAlterationDate
@@ -219,6 +207,6 @@ object AppPreferenceManager {
             SortingType.ByCreationDate -> 2
             SortingType.ByAlterationDate -> 3
         }
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putInt(preferenceKey, sortingTypeInt).apply();
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putInt(preferenceKey, sortingTypeInt).apply()
     }
 }

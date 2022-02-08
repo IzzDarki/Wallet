@@ -31,6 +31,7 @@ import com.bennet.wallet.preferences.AppPreferenceManager
 import com.bennet.wallet.preferences.CardPreferenceManager
 import com.bennet.wallet.services.CreateExampleCardService
 import com.bennet.wallet.components.EditLabelsComponent
+import com.bennet.wallet.fragments.HomeFragment
 import com.bennet.wallet.utils.ItemProperty
 import com.bennet.wallet.utils.Utility
 import com.bennet.wallet.utils.Utility.PreferenceArrayInt
@@ -454,7 +455,7 @@ class EditCardActivity
 
 
     // region action bar menu
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.edit_activity_action_bar_menu, menu)
         return true
     }
@@ -831,7 +832,7 @@ class EditCardActivity
                     val imagesDirectory =
                         File(filesDir.toString() + "/" + getString(R.string.cards_images_folder_name))
                     if (!imagesDirectory.exists()) imagesDirectory.mkdirs()
-                    val newBackImage = File(imagesDirectory, currentBackImage?.name)
+                    val newBackImage = File(imagesDirectory, currentBackImage!!.name)
                     val mainKey = MasterKey.Builder(this)
                         .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
                         .build()
@@ -936,7 +937,7 @@ class EditCardActivity
 
     private fun finishAndReturnToHome() {
         finish()
-        val intent = Intent(this, HomeActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP) // will clear back stack until instance of HomeActivity // It looks like this is needed although HomeActivity is singleTop
         startActivity(intent)
     }
