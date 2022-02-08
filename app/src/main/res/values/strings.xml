@@ -45,6 +45,7 @@
         <item>@string/preferences_app_functions_entries_cards</item>
         <item>@string/preferences_app_functions_entries_passwords</item>
     </string-array>
+    <string name="changing_app_functions_requires_restart">Changing app functions requires an app restart. Close the app and reopen it.</string>
 
     <string name="preferences_advanced_title">Advanced</string>
 

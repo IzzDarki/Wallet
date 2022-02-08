@@ -147,4 +147,5 @@
     <string name="preferences_author_title">Autor</string>
     <string name="preferences_email_title">E-Mail</string>
     <string name="preferences_version_title">Version</string>
+    <string name="changing_app_functions_requires_restart">Änderungen der App Funktionen benötigen einen App-Neustart. Schließe die App und öffne sie wieder.</string>
 </resources>

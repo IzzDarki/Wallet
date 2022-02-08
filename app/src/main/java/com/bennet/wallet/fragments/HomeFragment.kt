@@ -6,15 +6,14 @@ import android.os.*
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.preference.PreferenceManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.bennet.wallet.R
-import com.bennet.wallet.activities.MainActivity
 import com.bennet.wallet.preferences.AppPreferenceManager
 import com.bennet.wallet.services.CreateExampleCardService
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -49,7 +48,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 State.Passwords
         }
 
-        fun reloadWithNewState(context: Context) {
+        fun reload(context: Context) {
             state = getNewState(context)
             notifyDataSetChanged()
         }
@@ -101,6 +100,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         })
         fragmentViewPager.adapter = ScreenSlidePagerAdapter(this)
 
+        // bottom navigation
+        if (!AppPreferenceManager.isAppFunctionCards(requireContext())
+            || !AppPreferenceManager.isAppFunctionPasswords(requireContext())
+        )
+            bottomNavigationView.visibility = View.GONE
+        else
+            bottomNavigationView.visibility = View.VISIBLE
+
         // init for first run
         initFirstRun()
     }
@@ -108,15 +115,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onResume() {
         super.onResume()
 
-        // bottom navigation (could be changed when coming back from SettingsActivity)
-        if (!AppPreferenceManager.isAppFunctionCards(requireContext())
-            || !AppPreferenceManager.isAppFunctionPasswords(requireContext())
-        )
-            bottomNavigationView.visibility = View.GONE
-        else
-            bottomNavigationView.visibility = View.VISIBLE
+        val adapter = fragmentViewPager.adapter as ScreenSlidePagerAdapter
+        if (!adapter.isStateUpToDate(requireContext())) {
+            Toast.makeText(
+                requireContext(),
+                R.string.changing_app_functions_requires_restart,
+                Toast.LENGTH_LONG,
+            ).show()
+        }
     }
-
 
     // Helpers
     /**

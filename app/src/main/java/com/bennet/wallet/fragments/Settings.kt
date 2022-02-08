@@ -67,8 +67,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 ).show()
                 false
             }
-            else
+            else {
+                Toast.makeText(requireContext(),
+                    R.string.changing_app_functions_requires_restart,
+                    Toast.LENGTH_LONG
+                ).show()
                 true
+            }
         }
     }
 
