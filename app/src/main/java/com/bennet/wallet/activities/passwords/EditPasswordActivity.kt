@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bennet.colorpickerview.dialog.ColorPickerDialogFragment
 import com.bennet.wallet.R
 import com.bennet.wallet.activities.MainActivity
-import com.bennet.wallet.fragments.HomeFragment
 import com.bennet.wallet.adapters.EditPropertyAdapter
 import com.bennet.wallet.preferences.AppPreferenceManager
 import com.bennet.wallet.preferences.PasswordPreferenceManager
@@ -69,7 +68,7 @@ class EditPasswordActivity
     private lateinit var labels: PreferenceArrayString // will not be kept up to date (only readAndCheckLabels updates labels)
     private var passwordColor: Int = 0
     private var passwordProperties: MutableList<ItemProperty> = mutableListOf()
-    private var passwordCreationDate = Date(0)
+    private var creationDate = Date(0)
     private var passwordAlterationDate = Date(0)
     // endregion
 
@@ -80,7 +79,6 @@ class EditPasswordActivity
     // endregion
 
 
-    // region overrides
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_password)
@@ -170,7 +168,6 @@ class EditPasswordActivity
         else
             return super.dispatchTouchEvent(ev)
     }
-    // endregion
 
 
     // region main functions
@@ -181,7 +178,7 @@ class EditPasswordActivity
         passwordValue = PasswordPreferenceManager.readPasswordValue(this, ID)
         labels = PasswordPreferenceManager.readLabels(this, ID)
         passwordColor = PasswordPreferenceManager.readColor(this, ID)
-        passwordCreationDate = PasswordPreferenceManager.readCreationDate(this, ID)
+        creationDate = PasswordPreferenceManager.readCreationDate(this, ID)
         passwordAlterationDate = PasswordPreferenceManager.readAlterationDate(this, ID)
         passwordProperties = PasswordPreferenceManager.readProperties(this, ID)
 
@@ -195,6 +192,7 @@ class EditPasswordActivity
         passwordValue = "" // init as empty
         labels = PreferenceArrayString()
         passwordColor = resources.getColor(R.color.card_default_color)
+        creationDate = Calendar.getInstance().time
 
         // init default properties
         passwordProperties.add(
@@ -487,8 +485,8 @@ class EditPasswordActivity
             passwordName,
             passwordValue,
             passwordColor,
-            passwordCreationDate, // TODO (newIntent)
-            passwordAlterationDate, // TODO
+            creationDate,
+            alterationDate = Calendar.getInstance().time,
             labels,
             passwordProperties
         )

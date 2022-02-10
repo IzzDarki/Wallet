@@ -32,6 +32,7 @@ import com.bennet.wallet.preferences.CardPreferenceManager
 import com.bennet.wallet.services.CreateExampleCardService
 import com.bennet.wallet.components.EditLabelsComponent
 import com.bennet.wallet.fragments.HomeFragment
+import com.bennet.wallet.utils.AppUtility
 import com.bennet.wallet.utils.ItemProperty
 import com.bennet.wallet.utils.Utility
 import com.bennet.wallet.utils.Utility.PreferenceArrayInt
@@ -95,7 +96,6 @@ class EditCardActivity
     // endregion
 
 
-    // region overrides
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -143,9 +143,6 @@ class EditCardActivity
                 if the images remain unchanged, last and current images are the same, then nothing gets deleted and preferences remain unchanged (scenario same for both "cancel" and "save")
                  */
         }
-
-        // scroll view (TODO feature was removed, because it didn't do anything)
-        // hideScrollbar()
 
         // card name
         cardNameInputEditText.setText(cardName)
@@ -262,7 +259,6 @@ class EditCardActivity
         hideKeyboard()
         super.finish()
     }
-    // endregion
 
 
     // region main functions
@@ -289,6 +285,7 @@ class EditCardActivity
         cardCodeType = AppPreferenceManager.getDefaultCardCodeType(this)
         cardCodeTypeText = AppPreferenceManager.getDefaultWithText(this)
         cardColor = resources.getColor(R.color.card_default_color)
+        cardCreationDate = Calendar.getInstance().time
 
         cardProperties.add(
             ItemProperty(
@@ -951,8 +948,8 @@ class EditCardActivity
             ID,
             cardName,
             cardColor,
-            cardCreationDate, // TODO update (newCardIntent)
-            cardAlterationDate,  // TODO update
+            cardCreationDate,
+            alterationDate = Calendar.getInstance().time,
             labels,
             code = cardCode ?: "",
             cardCodeType,
