@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.*
 import android.widget.FrameLayout
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
@@ -26,6 +27,7 @@ import com.bennet.wallet.preferences.AppPreferenceManager.SortingType
 import com.bennet.wallet.preferences.PasswordPreferenceManager
 import com.bennet.wallet.utils.*
 import com.bennet.wallet.utils.Utility.attachDragAndDropToRecyclerView
+import com.bennet.wallet.utils.Utility.setPaddingBottom
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 import kotlin.random.Random
@@ -61,19 +63,23 @@ class HomePasswordsFragment()
         plusButton = view.findViewById(R.id.fragment_home_passwords_plus_button)
         recyclerView = view.findViewById(R.id.fragment_home_passwords_recycler_view)
 
+        updatePasswords()
+
         // plus button
         plusButton.setOnClickListener {
             createNewPassword()
         }
 
-        updatePasswords()
-
+        // Passwords recycler view
         recyclerView.layoutManager = getPasswordGridLayoutManager()
-
         val adapter = PasswordAdapter(passwords)
         recyclerView.adapter = adapter
+        recyclerView.doOnPreDraw { // Add bottom padding
+            it.setPaddingBottom(plusButton.height + 2 * plusButton.paddingBottom)
+            // needed to prevent the floating action button to overlap with the recyclerview
+        }
 
-        // drag and drop
+        // Drag and drop
         attachDragAndDropToRecyclerView(
             recyclerView,
             passwords

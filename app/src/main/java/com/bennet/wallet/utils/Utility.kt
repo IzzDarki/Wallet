@@ -130,6 +130,15 @@ object Utility {
         return value.data
     }
 
+    fun View.setPaddingBottom(value: Int) {
+        this.setPadding(
+            this.paddingLeft,
+            this.paddingTop,
+            this.paddingRight,
+            value,
+        )
+    }
+
     fun List<String>.toPair(): Pair<String, String> {
         return when (this.size) {
             2 -> Pair(this[0], this[1])

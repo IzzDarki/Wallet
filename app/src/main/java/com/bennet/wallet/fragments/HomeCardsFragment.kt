@@ -14,6 +14,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
@@ -28,6 +29,7 @@ import com.bennet.wallet.utils.CardOrPasswordPreviewData
 import com.bennet.wallet.utils.CardOrPasswordStableIDKeyProvider
 import com.bennet.wallet.utils.MultiSelectItemDetailsLookup
 import com.bennet.wallet.utils.Utility.attachDragAndDropToRecyclerView
+import com.bennet.wallet.utils.Utility.setPaddingBottom
 
 class HomeCardsFragment
     : Fragment(R.layout.fragment_home_cards) {
@@ -66,15 +68,21 @@ class HomeCardsFragment
 
         updateCards()
 
-        // card grid recycler view
-        cardGridRecyclerView.layoutManager = getCardGridLayoutManager()
-        val adapter = CardAdapter(cards)
-        cardGridRecyclerView.adapter = adapter
+        // Plus button (FAB)
         plusButton.setOnClickListener {
             createNewCard()
         }
 
-        // drag and drop
+        // Card grid recycler view
+        cardGridRecyclerView.layoutManager = getCardGridLayoutManager()
+        val adapter = CardAdapter(cards)
+        cardGridRecyclerView.adapter = adapter
+        cardGridRecyclerView.doOnPreDraw { // Add bottom padding
+            it.setPaddingBottom(plusButton.height + 2 * plusButton.paddingBottom)
+            // needed to prevent the floating action button to overlap with the recyclerview
+        }
+
+        // Drag and drop
         attachDragAndDropToRecyclerView(
             cardGridRecyclerView,
             cards
@@ -89,7 +97,7 @@ class HomeCardsFragment
             selectionTracker.clearSelection()
         }
 
-        // selection tracker
+        // Selection tracker
         selectionTracker = SelectionTracker.Builder(
             SELECTION_ID,
             cardGridRecyclerView,
