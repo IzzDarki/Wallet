@@ -127,7 +127,7 @@ class ShowPasswordActivity : AppCompatActivity() {
             }
 
             R.id.show_card_or_password_action_bar_delete -> {
-                AlertDialog.Builder(ContextThemeWrapper(this, R.style.RoundedCornersDialog))
+                AlertDialog.Builder(ContextThemeWrapper(this, R.style.RoundedCornersDialogTheme))
                     .setTitle(R.string.delete_password)
                     .setMessage(R.string.delete_password_dialog_message)
                     .setCancelable(true)

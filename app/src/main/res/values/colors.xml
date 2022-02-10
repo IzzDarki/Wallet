@@ -1,9 +1,10 @@
 <!--?xml version="1.0" encoding="UTF-8"?-->
 <resources>
   <color name="primaryColor">#0776ec</color>
-    <color name="primaryDarkColor">#004bb9</color>
+  <color name="primaryDarkColor">#004bb9</color>
+
   <color name="secondaryColor">#546e7a</color>
-    <color name="secondaryTextColor">#ffffff</color>
+
   <color name="accentColor">@color/primaryColor</color>
   
   <color name="on_dark_text_color">#ffffff</color>
