@@ -60,7 +60,7 @@ public class ScrollAnimationImageView extends androidx.appcompat.widget.AppCompa
         setBackgroundResource(android.R.color.transparent);
     }
 
-    public void unhide() {
+    public void unHide() {
         hidden = false;
         drawAnimation();
     }
@@ -139,27 +139,6 @@ public class ScrollAnimationImageView extends androidx.appcompat.widget.AppCompa
         else
             return 0;
     }
-
-    /* was used once as additional space (when front & back), but replaced by getFrontImageOffset, which hopefully but also likely is correct
-    public int getBottomSpaceHeight() {
-        if (frontImage != null && backImage != null) {
-            return (getMaxImageHeight() - frontImage.getHeight()) / 2;
-            /* // doesn't really work in all situations (if the second card is for example max size, it needs the space to display - the code perfectly fits the space, that the animation finishes when scrolled until end, but that leads to overlap of second card and other views, if second card is big
-            int spaceBelow = 0;
-            for (int i = linearLayout.indexOfChild(spaceInLinearLayout) + 1; i < linearLayout.getChildCount(); i++)
-                spaceBelow += linearLayout.getChildAt(i).getHeight();
-
-            int spaceNeeded = (getMaxImageHeight() - frontImage.getHeight()) / 2;
-            int spaceDiff = spaceNeeded - spaceBelow;
-            if (spaceDiff > 0)
-                return spaceDiff;
-
-             *)/
-        }
-        return 0;
-    }
-    */
-
 
     @Override
     public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
