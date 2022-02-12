@@ -1,4 +1,4 @@
-package com.bennet.wallet.activities;
+package com.bennet.wallet.ui.secondary;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -14,10 +14,8 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.ContextThemeWrapper;
 
 import com.bennet.wallet.R;
-import com.bennet.wallet.activities.GetImageActivity;
 
 import java.io.File;
 

@@ -1,27 +1,20 @@
-package com.bennet.wallet.fragments
+package com.bennet.wallet.ui.home
 
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Paint
-import android.graphics.Typeface
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import android.widget.FrameLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bennet.wallet.R
-import com.bennet.wallet.activities.passwords.EditPasswordActivity
-import com.bennet.wallet.adapters.ExpandingListAdapter
-import com.bennet.wallet.adapters.PasswordAdapter
+import com.bennet.wallet.ui.passwords.EditPasswordActivity
 import com.bennet.wallet.preferences.AppPreferenceManager
 import com.bennet.wallet.preferences.AppPreferenceManager.SortingType
 import com.bennet.wallet.preferences.PasswordPreferenceManager
@@ -29,8 +22,6 @@ import com.bennet.wallet.utils.*
 import com.bennet.wallet.utils.Utility.attachDragAndDropToRecyclerView
 import com.bennet.wallet.utils.Utility.setPaddingBottom
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import java.util.*
-import kotlin.random.Random
 
 class HomePasswordsFragment()
     : Fragment(R.layout.fragment_home_passwords) {

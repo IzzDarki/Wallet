@@ -1,4 +1,4 @@
-package com.bennet.wallet.adapters
+package com.bennet.wallet.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.View

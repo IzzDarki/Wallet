@@ -21,7 +21,7 @@
         android:theme="@style/AppTheme">
         <!-- main activities -->
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true"
             android:launchMode="singleTop">
             <intent-filter>
@@ -31,30 +31,30 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.cards.ShowCardActivity"
+            android:name=".ui.cards.ShowCardActivity"
             android:configChanges="orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.cards.EditCardActivity"
+            android:name=".ui.cards.EditCardActivity"
             android:configChanges="orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.cards.ShowCardActivity" />
+                android:value=".ui.cards.ShowCardActivity" />
         </activity>
         <activity
-            android:name=".activities.passwords.ShowPasswordActivity"
+            android:name=".ui.passwords.ShowPasswordActivity"
             android:launchMode="singleTop" />
-        <activity android:name=".activities.passwords.EditPasswordActivity" />
+        <activity android:name=".ui.passwords.EditPasswordActivity" />
 
         <!-- other activities -->
-        <activity android:name=".activities.GetContentImageActivity" />
-        <activity android:name=".activities.ImageCaptureActivity" />
-        <activity android:name=".activities.CodeScannerActivity" />
-        <activity android:name=".activities.CropActivity" /> <!-- services -->
+        <activity android:name=".ui.secondary.GetContentImageActivity" />
+        <activity android:name=".ui.secondary.ImageCaptureActivity" />
+        <activity android:name=".ui.secondary.CodeScannerActivity" />
+        <activity android:name=".ui.secondary.CropActivity" /> <!-- services -->
         <service
             android:name=".services.ClearDirectoryService"
             android:permission="android.permission.BIND_JOB_SERVICE" />

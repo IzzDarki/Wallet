@@ -1,4 +1,4 @@
-package com.bennet.wallet.adapters
+package com.bennet.wallet.ui.adapters
 
 import android.content.Context
 import android.content.DialogInterface
@@ -21,7 +21,6 @@ import com.bennet.wallet.utils.Utility
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import java.util.*
 
 class EditPropertyAdapter(properties: MutableList<ItemProperty>, onPropertyRemovalListener: (() -> Unit)?)
     : RecyclerView.Adapter<EditPropertyAdapter.ViewHolder>() {

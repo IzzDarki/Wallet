@@ -1,4 +1,4 @@
-package com.bennet.wallet.activities;
+package com.bennet.wallet.ui.secondary;
 
 import android.Manifest;
 import android.content.DialogInterface;

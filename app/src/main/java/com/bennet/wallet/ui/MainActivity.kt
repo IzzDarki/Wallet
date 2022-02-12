@@ -1,4 +1,4 @@
-package com.bennet.wallet.activities
+package com.bennet.wallet.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

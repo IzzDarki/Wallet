@@ -1,4 +1,4 @@
-package com.bennet.wallet.adapters
+package com.bennet.wallet.ui.home
 
 import android.content.Context
 import android.content.Intent
@@ -12,8 +12,8 @@ import android.view.View
 import androidx.core.view.doOnPreDraw
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.SelectionTracker
-import com.bennet.wallet.activities.cards.CardActivity
-import com.bennet.wallet.activities.cards.ShowCardActivity
+import com.bennet.wallet.ui.cards.CardActivity
+import com.bennet.wallet.ui.cards.ShowCardActivity
 import com.bennet.wallet.utils.*
 
 class CardAdapter(cards: List<CardOrPasswordPreviewData>)

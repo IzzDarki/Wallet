@@ -1,8 +1,7 @@
-package com.bennet.wallet.fragments
+package com.bennet.wallet.ui.home
 
 import android.content.DialogInterface
 import com.bennet.wallet.R
-import com.bennet.wallet.adapters.CardAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.bennet.wallet.utils.Utility.PreferenceArrayInt
@@ -19,10 +18,10 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
-import com.bennet.wallet.activities.cards.EditCardActivity
+import com.bennet.wallet.ui.cards.EditCardActivity
 import com.bennet.wallet.preferences.CardPreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
-import com.bennet.wallet.activities.cards.CardActivity
+import com.bennet.wallet.ui.cards.CardActivity
 import com.bennet.wallet.preferences.AppPreferenceManager
 import com.bennet.wallet.preferences.AppPreferenceManager.SortingType
 import com.bennet.wallet.utils.CardOrPasswordPreviewData

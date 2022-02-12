@@ -1,4 +1,4 @@
-package com.bennet.wallet.activities.cards
+package com.bennet.wallet.ui.cards
 
 import android.content.DialogInterface
 import android.content.Intent
@@ -15,7 +15,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bennet.wallet.R
-import com.bennet.wallet.adapters.ShowPropertyAdapter
+import com.bennet.wallet.ui.adapters.ShowPropertyAdapter
 import com.bennet.wallet.preferences.AppPreferenceManager
 import com.bennet.wallet.preferences.CardPreferenceManager
 import com.bennet.wallet.utils.ItemProperty

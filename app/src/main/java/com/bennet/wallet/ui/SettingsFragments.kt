@@ -1,14 +1,11 @@
-package com.bennet.wallet.fragments
+package com.bennet.wallet.ui
 
 import android.content.Context
 import androidx.preference.PreferenceFragmentCompat
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
 import com.bennet.wallet.R
 import androidx.appcompat.app.AppCompatDelegate
 import android.widget.Toast
-import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.preference.ListPreference
 import androidx.preference.MultiSelectListPreference

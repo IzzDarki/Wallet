@@ -6,7 +6,7 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.HomeCardsFragment">
+    tools:context=".ui.home.HomeCardsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_home_cards_card_grid_recycler_view"

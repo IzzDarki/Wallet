@@ -1,4 +1,4 @@
-package com.bennet.wallet.activities;
+package com.bennet.wallet.ui.secondary;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;

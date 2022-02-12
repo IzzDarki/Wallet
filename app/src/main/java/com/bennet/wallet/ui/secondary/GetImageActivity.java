@@ -1,4 +1,4 @@
-package com.bennet.wallet.activities;
+package com.bennet.wallet.ui.secondary;
 
 import android.content.Intent;
 import android.graphics.Bitmap;

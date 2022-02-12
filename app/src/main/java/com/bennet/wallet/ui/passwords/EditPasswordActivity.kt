@@ -1,4 +1,4 @@
-package com.bennet.wallet.activities.passwords
+package com.bennet.wallet.ui.passwords
 
 import android.content.DialogInterface
 import android.content.Intent
@@ -19,8 +19,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bennet.colorpickerview.dialog.ColorPickerDialogFragment
 import com.bennet.wallet.R
-import com.bennet.wallet.activities.MainActivity
-import com.bennet.wallet.adapters.EditPropertyAdapter
+import com.bennet.wallet.ui.MainActivity
+import com.bennet.wallet.ui.adapters.EditPropertyAdapter
 import com.bennet.wallet.preferences.AppPreferenceManager
 import com.bennet.wallet.preferences.PasswordPreferenceManager
 import com.bennet.wallet.components.EditLabelsComponent

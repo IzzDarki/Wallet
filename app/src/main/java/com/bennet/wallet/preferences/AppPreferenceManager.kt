@@ -3,8 +3,7 @@ package com.bennet.wallet.preferences
 import android.content.Context
 import androidx.preference.PreferenceManager
 import com.bennet.wallet.R
-import com.bennet.wallet.activities.cards.CardActivity
-import com.bennet.wallet.utils.Utility.PreferenceArrayInt
+import com.bennet.wallet.ui.cards.CardActivity
 import java.util.*
 
 /**

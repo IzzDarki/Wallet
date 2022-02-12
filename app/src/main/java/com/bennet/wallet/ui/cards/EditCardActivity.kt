@@ -1,4 +1,4 @@
-package com.bennet.wallet.activities.cards
+package com.bennet.wallet.ui.cards
 
 import android.content.DialogInterface
 import android.content.Intent
@@ -25,14 +25,16 @@ import androidx.security.crypto.EncryptedFile
 import androidx.security.crypto.MasterKey
 import com.bennet.colorpickerview.dialog.ColorPickerDialogFragment
 import com.bennet.wallet.R
-import com.bennet.wallet.activities.*
-import com.bennet.wallet.adapters.EditPropertyAdapter
+import com.bennet.wallet.ui.adapters.EditPropertyAdapter
 import com.bennet.wallet.preferences.AppPreferenceManager
 import com.bennet.wallet.preferences.CardPreferenceManager
 import com.bennet.wallet.services.CreateExampleCardService
 import com.bennet.wallet.components.EditLabelsComponent
-import com.bennet.wallet.fragments.HomeFragment
-import com.bennet.wallet.utils.AppUtility
+import com.bennet.wallet.ui.*
+import com.bennet.wallet.ui.secondary.CodeScannerActivity
+import com.bennet.wallet.ui.secondary.GetContentImageActivity
+import com.bennet.wallet.ui.secondary.GetImageActivity
+import com.bennet.wallet.ui.secondary.ImageCaptureActivity
 import com.bennet.wallet.utils.ItemProperty
 import com.bennet.wallet.utils.Utility
 import com.bennet.wallet.utils.Utility.PreferenceArrayInt

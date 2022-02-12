@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="fileprovider_authority" translatable="false">com.bennet.wallpaper.debug.fileprovider</string>
-    <string name="version_name" translatable="false">1.4.0-alpha.1 (Debug)</string> <!-- TODO keep this updated -->
+    <string name="version_name" translatable="false">1.2.0-alpha.0 (Debug)</string> <!-- TODO keep this updated -->
     <string name="app_name">Wallet Debug</string>
 </resources>

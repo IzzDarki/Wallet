@@ -1,16 +1,15 @@
-package com.bennet.wallet.adapters
+package com.bennet.wallet.ui.home
 
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.RecyclerView
 import com.bennet.wallet.R
-import com.bennet.wallet.activities.passwords.ShowPasswordActivity
+import com.bennet.wallet.ui.passwords.ShowPasswordActivity
 import com.bennet.wallet.utils.*
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textview.MaterialTextView

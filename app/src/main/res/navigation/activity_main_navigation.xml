@@ -9,13 +9,13 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.bennet.wallet.fragments.HomeFragment"
+        android:name="com.bennet.wallet.ui.home.HomeFragment"
         android:label="@string/home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/nav_settings"
-        android:name="com.bennet.wallet.fragments.SettingsFragment"
+        android:name="com.bennet.wallet.ui.SettingsFragment"
         android:label="@string/settings" >
         <action
             android:id="@+id/action_nav_settings_to_default_values"
@@ -30,18 +30,18 @@
 
     <fragment
         android:id="@+id/nav_settings_default_values"
-        android:name="com.bennet.wallet.fragments.DefaultValuesSettingsFragment"
+        android:name="com.bennet.wallet.ui.DefaultValuesSettingsFragment"
         android:label="@string/preferences_default_values_title" />
 
     <fragment
         android:id="@+id/nav_settings_credits"
-        android:name="com.bennet.wallet.fragments.CreditsSettingsFragment"
+        android:name="com.bennet.wallet.ui.CreditsSettingsFragment"
         android:label="@string/preferences_credits">
     </fragment>
 
     <fragment
         android:id="@+id/nav_settings_app_info"
-        android:name="com.bennet.wallet.fragments.AppInfoSettingsFragment"
+        android:name="com.bennet.wallet.ui.AppInfoSettingsFragment"
         android:label="@string/preferences_app_info">
     </fragment>
 

@@ -1,4 +1,4 @@
-package com.bennet.wallet.fragments
+package com.bennet.wallet.ui.home
 
 import android.content.Context
 import android.content.Intent

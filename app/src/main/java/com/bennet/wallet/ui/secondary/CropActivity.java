@@ -1,11 +1,10 @@
-package com.bennet.wallet.activities;
+package com.bennet.wallet.ui.secondary;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -14,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bennet.wallet.preferences.AppPreferenceManager;
 import com.bennet.wallet.R;
-import com.bennet.wallet.adapters.CardAdapter;
+import com.bennet.wallet.ui.home.CardAdapter;
 import com.google.android.material.appbar.MaterialToolbar;
 
 import com.theartofdev.edmodo.cropper.CropImageView; // Apache License 2.0 http://www.apache.org/licenses/LICENSE-2.0.txt

@@ -1,4 +1,4 @@
-package com.bennet.wallet.activities.passwords
+package com.bennet.wallet.ui.passwords
 
 import android.content.DialogInterface
 import android.content.Intent
@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bennet.wallet.R
-import com.bennet.wallet.adapters.ShowPropertyAdapter
+import com.bennet.wallet.ui.adapters.ShowPropertyAdapter
 import com.bennet.wallet.preferences.PasswordPreferenceManager
 import com.bennet.wallet.utils.ItemProperty
 import com.google.android.material.appbar.MaterialToolbar

@@ -1,4 +1,4 @@
-package com.bennet.wallet.activities.cards
+package com.bennet.wallet.ui.cards
 
 import android.content.Context
 import com.bennet.wallet.utils.Utility.isMahlerFile
@@ -14,10 +14,8 @@ import androidx.security.crypto.EncryptedFile
 import android.graphics.BitmapFactory
 import com.bennet.wallet.R
 import android.widget.Toast
-import android.view.ViewTreeObserver.OnScrollChangedListener
 import androidx.core.widget.NestedScrollView
 import com.bennet.wallet.preferences.CardPreferenceManager
-import com.bennet.wallet.utils.Utility
 import com.google.zxing.BarcodeFormat
 import java.io.File
 import java.io.IOException
