@@ -3,7 +3,7 @@ package com.bennet.wallet.utils
 import androidx.annotation.ColorInt
 import androidx.recyclerview.selection.ItemKeyProvider
 
-class CardOrPasswordPreviewData(
+data class CardOrPasswordPreviewData(
     val ID: Int,
     val name: String,
     @ColorInt val color: Int,

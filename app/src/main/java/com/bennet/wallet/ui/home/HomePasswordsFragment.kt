@@ -114,8 +114,8 @@ class HomePasswordsFragment()
 
         if (init) {
             // This code does not run if this is the first time that onResume is being called
-            updatePasswords()
-            recyclerView.adapter?.notifyDataSetChanged()
+            if (updatePasswords())
+                recyclerView.adapter?.notifyDataSetChanged()
         }
         else
             init = true // if this is the first run of onResume, don't update passwords
@@ -247,10 +247,13 @@ class HomePasswordsFragment()
 
 
     // helper
-    private fun updatePasswords() {
+    private fun updatePasswords(): Boolean {
+        val oldList = passwords.toList()
         passwords.clear()
         passwords.addAll(PasswordPreferenceManager.readAll(requireContext()))
         sortPasswordsArray(AppPreferenceManager.getPasswordsSortingType(requireContext())) // sort the list according to saved sorting type
+
+        return oldList != passwords
     }
 
     private fun getPasswordGridLayoutManager(): StaggeredGridLayoutManager {

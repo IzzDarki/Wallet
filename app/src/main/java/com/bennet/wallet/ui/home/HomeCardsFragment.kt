@@ -151,11 +151,12 @@ class HomeCardsFragment
     }
 
     fun updateCardsAndNotifyAdapter() {
-        updateCards()
-        cardGridRecyclerView.adapter?.notifyDataSetChanged()
+        if (updateCards())
+            cardGridRecyclerView.adapter?.notifyDataSetChanged()
     }
 
-    private fun updateCards() {
+    private fun updateCards(): Boolean {
+        val oldCards = cards.toList()
         cardIDs = CardPreferenceManager.readAllIDs(requireContext())
         cards.clear()
         for (cardID in cardIDs) {
@@ -168,6 +169,8 @@ class HomeCardsFragment
             )
         }
         sortCardsArray(AppPreferenceManager.getCardsSortingType(requireContext())) // sort the list according to saved sorting type
+
+        return cards != oldCards
     }
 
     private fun editCard(ID: Int) {
@@ -265,7 +268,6 @@ class HomeCardsFragment
     }
 
     // TODO onBackPressed: https://stackoverflow.com/questions/5448653/how-to-implement-onbackpressed-in-fragments
-
 
     // screen orientation change
     override fun onConfigurationChanged(newConfig: Configuration) {
