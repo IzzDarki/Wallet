@@ -20,7 +20,10 @@ import androidx.core.widget.NestedScrollView;
 
 import com.bennet.wallet.R;
 
-public class ScrollAnimationImageView extends androidx.appcompat.widget.AppCompatImageView implements NestedScrollView.OnScrollChangeListener {
+public class ScrollAnimationImageView
+        extends androidx.appcompat.widget.AppCompatImageView
+        implements NestedScrollView.OnScrollChangeListener
+{
     static public final double widthToCornerRadiusRatio = 53.98 / 3.18; // 16.974842767295597484276729559748; // used to calculate corner radius in pixels
     static protected float offset = 0;
 
@@ -52,6 +55,10 @@ public class ScrollAnimationImageView extends androidx.appcompat.widget.AppCompa
         spaceInLinearLayout = new Space(scrollView.getContext());
         updateSpace();
         linearLayout.addView(spaceInLinearLayout);
+
+        // This causes drawing the animation when soft keyboard comes up
+        // drawAnimation is invoked a few times, but not regularly, so that should be fine
+        scrollView.getViewTreeObserver().addOnGlobalLayoutListener(this::drawAnimation);
     }
 
 
@@ -295,7 +302,7 @@ public class ScrollAnimationImageView extends androidx.appcompat.widget.AppCompa
 
     public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap
-                .getHeight(), Bitmap.Config.ARGB_8888);
+        .getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
 
 
