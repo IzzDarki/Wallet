@@ -16,8 +16,9 @@ import com.bennet.wallet.ui.cards.CardActivity
 import com.bennet.wallet.ui.cards.ShowCardActivity
 import com.bennet.wallet.utils.*
 
-class CardAdapter(cards: List<CardOrPasswordPreviewData>)
-    : RecyclerView.Adapter<CardAdapter.ViewHolder>()
+class CardAdapter(
+    private var cards: List<CardOrPasswordPreviewData>
+) : RecyclerView.Adapter<CardAdapter.ViewHolder>()
 {
 
     companion object {
@@ -25,12 +26,24 @@ class CardAdapter(cards: List<CardOrPasswordPreviewData>)
         var cardWidth: Double = 0.0
     }
 
-    private var cards: List<CardOrPasswordPreviewData> = cards
     lateinit var selectionTracker: SelectionTracker<Long>
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), MultiSelectAdapterViewHolder {
         var cardView: MaterialCardView = itemView.findViewById(R.id.small_card_item_card_view)
         var textView: MaterialTextView = itemView.findViewById(R.id.small_card_item_text_view)
+
+        init {
+            cardView.setOnClickListener {
+                // Show card on click
+                showCard(cards[adapterPosition].ID)
+            }
+        }
+
+        private fun showCard(cardID: Int) {
+            val intent = Intent(cardView.context, ShowCardActivity::class.java)
+            intent.putExtra(CardActivity.EXTRA_CARD_ID, cardID)
+            cardView.context.startActivity(intent)
+        }
 
         // needed for selection
         override val itemDetails: ItemDetailsLookup.ItemDetails<Long>
@@ -38,12 +51,7 @@ class CardAdapter(cards: List<CardOrPasswordPreviewData>)
                 override fun getPosition(): Int = adapterPosition
                 override fun getSelectionKey(): Long = cards[adapterPosition].ID.toLong()
             }
-    }
 
-    private fun showCard(context: Context, cardID: Int) {
-        val intent = Intent(context, ShowCardActivity::class.java)
-        intent.putExtra(CardActivity.EXTRA_CARD_ID, cardID)
-        context.startActivity(intent)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -82,11 +90,6 @@ class CardAdapter(cards: List<CardOrPasswordPreviewData>)
             holder.textView.setTextColor(context.resources.getColor(R.color.on_dark_text_color))
         else
             holder.textView.setTextColor(context.resources.getColor(R.color.on_light_text_color))
-
-        // show card on click
-        holder.cardView.setOnClickListener {
-            showCard(context, cards[pos].ID)
-        }
 
         if (selectionTracker.isSelected(cards[pos].ID.toLong()))
             AppUtility.makeCardViewSelected(holder.cardView)  // if not selected, outline has already been drawn (or not, if it has no outline)

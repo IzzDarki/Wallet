@@ -265,6 +265,7 @@ class HomePasswordsFragment()
 
         val indexRemoved = passwords.indexOfFirst { it.ID == passwordID }
         passwords.removeAt(indexRemoved)
+        recyclerView.adapter?.notifyItemRemoved(indexRemoved)
     }
 
     /**

@@ -8,6 +8,7 @@ import com.bennet.wallet.utils.Utility.PreferenceArrayInt
 import android.os.Bundle
 import android.content.Intent
 import android.content.res.Configuration
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
