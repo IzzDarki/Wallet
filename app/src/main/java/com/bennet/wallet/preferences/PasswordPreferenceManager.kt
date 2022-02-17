@@ -287,7 +287,7 @@ object PasswordPreferenceManager : CardOrPasswordPreferenceManager {
     // region private helper
     private var preferences: SharedPreferences? = null
 
-    private fun getPreferences(context: Context): SharedPreferences {
+    @Synchronized fun getPreferences(context: Context): SharedPreferences {
         if (preferences == null)
             // preferences = context.getSharedPreferences("passwords-test", Context.MODE_PRIVATE) // not encrypted for testing
             preferences = Utility.openEncryptedPreferences(context, PASSWORDS_PREFERENCES_NAME)

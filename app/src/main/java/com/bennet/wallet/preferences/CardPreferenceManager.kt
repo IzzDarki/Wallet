@@ -1,7 +1,6 @@
 package com.bennet.wallet.preferences
 
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.bennet.wallet.R
 import com.bennet.wallet.utils.Utility.PreferenceArrayString
@@ -9,9 +8,6 @@ import com.bennet.wallet.utils.Utility.PreferenceArrayInt
 import com.bennet.wallet.utils.Utility.openEncryptedPreferences
 import java.util.*
 
-import com.bennet.wallet.preferences.CardPreferenceManager.readBackImageFile
-
-import com.bennet.wallet.preferences.CardPreferenceManager.readFrontImageFile
 import com.bennet.wallet.utils.AppUtility
 import com.bennet.wallet.utils.ItemProperty
 import java.io.File
@@ -406,11 +402,11 @@ object CardPreferenceManager : CardOrPasswordPreferenceManager {
 
     // region all IDs
     override fun readAllIDs(context: Context): PreferenceArrayInt {
-        return PreferenceArrayInt(getPreferences(context).getString(PREFERENCE_ALL_CARD_IDS, null));
+        return PreferenceArrayInt(getPreferences(context).getString(PREFERENCE_ALL_CARD_IDS, null))
     }
 
     override fun writeAllIDs(context: Context, allIDs: PreferenceArrayInt) {
-        getPreferences(context).edit().putString(PREFERENCE_ALL_CARD_IDS, allIDs?.toPreference()).apply();
+        getPreferences(context).edit().putString(PREFERENCE_ALL_CARD_IDS, allIDs.toPreference()).apply()
     }
 
     /**
@@ -473,7 +469,7 @@ object CardPreferenceManager : CardOrPasswordPreferenceManager {
     // region private helper
     private var preferences: SharedPreferences? = null
 
-    fun getPreferences(context: Context): SharedPreferences {
+    @Synchronized fun getPreferences(context: Context): SharedPreferences {
         if (preferences == null)
             // preferences = context.getSharedPreferences("cards-test", MODE_PRIVATE) // not encrypted for testing
             preferences = openEncryptedPreferences(context, CARDS_PREFERENCES_NAME_ENCRYPTED)

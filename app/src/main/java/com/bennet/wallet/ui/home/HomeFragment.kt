@@ -9,14 +9,20 @@ import android.view.View
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.bennet.wallet.R
 import com.bennet.wallet.preferences.AppPreferenceManager
+import com.bennet.wallet.preferences.CardPreferenceManager
+import com.bennet.wallet.preferences.PasswordPreferenceManager
 import com.bennet.wallet.services.CreateExampleCardService
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
@@ -107,6 +113,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             bottomNavigationView.visibility = View.GONE
         else
             bottomNavigationView.visibility = View.VISIBLE
+
+        // preload encrypted preferences for better performance
+        if (AppPreferenceManager.isAppFunctionCards(requireContext()))
+            lifecycleScope.launch {
+                CardPreferenceManager.getPreferences(requireContext())
+            }
+        if (AppPreferenceManager.isAppFunctionPasswords(requireContext()))
+            lifecycleScope.launch {
+                PasswordPreferenceManager.getPreferences(requireContext())
+            }
 
         // init for first run
         initFirstRun()
