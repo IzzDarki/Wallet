@@ -136,7 +136,7 @@
     <string name="preferences_email_content" translatable="false">izzdarki.dev@gmail.com</string>
     <string name="preferences_mailto_link" translatable="false">mailto:izzdarki.dev@gmail.com?subject=Wallet</string>
     <string name="preferences_version_title">Version</string>
-    <string name="version_name" translatable="false">1.2.0-alpha.0</string> <!-- TODO keep this updated -->
+    <string name="version_name" translatable="false">2.0.0-alpha.0</string> <!-- TODO keep this updated -->
     <string name="preferences_releases_link" translatable="false">https://github.com/IzzDarki/Wallet/releases</string>
 
     <!-- language -->
