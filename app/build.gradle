@@ -12,7 +12,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.bennet.wallet"
+        applicationId "com.izzdarki.wallet"
         minSdkVersion 21
         targetSdkVersion 31
         versionCode 7
@@ -23,10 +23,13 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true // Enables code shrinking, obfuscation, and optimization
+            shrinkResources true // Enables resource shrinking, which is performed by the Android Gradle plugin.
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
+            minifyEnabled false
+            shrinkResources false
             applicationIdSuffix '.debug'
         }
     }
@@ -55,14 +58,14 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview-selection:1.1.0'
     implementation 'com.google.android.material:material:1.5.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.10"
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.4.0'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.4.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.4.1'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.4.1'
 
     // TODO replace these dependencies (from jcenter)
     implementation 'me.dm7.barcodescanner:zxing:1.9.13' // TODO replace with https://github.com/journeyapps/zxing-android-embedded
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
 
 
     //testImplementation 'junit:junit:4.13.2'

@@ -1,7 +1,7 @@
 <resources>
 
     <!-- strings -->
-    <string name="fileprovider_authority" translatable="false">com.bennet.wallpaper.fileprovider</string>
+    <string name="fileprovider_authority" translatable="false">izzdarki.wallpaper.fileprovider</string>
     <string name="cards_images_folder_name" translatable="false">Cards_images/</string> <!-- must stay the same -->
     <string name="example_card_front_image_file_name" translatable="false">example_card_front_image.jpg</string> <!-- see res/raw --> <!-- must stay the same -->
     <string name="example_card_back_image_file_name" translatable="false">example_card_back_image.jpg</string> <!-- see res/raw --> <!-- must stay the same -->
@@ -137,6 +137,7 @@
     <string name="preferences_mailto_link" translatable="false">mailto:izzdarki.dev@gmail.com?subject=Wallet</string>
     <string name="preferences_version_title">Version</string>
     <string name="version_name" translatable="false">1.2.0-alpha.0</string> <!-- TODO keep this updated -->
+    <string name="preferences_releases_link" translatable="false">https://github.com/IzzDarki/Wallet/releases</string>
 
     <!-- language -->
     <string name="no">No</string>

@@ -17,6 +17,9 @@
     <Preference
         android:title="@string/preferences_version_title"
         android:summary="@string/version_name"
-        android:icon="@drawable/ic_label_24dp"/>
+        android:icon="@drawable/ic_label_24dp">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="@string/preferences_releases_link" />
+    </Preference>
 
 </PreferenceScreen>

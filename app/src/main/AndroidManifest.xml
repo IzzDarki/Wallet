@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bennet.wallet">
+    package="izzdarki.wallet">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission
@@ -12,16 +12,17 @@
         android:maxSdkVersion="25" />
 
     <application
-        android:name=".Application"
+        android:name="com.izzdarki.wallet.Application"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <!-- main activities -->
         <activity
-            android:name=".ui.MainActivity"
+            android:name="com.izzdarki.wallet.ui.MainActivity"
             android:exported="true"
             android:launchMode="singleTop">
             <intent-filter>
@@ -31,35 +32,37 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.cards.ShowCardActivity"
+            android:name="com.izzdarki.wallet.ui.cards.ShowCardActivity"
             android:configChanges="orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.cards.EditCardActivity"
+            android:name="com.izzdarki.wallet.ui.cards.EditCardActivity"
             android:configChanges="orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.cards.ShowCardActivity" />
+                android:value="com.izzdarki.wallet.ui.cards.ShowCardActivity" />
         </activity>
         <activity
-            android:name=".ui.passwords.ShowPasswordActivity"
+            android:name="com.izzdarki.wallet.ui.passwords.ShowPasswordActivity"
             android:launchMode="singleTop" />
-        <activity android:name=".ui.passwords.EditPasswordActivity" />
+        <activity android:name="com.izzdarki.wallet.ui.passwords.EditPasswordActivity" />
 
         <!-- other activities -->
-        <activity android:name=".ui.secondary.GetContentImageActivity" />
-        <activity android:name=".ui.secondary.ImageCaptureActivity" />
-        <activity android:name=".ui.secondary.CodeScannerActivity" />
-        <activity android:name=".ui.secondary.CropActivity" /> <!-- services -->
+        <activity android:name="com.izzdarki.wallet.ui.secondary.GetContentImageActivity" />
+        <activity android:name="com.izzdarki.wallet.ui.secondary.ImageCaptureActivity" />
+        <activity android:name="com.izzdarki.wallet.ui.secondary.CodeScannerActivity" />
+        <activity android:name="com.izzdarki.wallet.ui.secondary.CropActivity" />
+
+        <!-- services -->
         <service
-            android:name=".services.ClearDirectoryService"
+            android:name="com.izzdarki.wallet.services.ClearDirectoryService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
-            android:name=".services.CreateExampleCardService"
+            android:name="com.izzdarki.wallet.services.CreateExampleCardService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <provider

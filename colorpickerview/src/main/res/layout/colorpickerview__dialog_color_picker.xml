@@ -19,7 +19,7 @@
         android:gravity="center_horizontal"
         android:orientation="horizontal" >
 
-        <com.bennet.colorpickerview.view.ColorPickerView
+        <com.izzdarki.colorpickerview.view.ColorPickerView
             android:id="@id/colorpickerview__color_picker_view"
             style="@style/colorpickerview__ColorPickerViewStyle"
             android:padding="16dp"/>
@@ -39,7 +39,7 @@
                 android:layout_gravity="top|center_horizontal"
                 android:orientation="vertical" >
 
-                <com.bennet.colorpickerview.view.ColorPanelView
+                <com.izzdarki.colorpickerview.view.ColorPanelView
                     android:id="@id/colorpickerview__color_panel_old"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/colorpickerview__dialog_preview_height"/>
@@ -54,7 +54,7 @@
                     android:text="↓"
                     android:textSize="16sp"/>
 
-                <com.bennet.colorpickerview.view.ColorPanelView
+                <com.izzdarki.colorpickerview.view.ColorPanelView
                     android:id="@id/colorpickerview__color_panel_new"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/colorpickerview__dialog_preview_height"/>
