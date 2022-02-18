@@ -10,6 +10,10 @@ Securely store cards and passwords
 - Dark and light mode (follows the system)
 - Languages: English and german (follows the system)
 
+### Important notes
+- **Don't rely on this app as the only place to store your passwords**
+- You might want to use an app locker for this app
+
 ### Screenshots
 ![Home cards](example-images/home-cards.jpg)  | ![Home passwords](example-images/home-passwords.jpg)  | ![Show card](example-images/show-card.jpg)  | ![Edit card](example-images/edit-card.jpg)
 :--------------------------------------------:|:-----------------------------------------------------:|:-------------------------------------------:|:-----------------------------------------:
