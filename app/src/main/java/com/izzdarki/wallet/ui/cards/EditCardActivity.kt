@@ -31,7 +31,6 @@ import com.izzdarki.wallet.ui.adapters.EditPropertyAdapter
 import com.izzdarki.wallet.preferences.AppPreferenceManager
 import com.izzdarki.wallet.preferences.CardPreferenceManager
 import com.izzdarki.wallet.services.CreateExampleCardService
-import com.izzdarki.wallet.components.EditLabelsComponent
 import com.izzdarki.wallet.ui.*
 import com.izzdarki.wallet.ui.secondary.CodeScannerActivity
 import com.izzdarki.wallet.ui.secondary.GetContentImageActivity
@@ -43,6 +42,7 @@ import com.izzdarki.wallet.utils.Utility.PreferenceArrayInt
 import com.izzdarki.wallet.utils.Utility.PreferenceArrayString
 import com.izzdarki.wallet.utils.Utility.IDGenerator
 import com.izzdarki.wallet.utils.Utility.hideKeyboard
+import com.izzdarki.editlabelscomponent.EditLabelsComponent
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
@@ -123,7 +123,11 @@ class EditCardActivity
         cardColorChip = findViewById(R.id.edit_card_color_chip)
         cardFrontImageChip = findViewById(R.id.edit_card_front_image_chip)
         cardBackImageChip = findViewById(R.id.edit_card_back_image_chip)
-        editLabelsComponent = EditLabelsComponent(this, R.id.edit_card_labels_chip_group, R.id.edit_card_labels_add_chip, linearLayout)
+        editLabelsComponent = EditLabelsComponent(
+            findViewById(R.id.edit_card_labels_chip_group),
+            findViewById(R.id.edit_card_labels_add_chip),
+            allLabels = CardPreferenceManager.collectAllLabelsSorted(this)
+        )
 
         // toolbar
         val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
@@ -687,7 +691,7 @@ class EditCardActivity
 
     private fun readAndCheckLabels() {
         val oldLabels = CardPreferenceManager.readLabels(this, ID)
-        labels = PreferenceArrayString(editLabelsComponent.readAllLabels().iterator())
+        labels = PreferenceArrayString(editLabelsComponent.currentLabels.iterator())
         if (!oldLabels.containsAll(labels) || !labels.containsAll(oldLabels))
             hasBeenModified = true
     }

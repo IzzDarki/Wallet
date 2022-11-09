@@ -23,17 +23,18 @@ import com.izzdarki.wallet.ui.MainActivity
 import com.izzdarki.wallet.ui.adapters.EditPropertyAdapter
 import com.izzdarki.wallet.preferences.AppPreferenceManager
 import com.izzdarki.wallet.preferences.PasswordPreferenceManager
-import com.izzdarki.wallet.components.EditLabelsComponent
 import com.izzdarki.wallet.utils.ItemProperty
 import com.izzdarki.wallet.utils.Utility
 import com.izzdarki.wallet.utils.Utility.IDGenerator
 import com.izzdarki.wallet.utils.Utility.PreferenceArrayString
 import com.izzdarki.wallet.utils.Utility.hideKeyboard
 import com.izzdarki.wallet.utils.Utility.setImeOptionsAndRestart
+import com.izzdarki.editlabelscomponent.EditLabelsComponent
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.izzdarki.wallet.preferences.CardPreferenceManager
 import java.util.*
 
 class EditPasswordActivity
@@ -92,7 +93,11 @@ class EditPasswordActivity
         passwordColorChip = findViewById(R.id.edit_password_color_chip)
         propertiesRecyclerView = findViewById(R.id.edit_password_recycler_view)
         addPasswordPropertyChip = findViewById(R.id.edit_password_add_password_property_chip)
-        editLabelsComponent = EditLabelsComponent(this, R.id.edit_password_labels_chip_group, R.id.edit_password_labels_add_chip, mainLinearLayout)
+        editLabelsComponent = EditLabelsComponent(
+            findViewById(R.id.edit_password_labels_chip_group),
+            findViewById(R.id.edit_password_labels_add_chip),
+            allLabels = CardPreferenceManager.collectAllLabelsSorted(this)
+        )
 
         // toolbar
         val toolbar: MaterialToolbar = findViewById(R.id.toolbar)
@@ -168,10 +173,10 @@ class EditPasswordActivity
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         // Every touch event goes through this function
-        if (editLabelsComponent.dispatchTouchEvent(ev))
-            return true
+        return if (editLabelsComponent.dispatchTouchEvent(ev))
+            true
         else
-            return super.dispatchTouchEvent(ev)
+            super.dispatchTouchEvent(ev)
     }
 
 
@@ -420,7 +425,7 @@ class EditPasswordActivity
 
     private fun readAndCheckLabels() {
         val oldLabels = PasswordPreferenceManager.readLabels(this, ID)
-        labels = PreferenceArrayString(editLabelsComponent.readAllLabels().iterator())
+        labels = PreferenceArrayString(editLabelsComponent.currentLabels.iterator())
         if (!oldLabels.containsAll(labels) || !labels.containsAll(oldLabels))
             hasBeenModified = true
     }

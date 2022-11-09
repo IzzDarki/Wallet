@@ -120,8 +120,12 @@ sealed interface CardOrPasswordPreferenceManager {
     fun writeCustomSortingNoGrouping(context: Context, customSorting: Utility.PreferenceArrayInt)
     fun writeCustomSortingWithGrouping(context: Context, customSorting: Map<String, List<String>>)
 
-    fun collectAllLabels(context: Context): Set<String> {
-        val labels = mutableSetOf<String>()
+    fun collectAllLabelsSorted(context: Context): SortedSet<String> {
+        val labels: SortedSet<String> = TreeSet { label1, label2 ->
+            val lengthCompare = label1.length.compareTo(label2.length)
+            if (lengthCompare != 0) lengthCompare
+            else label1.compareTo(label2)
+        }
         for (ID in readAllIDs(context)) {
             labels.addAll(readLabels(context, ID))
         }
