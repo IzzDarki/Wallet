@@ -18,7 +18,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity
+            android:name=".MainActivity2"
+            android:exported="false"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <!-- main activities -->
         <activity
             android:name="com.izzdarki.wallet.ui.MainActivity"
@@ -48,15 +56,11 @@
         <activity
             android:name="com.izzdarki.wallet.ui.passwords.ShowPasswordActivity"
             android:launchMode="singleTop" />
-        <activity android:name="com.izzdarki.wallet.ui.passwords.EditPasswordActivity" />
-
-        <!-- other activities -->
+        <activity android:name="com.izzdarki.wallet.ui.passwords.EditPasswordActivity" /> <!-- other activities -->
         <activity android:name="com.izzdarki.wallet.ui.secondary.GetContentImageActivity" />
         <activity android:name="com.izzdarki.wallet.ui.secondary.ImageCaptureActivity" />
         <activity android:name="com.izzdarki.wallet.ui.secondary.CodeScannerActivity" />
-        <activity android:name="com.izzdarki.wallet.ui.secondary.CropActivity" />
-
-        <!-- services -->
+        <activity android:name="com.izzdarki.wallet.ui.secondary.CropActivity" /> <!-- services -->
         <service
             android:name="com.izzdarki.wallet.services.ClearDirectoryService"
             android:permission="android.permission.BIND_JOB_SERVICE" />

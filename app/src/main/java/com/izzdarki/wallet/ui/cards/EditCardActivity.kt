@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.*
 import android.view.View.OnFocusChangeListener
 import android.view.View.VISIBLE
@@ -19,7 +18,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.view.doOnPreDraw
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -44,7 +44,7 @@ import com.izzdarki.wallet.utils.Utility.IDGenerator
 import com.izzdarki.wallet.utils.Utility.hideKeyboard
 import com.izzdarki.editlabelscomponent.EditLabelsComponent
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.chip.Chip
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -77,11 +77,11 @@ class EditCardActivity
     private lateinit var cardCodeTypeInput: MaterialAutoCompleteTextView
     private lateinit var cardCodeTypeTextInput: MaterialAutoCompleteTextView
     private lateinit var propertiesRecyclerView: RecyclerView
-    private lateinit var addNewPropertyChip: Chip
+    private lateinit var addNewPropertyButton: MaterialButton
+    private lateinit var cardColorButton: MaterialButton
+    private lateinit var cardFrontImageButton: MaterialButton
+    private lateinit var cardBackImageButton: MaterialButton
     private lateinit var editLabelsComponent: EditLabelsComponent
-    private lateinit var cardColorChip: Chip
-    private lateinit var cardFrontImageChip: Chip
-    private lateinit var cardBackImageChip: Chip
     // endregion
 
 
@@ -119,10 +119,10 @@ class EditCardActivity
         cardCodeTypeInput = findViewById(R.id.edit_card_code_type_input)
         cardCodeTypeTextInput = findViewById(R.id.edit_card_code_type_text_input)
         propertiesRecyclerView = findViewById(R.id.edit_card_recycler_view)
-        addNewPropertyChip = findViewById(R.id.edit_card_add_new_property_chip)
-        cardColorChip = findViewById(R.id.edit_card_color_chip)
-        cardFrontImageChip = findViewById(R.id.edit_card_front_image_chip)
-        cardBackImageChip = findViewById(R.id.edit_card_back_image_chip)
+        addNewPropertyButton = findViewById(R.id.edit_card_add_new_property_button)
+        cardColorButton = findViewById(R.id.edit_card_color_button)
+        cardFrontImageButton = findViewById(R.id.edit_card_front_image_button)
+        cardBackImageButton = findViewById(R.id.edit_card_back_image_button)
         editLabelsComponent = EditLabelsComponent(
             findViewById(R.id.edit_card_labels_chip_group),
             findViewById(R.id.edit_card_labels_add_chip),
@@ -238,15 +238,15 @@ class EditCardActivity
         editLabelsComponent.displayLabels(labels)
 
         // create new card property button
-        addNewPropertyChip.setOnClickListener { addNewProperty() }
+        addNewPropertyButton.setOnClickListener { addNewProperty() }
 
         // card color
-        cardColorChip.setOnClickListener { pickColor() }
+        cardColorButton.setOnClickListener { pickColor() }
         updateColorButtonColor()
 
         // card images
-        cardFrontImageChip.setOnClickListener { chooseImage(true) }
-        cardBackImageChip.setOnClickListener { chooseImage(false) }
+        cardFrontImageButton.setOnClickListener { chooseImage(true) }
+        cardBackImageButton.setOnClickListener { chooseImage(false) }
 
         // card view
         createCardView()
@@ -599,7 +599,7 @@ class EditCardActivity
     private fun pickColor() {
         val dialogFragment = ColorPickerDialogFragment.newInstance(
             PICK_COLOR_DIALOG_ID,
-            null,
+            getString(R.string.select_color),
             null,
             cardColor,
             false
@@ -623,11 +623,11 @@ class EditCardActivity
     override fun onDialogDismissed(dialogId: Int) {}
 
     private fun updateColorButtonColor() {
-        cardColorChip.chipBackgroundColor = ColorStateList.valueOf(cardColor)
+        cardColorButton.setBackgroundColor(cardColor)
         if (Utility.isColorDark(cardColor))
-            cardColorChip.setTextColor(resources.getColor(R.color.on_dark_text_color))
+            cardColorButton.setTextColor(ResourcesCompat.getColor(resources, R.color.on_dark_text_color,theme))
         else
-            cardColorChip.setTextColor(resources.getColor(R.color.on_light_text_color))
+            cardColorButton.setTextColor(ResourcesCompat.getColor(resources, R.color.on_light_text_color, theme))
 
         if (Utility.areColorsSimilar(
                 Utility.getDefaultBackgroundColor(this),
@@ -635,11 +635,11 @@ class EditCardActivity
             )
         ) {
             // draw outline
-            cardColorChip.chipStrokeWidth = resources.getDimension(R.dimen.outline_for_similar_colors_stroke_width)
-            cardColorChip.chipStrokeColor = ColorStateList.valueOf(resources.getColor(R.color.card_view_outline_color))
+            cardColorButton.strokeWidth = resources.getDimension(R.dimen.outline_for_similar_colors_stroke_width).toInt()
+            cardColorButton.strokeColor = ColorStateList.valueOf(resources.getColor(R.color.card_view_outline_color))
         } else {
             // remove outline
-            cardColorChip.chipStrokeWidth = 0F
+            cardColorButton.strokeWidth = 0
         }
     }
 
@@ -1056,17 +1056,17 @@ class EditCardActivity
         if (!isMahlerCardInit) {
             deleteFrontImage()
 
-            val frontImageStream = resources.openRawResource(R.raw.front_mahler_image)
+            val mahlerImageStream = resources.openRawResource(R.raw.front_mahler_image)
 
             // ensure cards images folder exists
-            val cardsImagesFolder = File(filesDir.toString() + "/" + getString(R.string.cards_images_folder_name))
-            if (!cardsImagesFolder.exists()) cardsImagesFolder.mkdirs()
+            val cashCardsImagesFolder = File(cacheDir.toString() + "/" + getString(R.string.cards_images_folder_name))
+            if (!cashCardsImagesFolder.exists()) cashCardsImagesFolder.mkdirs()
             currentFrontImage = CreateExampleCardService.copyCardImage(
                 this,
-                frontImageStream,
-                cardsImagesFolder,
+                mahlerImageStream,
+                cashCardsImagesFolder,
                 "JPEG_" + ID + "_" + getString(R.string.mahler_card_front_image_file_name)
-            ) // The filename of Mahler card should not change in future versions of the app (It's checked by Utility.isMahlerFile(...))
+            ) // The filename of Mahler card should not change in future versions of the app (It's checked by Utility.isMahlerFile(...)) // TODO from now on it is not used anymore
             updateFrontImage()
 
             cardName = "Gustav Mahler"

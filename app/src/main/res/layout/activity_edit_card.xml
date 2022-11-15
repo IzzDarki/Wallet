@@ -1,222 +1,230 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <include layout="@layout/toolbar"/>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        android:orientation="vertical">
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/edit_card_scroll_view"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent">
 
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/edit_card_linear_layout"
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/edit_card_scroll_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginStart="@dimen/default_padding"
-                android:layout_marginEnd="@dimen/default_padding">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edit_card_name_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-
-                    android:hint="@string/card_name"
-                    app:endIconMode="none"
-                    app:errorEnabled="true">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edit_card_name_input"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:inputType="text"
-                        android:imeOptions="actionNext"/>
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edit_card_code_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/text_input_padding_bottom"
-
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-
-                    android:hint="@string/card_code"
-                    app:endIconMode="custom"
-                    app:endIconDrawable="@drawable/icon_qr_code_scan_24dp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edit_card_code_input"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text"
-                        android:imeOptions="actionNext"/>
-
-                </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/edit_card_code_type_and_text_layout"
+                    android:id="@+id/edit_card_linear_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/text_input_padding_bottom"
-                    android:orientation="horizontal">
+                    android:orientation="vertical"
+                    android:layout_marginStart="@dimen/default_padding"
+                    android:layout_marginEnd="@dimen/default_padding">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="wrap_content"
+                        android:id="@+id/edit_card_name_layout"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingStart="0dp"
-                        android:paddingEnd="@dimen/text_input_padding_bottom"
 
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
 
-                        android:hint="@string/card_code_type">
+                        android:hint="@string/card_name"
+                        app:endIconMode="none"
+                        app:errorEnabled="true">
 
-                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                            android:id="@+id/edit_card_code_type_input"
-                            android:layout_width="wrap_content"
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_card_name_input"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="none"
-                            android:imeOptions="actionNext"
-                            android:maxLines="1"/>
+                            android:maxLines="1"
+                            android:inputType="text"
+                            android:imeOptions="actionNext"/>
 
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="wrap_content"
+                        android:id="@+id/edit_card_code_layout"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/text_input_padding_bottom"
 
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
 
-                        android:hint="@string/card_code_type_text">
+                        android:hint="@string/card_code"
+                        app:endIconMode="custom"
+                        app:endIconDrawable="@drawable/icon_qr_code_scan_24dp">
 
-                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                            android:id="@+id/edit_card_code_type_text_input"
-                            android:layout_width="wrap_content"
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_card_code_input"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="none"
-                            android:imeOptions="actionNext"
-                            android:maxLines="1"/>
+                            android:inputType="text"
+                            android:imeOptions="actionNext"/>
 
                     </com.google.android.material.textfield.TextInputLayout>
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:id="@+id/edit_card_code_type_and_text_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/text_input_padding_bottom"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="0dp"
+                            android:paddingEnd="@dimen/text_input_padding_bottom"
+
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+
+                            android:hint="@string/card_code_type">
+
+                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                android:id="@+id/edit_card_code_type_input"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:inputType="none"
+                                android:imeOptions="actionNext"
+                                android:maxLines="1"/>
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+
+                            android:hint="@string/card_code_type_text">
+
+                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                android:id="@+id/edit_card_code_type_text_input"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:inputType="none"
+                                android:imeOptions="actionNext"
+                                android:maxLines="1"/>
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/edit_card_recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:clipToPadding="false"
+                        tools:itemCount="2"
+                        tools:listitem="@layout/adapter_edit_property"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/edit_card_add_new_property_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:icon="@drawable/icon_plus_24dp"
+                        style="@style/Widget.Material3.Button.ElevatedButton"
+                        android:text="@string/card_property" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="@dimen/horizontal_divider_padding"
+                        android:layout_marginBottom="@dimen/horizontal_divider_padding"
+                        android:background="?android:attr/listDivider"/>
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/edit_card_labels_chip_group"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/edit_card_labels_add_chip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:chipIcon="@drawable/icon_plus_24dp"
+                            app:chipIconVisible="true"
+                            android:text="@string/label"
+                            style="@style/Widget.Material3.Chip.Assist" />
+
+                    </com.google.android.material.chip.ChipGroup>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="@dimen/horizontal_divider_padding"
+                        android:layout_marginBottom="@dimen/horizontal_divider_padding"
+                        android:background="?android:attr/listDivider"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/edit_card_color_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/edit_color_button_text"
+                        style="@style/Widget.Material3.Button.TonalButton"/>
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/edit_card_front_image_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/front_image"
+                            style="@style/Widget.Material3.Button.ElevatedButton.Icon"
+                            app:icon="@drawable/icon_image_24dp"
+                            android:layout_marginEnd="@dimen/default_padding"/>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/edit_card_back_image_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/back_image"
+                            style="@style/Widget.Material3.Button.ElevatedButton.Icon"
+                            app:icon="@drawable/icon_image_24dp"/>
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <!-- extra space -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:visibility="invisible"/>
+
+                    <!-- card (space) is displayed at the bottom, programmatically -->
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/edit_card_recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:clipToPadding="false"/>
+            </androidx.core.widget.NestedScrollView>
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/edit_card_add_new_property_chip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:chipIcon="@drawable/icon_plus_24dp"
-                    android:text="@string/card_property"
-                    style="@style/Widget.MaterialComponents.Chip.Action"
-                    app:chipBackgroundColor="@color/accentColor"/>
+            <!-- animated card view is in here -->
+            <FrameLayout
+                android:id="@+id/edit_card_card_view_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/default_padding"
+                android:layout_marginEnd="@dimen/default_padding"/>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/horizontal_divider_padding"
-                    android:layout_marginBottom="@dimen/horizontal_divider_padding"
-                    android:background="?android:attr/listDivider"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/edit_card_labels_chip_group"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/edit_card_labels_add_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:chipIcon="@drawable/icon_plus_24dp"
-                        android:text="@string/label"
-                        style="@style/Widget.MaterialComponents.Chip.Action"
-                        app:chipBackgroundColor="@color/accentColor"/>
-
-                </com.google.android.material.chip.ChipGroup>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/horizontal_divider_padding"
-                    android:layout_marginBottom="@dimen/horizontal_divider_padding"
-                    android:background="?android:attr/listDivider"/>
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/edit_card_color_chip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/edit_color_button_text"
-                    style="@style/Widget.MaterialComponents.Chip.Action"/>
-
-                <com.google.android.material.chip.ChipGroup
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/edit_card_front_image_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/front_image"
-                        style="@style/Widget.MaterialComponents.Chip.Action"
-                        app:chipBackgroundColor="@color/accentColor"
-                        app:chipIcon="@drawable/icon_image_24dp"/>
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/edit_card_back_image_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/back_image"
-                        style="@style/Widget.MaterialComponents.Chip.Action"
-                        app:chipBackgroundColor="@color/accentColor"
-                        app:chipIcon="@drawable/icon_image_24dp"/>
-
-                </com.google.android.material.chip.ChipGroup>
-
-                <!-- extra space -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:visibility="invisible"/>
-
-                <!-- card (space) is displayed at the bottom, programmatically -->
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-        </androidx.core.widget.NestedScrollView>
-
-        <!-- animated card view is in here -->
-        <FrameLayout
-            android:id="@+id/edit_card_card_view_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/default_padding"
-            android:layout_marginEnd="@dimen/default_padding"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

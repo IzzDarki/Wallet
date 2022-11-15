@@ -8,7 +8,7 @@
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/text_input_padding_bottom"
 
-    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
 
     app:errorEnabled="false"
     app:endIconMode="custom"

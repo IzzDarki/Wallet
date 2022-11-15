@@ -1,7 +1,6 @@
 package com.izzdarki.wallet.ui.cards
 
 import android.content.Context
-import com.izzdarki.wallet.utils.Utility.isMahlerFile
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.FrameLayout
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -97,7 +96,6 @@ open class CardActivity : AppCompatActivity() {
                 val bitmap: Bitmap? = if (parentActivityReference.get()!!.isInFilesDir(imageFile!!)
                     && imageFile.name != context!!.getString(R.string.example_card_front_image_file_name)
                     && imageFile.name != context.getString(R.string.example_card_back_image_file_name)
-                    && !isMahlerFile(parentActivityReference.get()!!, imageFile)
                 ) { // these files don't need to be encrypted
                     decodeEncryptedFile()
                 }

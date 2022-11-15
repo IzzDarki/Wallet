@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/adapter_expandable_list_expand_icon"
@@ -21,17 +24,17 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
 
-        android:textSize="16sp"
-        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
         app:layout_constraintBottom_toTopOf="@id/adapter_expandable_list_recycler_view"
         app:layout_constraintStart_toEndOf="@id/adapter_expandable_list_expand_icon"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Section header"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/adapter_expandable_list_recycler_view"
         app:layout_constraintTop_toBottomOf="@id/adapter_expandable_list_header"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

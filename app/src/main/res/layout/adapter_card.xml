@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
 
     android:id="@+id/small_card_item_card_view"
     android:layout_width="match_parent"
@@ -16,7 +17,9 @@
         android:layout_margin="8dp"
 
         android:textSize="20sp"
+        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
         android:textAlignment="center"
-        android:maxLines="3"/>
+        android:maxLines="3"
+        tools:text="Example card"/>
 
 </com.google.android.material.card.MaterialCardView>

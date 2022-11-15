@@ -3,4 +3,5 @@
     <bool name="preferences_detailed_errors_default">true</bool>
     <bool name="preferences_hide_length_secret_field_default">true</bool>
     <bool name="preferences_secret_field_monospace_default">true</bool>
+    <bool name="theme_window_light_status_bar">false</bool>
 </resources>

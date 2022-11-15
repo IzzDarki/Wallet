@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_marginStart="@dimen/list_item_start_margin">
 
@@ -34,10 +36,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
-                android:textSize="16sp"
-                android:textColor="@color/material_on_background_emphasis_high_type"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                 android:maxLines="1"
-                android:textIsSelectable="true" />
+                android:textIsSelectable="true"
+                tools:text="Property name"/>
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/show_property_value_view"
@@ -45,8 +47,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginBottom="5dp"
-                android:textSize="16sp"
-                android:textColor="@color/material_on_background_emphasis_medium"/>
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                tools:text="Property value"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

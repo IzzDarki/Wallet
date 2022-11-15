@@ -1,10 +1,12 @@
 package com.izzdarki.wallet
 
 import android.app.Application
+import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
 import androidx.security.crypto.EncryptedFile
 import androidx.security.crypto.MasterKey
+import com.google.android.material.color.DynamicColors
 import com.izzdarki.wallet.ui.SettingsFragment
 import com.izzdarki.wallet.preferences.AppPreferenceManager
 import com.izzdarki.wallet.preferences.CardPreferenceManager
@@ -19,6 +21,9 @@ class Application : Application() {
         super.onCreate()
         runUpdateCode()
         setThemeFromPreferences()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            DynamicColors.applyToActivitiesIfAvailable(this)
+        }
     }
 
     private fun setThemeFromPreferences() {
