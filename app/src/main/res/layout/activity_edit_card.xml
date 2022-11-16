@@ -5,14 +5,17 @@
     xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.izzdarki.wallet.ui.cards.EditCardActivity">
 
     <include layout="@layout/toolbar"/>
 
+    <!-- layout_behaviour makes app bar change color when scrolling -->
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
