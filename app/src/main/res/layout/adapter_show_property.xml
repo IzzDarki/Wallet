@@ -6,8 +6,7 @@
 
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_marginStart="@dimen/list_item_start_margin">
+    android:orientation="vertical">
 
     <View
         android:id="@+id/show_property_divider"
