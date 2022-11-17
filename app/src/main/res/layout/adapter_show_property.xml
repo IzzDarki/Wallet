@@ -6,13 +6,13 @@
 
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/list_item_start_margin"
     android:orientation="vertical">
 
     <View
         android:id="@+id/show_property_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginStart="5dp"
         android:background="?android:attr/listDivider" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,7 +33,6 @@
                 android:id="@+id/show_property_name_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                 android:maxLines="1"
@@ -44,7 +43,6 @@
                 android:id="@+id/show_property_value_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
                 android:layout_marginBottom="5dp"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                 tools:text="Property value"/>
