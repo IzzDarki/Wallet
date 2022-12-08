@@ -39,19 +39,23 @@
             android:configChanges="orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden">
+            android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.izzdarki.wallet.ui.cards.ShowCardActivity" />
         </activity>
-        <activity
-            android:name="com.izzdarki.wallet.ui.passwords.ShowPasswordActivity"
+        <activity android:name="com.izzdarki.wallet.ui.passwords.ShowPasswordActivity"
             android:launchMode="singleTop" />
-        <activity android:name="com.izzdarki.wallet.ui.passwords.EditPasswordActivity" /> <!-- other activities -->
+        <activity android:name="com.izzdarki.wallet.ui.passwords.EditPasswordActivity"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <!-- other activities -->
         <activity android:name="com.izzdarki.wallet.ui.secondary.GetContentImageActivity" />
         <activity android:name="com.izzdarki.wallet.ui.secondary.ImageCaptureActivity" />
         <activity android:name="com.izzdarki.wallet.ui.secondary.CodeScannerActivity" />
-        <activity android:name="com.izzdarki.wallet.ui.secondary.CropActivity" /> <!-- services -->
+        <activity android:name="com.izzdarki.wallet.ui.secondary.CropActivity" />
+
+        <!-- services -->
         <service
             android:name="com.izzdarki.wallet.services.ClearDirectoryService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
