@@ -18,8 +18,10 @@ import izzdarki.wallet.R
 import com.izzdarki.wallet.ui.adapters.ShowPropertyAdapter
 import com.izzdarki.wallet.preferences.AppPreferenceManager
 import com.izzdarki.wallet.preferences.CardPreferenceManager
-import com.izzdarki.wallet.utils.ItemProperty
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
+import com.google.android.material.divider.MaterialDivider
 import com.google.android.material.textview.MaterialTextView
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
@@ -32,16 +34,17 @@ class ShowCardActivity : CardActivity() {
     private lateinit var cardCodeImageView: ImageView
     private lateinit var cardCodePlainTextView: MaterialTextView
     private lateinit var cardPropertiesRecyclerView: RecyclerView
-    private lateinit var dividerCardProperties: View
-    private lateinit var dividerCardImages: View
+    private lateinit var dividerCardProperties: MaterialDivider
+    private lateinit var dividerCardImages: MaterialDivider
     private lateinit var extraSpaceCardImages: Space
+    private lateinit var labelsChipGroup: ChipGroup
+    private lateinit var labelsDivider: MaterialDivider
     // endregion
 
 
     // region variables
     @ColorInt private var codeForegroundColor = 0
     @ColorInt private var codeBackgroundColor = 0
-    private lateinit var cardProperties: MutableList<ItemProperty>
     // endregion
 
 
@@ -60,6 +63,8 @@ class ShowCardActivity : CardActivity() {
         dividerCardProperties = findViewById(R.id.show_card_divider_card_properties)
         dividerCardImages = findViewById(R.id.show_card_divider_card_images)
         extraSpaceCardImages = findViewById(R.id.show_card_extra_space_card_images)
+        labelsChipGroup = findViewById(R.id.labels_chip_group)
+        labelsDivider = findViewById(R.id.labels_divider)
 
         // init
         initFromPreferences()
@@ -78,6 +83,16 @@ class ShowCardActivity : CardActivity() {
         cardPropertiesRecyclerView.adapter = createShowPropertyAdapter()
         show()
 
+        // password labels
+        if (labels.isEmpty()) {
+            labelsDivider.visibility = View.GONE
+            labelsChipGroup.visibility = View.GONE
+        } else {
+            labelsDivider.visibility = View.VISIBLE
+            labelsChipGroup.visibility = View.VISIBLE
+            addLabelsToChipGroup()
+        }
+
         // card view
         createCardView()
     }
@@ -88,6 +103,17 @@ class ShowCardActivity : CardActivity() {
         cardView.removeFrontImage() // hides old image, new image will be loaded later
         cardView.removeBackImage() // hides old image, new image will be loaded later
         initFromPreferences()
+
+        // hide/show labels chip group
+        if (labels.isEmpty()) {
+            labelsDivider.visibility = View.GONE
+            labelsChipGroup.visibility = View.GONE
+        } else {
+            labelsDivider.visibility = View.VISIBLE
+            labelsChipGroup.visibility = View.VISIBLE
+            labelsChipGroup.removeAllViews()
+            addLabelsToChipGroup()
+        }
 
         // update
         cardPropertiesRecyclerView.adapter = createShowPropertyAdapter() // because cardProperties has been reassigned, a new adapter, that holds the new cardProperties is needed
@@ -136,12 +162,6 @@ class ShowCardActivity : CardActivity() {
         return true
     }
     // endregion
-
-
-    override fun initFromPreferences() {
-        super.initFromPreferences()
-        cardProperties = CardPreferenceManager.readProperties(this, ID)
-    }
 
     private fun show() {
         // hide scrollbar (TODO feature was removed, because it didn't do anything)
@@ -213,6 +233,14 @@ class ShowCardActivity : CardActivity() {
         }
         else
             dividerCardImages.visibility = View.GONE
+    }
+
+    private fun addLabelsToChipGroup() {
+        for (label in labels) {
+            val chip = Chip(this)
+            chip.text = label
+            labelsChipGroup.addView(chip)
+        }
     }
 
     private fun createShowPropertyAdapter(): ShowPropertyAdapter {

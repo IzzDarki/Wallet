@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.divider.MaterialDivider
 import izzdarki.wallet.R
 import com.izzdarki.wallet.preferences.AppPreferenceManager
 import com.izzdarki.wallet.utils.ItemProperty
@@ -21,7 +22,7 @@ class ShowPropertyAdapter(properties: List<ItemProperty>, onTextVisibilityChange
 
     inner class ViewHolder(v: View)
         : RecyclerView.ViewHolder(v) {
-        var divider: View = v.findViewById(R.id.show_property_divider)
+        var divider: MaterialDivider = v.findViewById(R.id.show_property_divider)
         var nameView: MaterialTextView = v.findViewById(R.id.show_property_name_view)
         var valueView: MaterialTextView = v.findViewById(R.id.show_property_value_view)
         var visibilityToggleButton: AppCompatImageButton = v.findViewById(R.id.show_property_visibility_toggle)

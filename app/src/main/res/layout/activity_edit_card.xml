@@ -134,6 +134,7 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical"
                         android:clipToPadding="false"
+                        android:nestedScrollingEnabled="false"
                         tools:itemCount="2"
                         tools:listitem="@layout/adapter_edit_property"/>
 
@@ -145,12 +146,11 @@
                         style="@style/Widget.Material3.Button.ElevatedButton"
                         android:text="@string/card_property" />
 
-                    <View
+                    <com.google.android.material.divider.MaterialDivider
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="@dimen/horizontal_divider_padding"
-                        android:layout_marginBottom="@dimen/horizontal_divider_padding"
-                        android:background="?android:attr/listDivider"/>
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vertical_divider_padding"
+                        android:layout_marginBottom="@dimen/vertical_divider_padding"/>
 
                     <com.google.android.material.chip.ChipGroup
                         android:id="@+id/edit_card_labels_chip_group"
@@ -168,12 +168,11 @@
 
                     </com.google.android.material.chip.ChipGroup>
 
-                    <View
+                    <com.google.android.material.divider.MaterialDivider
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="@dimen/horizontal_divider_padding"
-                        android:layout_marginBottom="@dimen/horizontal_divider_padding"
-                        android:background="?android:attr/listDivider"/>
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vertical_divider_padding"
+                        android:layout_marginBottom="@dimen/vertical_divider_padding"/>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/edit_card_color_button"

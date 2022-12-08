@@ -35,7 +35,6 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.izzdarki.wallet.preferences.CardPreferenceManager
 import java.util.*
 
 class EditPasswordActivity
@@ -338,6 +337,7 @@ class EditPasswordActivity
         return requestCancel()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         requestCancel()
     }
@@ -427,7 +427,7 @@ class EditPasswordActivity
 
     private fun readAndCheckLabels() {
         val oldLabels = PasswordPreferenceManager.readLabels(this, ID)
-        labels = PreferenceArrayString(editLabelsComponent.currentLabels.iterator())
+        labels = PreferenceArrayString(editLabelsComponent.currentLabels.sorted().iterator())
         if (!oldLabels.containsAll(labels) || !labels.containsAll(oldLabels))
             hasBeenModified = true
     }

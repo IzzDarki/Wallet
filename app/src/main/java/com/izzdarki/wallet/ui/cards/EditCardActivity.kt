@@ -93,13 +93,6 @@ class EditCardActivity
     private var lastBackImage: File? = null
     // endregion
 
-
-    // region card properties (some others are inherited from CardActivity)
-    private var cardProperties: MutableList<ItemProperty> = mutableListOf()
-    private lateinit var labels: PreferenceArrayString  // will not be kept up to date (only readAndCheckLabels updates labels)
-    // endregion
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -278,9 +271,6 @@ class EditCardActivity
     // region main functions
     override fun initFromPreferences() {
         super.initFromPreferences()
-
-        labels = CardPreferenceManager.readLabels(this, ID)
-        cardProperties = CardPreferenceManager.readProperties(this, ID)
 
         if (cardProperties.isEmpty()) {
             // set IME options on last input field to done
@@ -498,6 +488,7 @@ class EditCardActivity
         return requestCancel()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         requestCancel()
     }
@@ -691,7 +682,7 @@ class EditCardActivity
 
     private fun readAndCheckLabels() {
         val oldLabels = CardPreferenceManager.readLabels(this, ID)
-        labels = PreferenceArrayString(editLabelsComponent.currentLabels.iterator())
+        labels = PreferenceArrayString(editLabelsComponent.currentLabels.sorted().iterator())
         if (!oldLabels.containsAll(labels) || !labels.containsAll(oldLabels))
             hasBeenModified = true
     }
@@ -788,7 +779,7 @@ class EditCardActivity
                     val imagesDirectory =
                         File(filesDir.toString() + "/" + getString(R.string.cards_images_folder_name))
                     if (!imagesDirectory.exists()) imagesDirectory.mkdirs()
-                    val newFrontImage = File(imagesDirectory, currentFrontImage?.name)
+                    val newFrontImage = File(imagesDirectory, currentFrontImage?.name!!)
                     val mainKey = MasterKey.Builder(this)
                         .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
                         .build()
