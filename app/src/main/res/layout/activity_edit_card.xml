@@ -205,6 +205,13 @@
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
+                    <!-- Space for keyboard, otherwise it covers stuff that can be edited -->
+                    <View
+                        android:id="@+id/edit_card_space_for_keyboard"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:visibility="gone"/>
+
                     <!-- extra space -->
                     <View
                         android:layout_width="match_parent"

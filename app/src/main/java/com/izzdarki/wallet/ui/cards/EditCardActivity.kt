@@ -9,7 +9,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import android.view.View.OnFocusChangeListener
-import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -82,6 +81,7 @@ class EditCardActivity
     private lateinit var cardFrontImageButton: MaterialButton
     private lateinit var cardBackImageButton: MaterialButton
     private lateinit var editLabelsComponent: EditLabelsComponent
+    private lateinit var spaceForKeyboard: View
     // endregion
 
 
@@ -116,6 +116,7 @@ class EditCardActivity
         cardColorButton = findViewById(R.id.edit_card_color_button)
         cardFrontImageButton = findViewById(R.id.edit_card_front_image_button)
         cardBackImageButton = findViewById(R.id.edit_card_back_image_button)
+        spaceForKeyboard = findViewById(R.id.edit_card_space_for_keyboard)
         editLabelsComponent = EditLabelsComponent(
             findViewById(R.id.edit_card_labels_chip_group),
             findViewById(R.id.edit_card_labels_add_chip),
@@ -252,6 +253,8 @@ class EditCardActivity
             onPropertyRemoval()
         }
         propertiesRecyclerView.adapter = adapter
+
+        updateSpaceForKeyboard()
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
@@ -741,6 +744,17 @@ class EditCardActivity
 
     // region image helpers
     /**
+     * If no images are there, extra space is added so that the keyboard does not cover
+     * editable input fields
+     */
+    private fun updateSpaceForKeyboard() {
+        if (currentFrontImage == null && currentBackImage == null)
+            spaceForKeyboard.visibility = View.INVISIBLE  // invisible but takes space
+        else
+            spaceForKeyboard.visibility = View.GONE
+    }
+
+    /**
      * deletes current image file (if it's not the same as last image) and replaces it with `imageFile`, while not changing anything about last image
      * @param isFront true, when setting front image, false when setting back image
      * @param imageFile file to set as image
@@ -762,6 +776,8 @@ class EditCardActivity
         check(!(isFront && currentFrontImage == null || !isFront && currentBackImage == null)) {
             "EditCardActivity.setCardImage: Image was not set for whatever reason. isFront: $isFront, currentFrontImage: $currentFrontImage, currentBackImage: $currentBackImage"
         }
+
+        updateSpaceForKeyboard()
     }
 
     /**
@@ -879,6 +895,7 @@ class EditCardActivity
             cardView.removeFrontImage()
             CardPreferenceManager.deleteFrontImage(this, ID)
             currentFrontImage = null
+            updateSpaceForKeyboard()
         }
     }
 
@@ -887,6 +904,7 @@ class EditCardActivity
             cardView.removeBackImage()
             CardPreferenceManager.deleteBackImage(this, ID)
             currentBackImage = null
+            updateSpaceForKeyboard()
         }
     }
 
@@ -1027,7 +1045,7 @@ class EditCardActivity
         }
         if (cardProperties.size == 1) {
             // the last item is going to be removed
-            if (cardCodeTypeTextInput.visibility == VISIBLE)
+            if (cardCodeTypeTextInput.visibility == View.VISIBLE)
                 Utility.setImeOptionsAndRestart(cardCodeTypeTextInput, EditorInfo.IME_ACTION_DONE)
             else
                 Utility.setImeOptionsAndRestart(cardCodeInputEditText, EditorInfo.IME_ACTION_DONE)
