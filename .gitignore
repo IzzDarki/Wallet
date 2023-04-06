@@ -3,6 +3,7 @@
 /.idea/caches
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
+/.idea/misc.xml
 
 # User-specific stuff
 .idea/**/workspace.xml
