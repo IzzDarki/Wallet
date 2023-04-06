@@ -149,4 +149,6 @@
     <string name="preferences_version_title">Version</string>
     <string name="changing_app_functions_requires_restart">Änderungen der App Funktionen benötigen einen App-Neustart. Schließe die App und öffne sie wieder.</string>
     <string name="select_color">Wähle eine Farbe</string>
+    <string name="search">Suchen</string>
+    <string name="home_search_hint">Suche nach Name oder Label</string>
 </resources>

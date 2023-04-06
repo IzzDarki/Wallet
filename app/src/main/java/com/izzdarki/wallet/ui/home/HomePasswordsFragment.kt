@@ -6,6 +6,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.selection.SelectionPredicates
@@ -40,6 +41,7 @@ class HomePasswordsFragment()
     private val passwords: MutableList<CardOrPasswordPreviewData> = mutableListOf()
     private lateinit var selectionTracker: SelectionTracker<Long>
     private var init = false
+    private var searchQuery: String = ""
 
     // lifecycle
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -114,8 +116,7 @@ class HomePasswordsFragment()
 
         if (init) {
             // This code does not run if this is the first time that onResume is being called
-            if (updatePasswords())
-                recyclerView.adapter?.notifyDataSetChanged()
+            updatePasswordsAndNotifyAdapter()
         }
         else
             init = true // if this is the first run of onResume, don't update passwords
@@ -187,6 +188,22 @@ class HomePasswordsFragment()
             else -> inflater.inflate(R.menu.home_action_bar_menu, menu)
         }
 
+        // SearchView
+        val searchItem = menu.findItem(R.id.home_action_bar_search)
+        val searchView = searchItem.actionView as SearchView
+        searchView.queryHint = getString(R.string.home_search_hint)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                searchQuery = query ?: ""
+                updatePasswordsAndNotifyAdapter() // updates passwords (also filters according to searchQuery)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return this.onQueryTextSubmit(newText) // submit on every change
+            }
+        })
+
         // Set checkboxes
         when (AppPreferenceManager.getPasswordsSortingType(requireContext())) {
             SortingType.ByName -> menu.findItem(R.id.home_action_bar_sort_by_name)?.isChecked = true
@@ -247,11 +264,22 @@ class HomePasswordsFragment()
 
 
     // helper
+    private fun updatePasswordsAndNotifyAdapter() {
+        if (updatePasswords())
+            recyclerView.adapter?.notifyDataSetChanged()
+    }
     private fun updatePasswords(): Boolean {
         val oldList = passwords.toList()
         passwords.clear()
         passwords.addAll(PasswordPreferenceManager.readAll(requireContext()))
         sortPasswordsArray(AppPreferenceManager.getPasswordsSortingType(requireContext())) // sort the list according to saved sorting type
+
+        if (searchQuery != "") {
+            passwords.retainAll {
+                it.name.contains(searchQuery, ignoreCase = true)
+                        || it.labels.any { label -> label.contains(searchQuery, ignoreCase = true) }
+            }
+        }
 
         return oldList != passwords
     }

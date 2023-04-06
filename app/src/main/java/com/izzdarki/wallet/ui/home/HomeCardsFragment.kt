@@ -16,6 +16,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
@@ -52,9 +53,7 @@ class HomeCardsFragment
     private var cards: MutableList<CardOrPasswordPreviewData> = mutableListOf()
     private lateinit var selectionTracker: SelectionTracker<Long>
     private var init = false
-
-    // preferences
-    private lateinit var cardIDs: PreferenceArrayInt
+    private var searchQuery: String = ""
 
 
     // lifecycle
@@ -163,18 +162,16 @@ class HomeCardsFragment
 
     private fun updateCards(): Boolean {
         val oldCards = cards.toList()
-        cardIDs = CardPreferenceManager.readAllIDs(requireContext())
         cards.clear()
-        for (cardID in cardIDs) {
-            cards.add(
-                CardOrPasswordPreviewData(
-                    cardID,
-                    CardPreferenceManager.readName(requireContext(), cardID),
-                    CardPreferenceManager.readColor(requireContext(), cardID)
-                )
-            )
-        }
+
+        cards.addAll(CardPreferenceManager.readAll(requireContext()))
         sortCardsArray(AppPreferenceManager.getCardsSortingType(requireContext())) // sort the list according to saved sorting type
+        if (searchQuery != "") {
+            cards.retainAll {
+                it.name.contains(searchQuery, ignoreCase = true)
+                        || it.labels.any { label -> label.contains(searchQuery, ignoreCase = true) }
+            }
+        }
 
         return cards != oldCards
     }
@@ -220,11 +217,27 @@ class HomeCardsFragment
     // action bar
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear() // Needed because HomePasswordsFragment also accesses this menu
-        when {
+        when { // Inflate the correct menu
             selectionTracker.selection.size() == 1 -> inflater.inflate(R.menu.home_action_bar_with_one_item_selected_menu, menu)
             selectionTracker.selection.size() > 1 -> inflater.inflate(R.menu.home_action_bar_with_multiple_items_selected_menu, menu)
             else -> inflater.inflate(R.menu.home_action_bar_menu, menu)
         }
+
+        // SearchView
+        val searchItem = menu.findItem(R.id.home_action_bar_search)
+        val searchView = searchItem.actionView as SearchView
+        searchView.queryHint = getString(R.string.home_search_hint)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                searchQuery = query ?: ""
+                updateCardsAndNotifyAdapter() // updates card (also filters according to searchQuery)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return this.onQueryTextSubmit(newText) // submit on every change
+            }
+        })
 
         // Set checkboxes
         when (AppPreferenceManager.getCardsSortingType(requireContext())) {
