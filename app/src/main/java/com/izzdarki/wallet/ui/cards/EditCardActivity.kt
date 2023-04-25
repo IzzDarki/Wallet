@@ -18,7 +18,6 @@ import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.WindowCompat
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -513,10 +512,7 @@ class EditCardActivity
         dialog = builder.create()
         deleteImageGroup.setOnClickListener {
             dialog.dismiss()
-            if (isFront)
-                removeFrontImage()
-            else
-                removeBackImage()
+            removeImage(isFront)
         }
         selectImageGroup.setOnClickListener {
             dialog.dismiss()
@@ -568,11 +564,11 @@ class EditCardActivity
         getContentIntent.putExtra(GetImageActivity.EXTRA_FILE_NAME, createImageName(isFront))
         getContentIntent.putExtra(
             GetImageActivity.EXTRA_IMAGE_MAX_NEEDED_SHORT_SIDE,
-            calculatedLayoutWidth
+            calculatedLayoutWidth.toInt()
         )
         getContentIntent.putExtra(
             GetImageActivity.EXTRA_IMAGE_MAX_NEEDED_LONG_SIDE,
-            calculatedLayoutHeight
+            calculatedLayoutHeight.toInt()
         )
         getContentIntent.putExtra(GetContentImageActivity.EXTRA_TYPE, "image/*")
 
@@ -761,6 +757,7 @@ class EditCardActivity
      */
     private fun setCardImage(isFront: Boolean, imageFile: File) {
         hasBeenModified = true
+        removeImage(isFront)  // make sure old image is removed before adding new one
         if (isFront) {
             if (currentFrontImage !== lastFrontImage)
                 deleteFrontImage()
@@ -888,6 +885,13 @@ class EditCardActivity
                 }
             }
         }
+    }
+
+    private fun removeImage(isFront: Boolean) {
+        if (isFront)
+            removeFrontImage()
+        else
+            removeBackImage()
     }
 
     private fun removeFrontImage() {
