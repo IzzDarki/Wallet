@@ -15,6 +15,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.doOnPreDraw
@@ -54,6 +55,7 @@ class HomeCardsFragment
     private lateinit var selectionTracker: SelectionTracker<Long>
     private var init = false
     private var searchQuery: String = ""
+    private lateinit var clearSelectionOnBackPressedCallback: OnBackPressedCallback
 
 
     // lifecycle
@@ -70,6 +72,16 @@ class HomeCardsFragment
         plusButton = view.findViewById(R.id.fragment_home_cards_plus_button)
 
         updateCards()
+
+        // back button
+        clearSelectionOnBackPressedCallback = object : OnBackPressedCallback(enabled = false) {
+            override fun handleOnBackPressed() {
+                selectionTracker.clearSelection()
+            }
+        }
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner,
+            clearSelectionOnBackPressedCallback
+        )
 
         // Plus button (FAB)
         plusButton.setOnClickListener {
@@ -114,6 +126,8 @@ class HomeCardsFragment
 
         selectionTracker.addObserver(object : SelectionTracker.SelectionObserver<Long>() {
             override fun onSelectionChanged() {
+                clearSelectionOnBackPressedCallback.isEnabled =
+                    (selectionTracker.selection.size() > 0)
                 activity?.invalidateOptionsMenu() // reload action bar menu
             }
         })
@@ -124,6 +138,7 @@ class HomeCardsFragment
     override fun onPause() {
         super.onPause()
         selectionTracker.clearSelection() // When fragment is no longer visible clear selection
+        clearSelectionOnBackPressedCallback.isEnabled = false
     }
     
     override fun onResume() {
@@ -134,6 +149,7 @@ class HomeCardsFragment
         }
         else
             init = true
+        clearSelectionOnBackPressedCallback.isEnabled = (selectionTracker.selection.size() > 0)
     }
 
 
@@ -285,8 +301,6 @@ class HomeCardsFragment
         }
         return true
     }
-
-    // TODO onBackPressed: https://stackoverflow.com/questions/5448653/how-to-implement-onbackpressed-in-fragments
 
     // screen orientation change
     override fun onConfigurationChanged(newConfig: Configuration) {

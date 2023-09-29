@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.*
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.doOnPreDraw
@@ -42,6 +43,7 @@ class HomePasswordsFragment()
     private lateinit var selectionTracker: SelectionTracker<Long>
     private var init = false
     private var searchQuery: String = ""
+    private lateinit var clearSelectionOnBackPressedCallback: OnBackPressedCallback
 
     // lifecycle
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +59,16 @@ class HomePasswordsFragment()
         recyclerView = view.findViewById(R.id.fragment_home_passwords_recycler_view)
 
         updatePasswords()
+
+        // back button
+        clearSelectionOnBackPressedCallback = object : OnBackPressedCallback(enabled = false) {
+            override fun handleOnBackPressed() {
+                selectionTracker.clearSelection()
+            }
+        }
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner,
+            clearSelectionOnBackPressedCallback
+        )
 
         // plus button
         plusButton.setOnClickListener {
@@ -101,6 +113,8 @@ class HomePasswordsFragment()
 
         selectionTracker.addObserver(object : SelectionTracker.SelectionObserver<Long>() {
             override fun onSelectionChanged() {
+                clearSelectionOnBackPressedCallback.isEnabled =
+                    (selectionTracker.selection.size() > 0)
                 activity?.invalidateOptionsMenu() // reload action bar menu
             }
         })
@@ -109,17 +123,18 @@ class HomePasswordsFragment()
     override fun onPause() {
         super.onPause()
         selectionTracker.clearSelection() // When fragment is no longer visible clear selection
+        clearSelectionOnBackPressedCallback.isEnabled = false
     }
 
     override fun onResume() {
         super.onResume()
-
         if (init) {
             // This code does not run if this is the first time that onResume is being called
             updatePasswordsAndNotifyAdapter()
         }
         else
             init = true // if this is the first run of onResume, don't update passwords
+        clearSelectionOnBackPressedCallback.isEnabled = (selectionTracker.selection.size() > 0)
     }
 
 
@@ -252,9 +267,6 @@ class HomePasswordsFragment()
         }
         return true
     }
-
-    // TODO onBackPressed: https://stackoverflow.com/questions/5448653/how-to-implement-onbackpressed-in-fragments
-
 
     // screen orientation change
     override fun onConfigurationChanged(newConfig: Configuration) {
