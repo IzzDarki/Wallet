@@ -1,9 +1,13 @@
 package com.izzdarki.wallet.ui.adapters
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.recyclerview.widget.RecyclerView
@@ -25,12 +29,20 @@ class ShowPropertyAdapter(properties: List<ItemProperty>, onTextVisibilityChange
         var divider: MaterialDivider = v.findViewById(R.id.show_property_divider)
         var nameView: MaterialTextView = v.findViewById(R.id.show_property_name_view)
         var valueView: MaterialTextView = v.findViewById(R.id.show_property_value_view)
+        var copyToClipboardButton: AppCompatImageButton = v.findViewById(R.id.show_property_copy_clipboard)
         var visibilityToggleButton: AppCompatImageButton = v.findViewById(R.id.show_property_visibility_toggle)
 
-        private val isTextHidden get() = valueView.text.toString().contains("\u2022")
         private val context get() = itemView.context
+        private val isTextHidden get() = valueView.text.toString() == context.getString(R.string.hidden_password_dots)
 
         init {
+            copyToClipboardButton.setOnClickListener {
+                val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                clipboardManager.setPrimaryClip(
+                    ClipData.newPlainText(context.getString(R.string.secret_text), properties[adapterPosition].value)
+                )
+                Toast.makeText(context, context.getString(R.string.copied_to_clipboard), Toast.LENGTH_SHORT).show()
+            }
             visibilityToggleButton.setOnClickListener {
                 val isCurrentlyHidden: Boolean = isTextHidden
                 onTextVisibilityChanged?.invoke()
@@ -55,7 +67,7 @@ class ShowPropertyAdapter(properties: List<ItemProperty>, onTextVisibilityChange
                 }
                 valueView.setTextIsSelectable(false)
                 visibilityToggleButton.setImageDrawable(
-                    AppCompatResources.getDrawable(context, R.drawable.icon_visibility_off_30dp)
+                    AppCompatResources.getDrawable(context, R.drawable.icon_visibility_off_24dp)
                 )
             }
             else {
@@ -63,7 +75,7 @@ class ShowPropertyAdapter(properties: List<ItemProperty>, onTextVisibilityChange
                 valueView.text = properties[adapterPosition].value
                 valueView.setTextIsSelectable(true)
                 visibilityToggleButton.setImageDrawable(
-                    AppCompatResources.getDrawable(context, R.drawable.icon_visibility_30dp)
+                    AppCompatResources.getDrawable(context, R.drawable.icon_visibility_24dp)
                 )
             }
         }

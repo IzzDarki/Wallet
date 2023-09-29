@@ -151,4 +151,6 @@
     <string name="select_color">Wähle eine Farbe</string>
     <string name="search">Suchen</string>
     <string name="home_search_hint">Suche nach Name oder Label</string>
+    <string name="copied_to_clipboard">In Ziwschenablage kopiert</string>
+    <string name="secret_text">Geheimer Text</string>
 </resources>

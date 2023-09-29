@@ -271,4 +271,6 @@
     <string name="select_color">Select color</string>
     <string name="search">Search</string>
     <string name="home_search_hint">Search for name or label</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="secret_text">Secret text</string>
 </resources>
