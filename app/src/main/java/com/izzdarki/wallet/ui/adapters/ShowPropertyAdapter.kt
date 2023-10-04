@@ -1,9 +1,12 @@
 package com.izzdarki.wallet.ui.adapters
 
 import android.content.ClipData
+import android.content.ClipDescription
 import android.content.ClipboardManager
 import android.content.Context
 import android.graphics.Typeface
+import android.os.Build
+import android.os.PersistableBundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,8 +27,7 @@ class ShowPropertyAdapter(properties: List<ItemProperty>, onTextVisibilityChange
     private var properties = properties
     private var onTextVisibilityChanged = onTextVisibilityChanged
 
-    inner class ViewHolder(v: View)
-        : RecyclerView.ViewHolder(v) {
+    inner class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         var divider: MaterialDivider = v.findViewById(R.id.show_property_divider)
         var nameView: MaterialTextView = v.findViewById(R.id.show_property_name_view)
         var valueView: MaterialTextView = v.findViewById(R.id.show_property_value_view)
@@ -38,10 +40,22 @@ class ShowPropertyAdapter(properties: List<ItemProperty>, onTextVisibilityChange
         init {
             copyToClipboardButton.setOnClickListener {
                 val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                clipboardManager.setPrimaryClip(
-                    ClipData.newPlainText(context.getString(R.string.secret_text), properties[adapterPosition].value)
-                )
-                Toast.makeText(context, context.getString(R.string.copied_to_clipboard), Toast.LENGTH_SHORT).show()
+                val clipData = ClipData.newPlainText(context.getString(R.string.secret_text), properties[adapterPosition].value)
+
+                // Set sensitive flag
+                if (properties[adapterPosition].secret && Build.VERSION.SDK_INT >= 24) { // extras are only available in API 24+
+                    val sensitiveFlagName =
+                        if (Build.VERSION.SDK_INT >= 33) ClipDescription.EXTRA_IS_SENSITIVE
+                        else "android.content.extra.IS_SENSITIVE"
+                    clipData.description.extras = PersistableBundle().apply {
+                        putBoolean(sensitiveFlagName, true)
+                    }
+                }
+                clipboardManager.setPrimaryClip(clipData)
+
+                // Only show a toast for Android 12 and lower, according to https://developer.android.com/develop/ui/views/touch-and-input/copy-paste#duplicate-notifications
+                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2)
+                    Toast.makeText(context, context.getString(R.string.copied_to_clipboard), Toast.LENGTH_SHORT).show()
             }
             visibilityToggleButton.setOnClickListener {
                 val isCurrentlyHidden: Boolean = isTextHidden
@@ -57,7 +71,7 @@ class ShowPropertyAdapter(properties: List<ItemProperty>, onTextVisibilityChange
          */
         fun setValueHidden(textHidden: Boolean) {
             if (textHidden) {
-                valueView.setTypeface(Typeface.MONOSPACE)
+                valueView.typeface = Typeface.MONOSPACE
                 if (AppPreferenceManager.isLengthHiddenInSecretFields(context))
                     valueView.setText(R.string.hidden_password_dots)
                 else {
