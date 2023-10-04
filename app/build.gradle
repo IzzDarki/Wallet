@@ -14,8 +14,8 @@ android {
         applicationId "com.izzdarki.wallet"
         minSdkVersion 23
         targetSdk 34
-        versionCode 7
-        versionName "2.0.0-alpha.0"
+        versionCode 8 // corresponds to 2.0.0-alpha.0 // TODO version code, keep up to date
+        versionName "2.1.0-alpha.0" // TODO version name, keep up to date
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -58,7 +58,6 @@ dependencies {
     implementation "androidx.core:core-ktx:1.12.0"
     implementation 'androidx.recyclerview:recyclerview-selection:1.1.0'
     implementation 'com.google.android.material:material:1.9.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.20"
     implementation 'androidx.navigation:navigation-fragment-ktx:2.7.3'
     implementation 'androidx.navigation:navigation-ui-ktx:2.7.3'
 
