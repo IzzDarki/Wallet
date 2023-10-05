@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.core.widget.NestedScrollView
 import com.izzdarki.wallet.preferences.CardPreferenceManager
 import com.google.zxing.BarcodeFormat
+import com.izzdarki.wallet.logic.AuthenticatedAppCompatActivity
 import com.izzdarki.wallet.utils.ItemProperty
 import com.izzdarki.wallet.utils.Utility
 import java.io.File
@@ -27,7 +28,7 @@ import java.lang.ref.WeakReference
 import java.security.GeneralSecurityException
 import java.util.*
 
-open class CardActivity : AppCompatActivity() {
+open class CardActivity : AuthenticatedAppCompatActivity() {
     // UI
     protected lateinit var cardViewLayout: FrameLayout
     protected lateinit var scrollView: NestedScrollView

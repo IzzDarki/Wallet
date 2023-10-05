@@ -12,7 +12,6 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.DialogFragment
@@ -35,10 +34,11 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.izzdarki.wallet.logic.AuthenticatedAppCompatActivity
 import java.util.*
 
 class EditPasswordActivity
-    : AppCompatActivity(), ColorPickerDialogFragment.ColorPickerDialogListener {
+    : AuthenticatedAppCompatActivity(), ColorPickerDialogFragment.ColorPickerDialogListener {
 
     // region static cast val
     companion object {

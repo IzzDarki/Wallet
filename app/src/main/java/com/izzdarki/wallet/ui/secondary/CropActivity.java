@@ -9,8 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 
+import com.izzdarki.wallet.logic.AuthenticatedAppCompatActivity;
 import com.izzdarki.wallet.preferences.AppPreferenceManager;
 import izzdarki.wallet.R;
 import com.izzdarki.wallet.ui.home.CardAdapter;
@@ -20,7 +20,7 @@ import com.theartofdev.edmodo.cropper.CropImageView; // Apache License 2.0 http:
 
 
 
-public class CropActivity extends AppCompatActivity implements CropImageView.OnCropImageCompleteListener {
+public class CropActivity extends AuthenticatedAppCompatActivity implements CropImageView.OnCropImageCompleteListener {
     static public final String EXTRA_IMAGE_URI = "com.izzdarki.wallet.crop_activity.extra_image_uri"; // Parcelable
     static public final String EXTRA_IMAGE_FILE_PATH = "com.izzdarki.wallet.crop_activity.extra_image_file_path"; // String
     static public final String EXTRA_RESULT_ERROR_EXCEPTION = "com.izzdarki.wallet.crop_activity.extra_result_error_exception"; // Serializable

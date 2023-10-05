@@ -8,7 +8,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import izzdarki.wallet.R
@@ -19,8 +18,9 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.divider.MaterialDivider
+import com.izzdarki.wallet.logic.AuthenticatedAppCompatActivity
 
-class ShowPasswordActivity : AppCompatActivity() {
+class ShowPasswordActivity : AuthenticatedAppCompatActivity() {
 
     // region intent extras
     companion object {

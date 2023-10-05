@@ -10,14 +10,15 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import izzdarki.wallet.R;
 import com.google.zxing.Result;
+import com.izzdarki.wallet.logic.AuthenticatedAppCompatActivity;
+
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
-public class CodeScannerActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
+public class CodeScannerActivity extends AuthenticatedAppCompatActivity implements ZXingScannerView.ResultHandler {
     static public final int RESULT_PERMISSION_DENIED = RESULT_FIRST_USER;
     static public final String EXTRA_RESULT_CODE_TYPE = "com.izzdarki.code_scanner.code_type"; // Serializable extra
     static public final String EXTRA_RESULT_CODE = "com.izzdarki.code_scanner.code"; // String extra

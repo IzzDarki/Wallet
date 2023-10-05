@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -18,6 +22,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <!-- main activities -->
         <activity
             android:name="com.izzdarki.wallet.ui.MainActivity"
@@ -25,10 +30,14 @@
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.izzdarki.wallet.ui.authentication.AuthenticationActivity"
+            android:exported="true"
+            android:noHistory="true"
+            android:excludeFromRecents="true" /> <!-- noHistory and excludeFromRecents means the user cannot return to this activity using the back button -->
         <activity
             android:name="com.izzdarki.wallet.ui.cards.ShowCardActivity"
             android:configChanges="orientation"
@@ -44,10 +53,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.izzdarki.wallet.ui.cards.ShowCardActivity" />
         </activity>
-        <activity android:name="com.izzdarki.wallet.ui.passwords.ShowPasswordActivity"
+        <activity
+            android:name="com.izzdarki.wallet.ui.passwords.ShowPasswordActivity"
             android:launchMode="singleTop" />
-        <activity android:name="com.izzdarki.wallet.ui.passwords.EditPasswordActivity"
-            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name="com.izzdarki.wallet.ui.passwords.EditPasswordActivity"
+            android:windowSoftInputMode="adjustResize" />
 
         <!-- other activities -->
         <activity android:name="com.izzdarki.wallet.ui.secondary.GetContentImageActivity" />

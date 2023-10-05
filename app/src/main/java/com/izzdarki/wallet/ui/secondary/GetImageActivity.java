@@ -8,9 +8,10 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import izzdarki.wallet.R;
+
+import com.izzdarki.wallet.logic.AuthenticatedAppCompatActivity;
 import com.izzdarki.wallet.utils.Utility;
 
 import java.io.File;
@@ -27,7 +28,7 @@ import java.io.File;
  * <p>GetImageActivity.EXTRA_RESULT_FILE (Serializable): file with copy of selected file</p>
  * <p>GetImageActivity.EXTRA_RESULT_URI (Parcelable): uri of result file</p>
  */
-public class GetImageActivity extends AppCompatActivity {
+public class GetImageActivity extends AuthenticatedAppCompatActivity {
 
     public static final String EXTRA_FILE_PROVIDER_AUTHORITY = "com.izzdarki.get_image_activity.file_provider_authority";
     public static final String EXTRA_FOLDER_PATH = "com.izzdarki.get_image_activity.extra_folder_path";

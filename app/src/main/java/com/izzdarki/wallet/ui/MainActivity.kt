@@ -1,7 +1,6 @@
 package com.izzdarki.wallet.ui
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.view.GravityCompat
 import androidx.navigation.findNavController
@@ -9,11 +8,12 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.izzdarki.wallet.logic.AuthenticatedAppCompatActivity
 import com.izzdarki.wallet.services.ClearDirectoryService
 import izzdarki.wallet.R
 import izzdarki.wallet.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AuthenticatedAppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding

@@ -153,4 +153,10 @@
     <string name="home_search_hint">Suche nach Name oder Label</string>
     <string name="copied_to_clipboard">In Ziwschenablage kopiert</string>
     <string name="secret_text">Geheimer Text</string>
+    <string name="app_password">App-Passwort</string>
+    <string name="authenticate">Authentifizieren</string>
+    <string name="authenticate_to_use_app_text">Gib dein App-Passwort ein um die App zu nutzen</string>
+    <string name="forget_app_password_text">Wenn du dein App-Passwort vergisst,\nist es unmöglich es zurückzusetzen.\nDu kannst auf deine Karten und Passwörter\nohne das App-Passwort nicht mehr zugreifen 😕.</string>
+    <string name="app_password_is_incorrect">App-Passwort ist falsch</string>
+
 </resources>
