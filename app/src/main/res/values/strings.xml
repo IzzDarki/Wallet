@@ -275,7 +275,7 @@
     <string name="secret_text">Secret text</string>
     <string name="app_password">App password</string>
     <string name="authenticate">Authenticate</string>
-    <string name="authenticate_to_use_app_text">Please enter your app password to use the app</string>
-    <string name="forget_app_password_text">If you forget your app password,\nthere is no way to reset it.\nYou cannot access your cards and passwords\nwithout the app password 😕.</string>
+    <string name="enter_your_app_password">Enter your app password</string>
+    <string name="forget_app_password_text">If you forget your app password,\nthere is no way to reset it.\nYou cannot access your cards and passwords\nwithout the app password.</string>
     <string name="app_password_is_incorrect">App password is incorrect</string>
 </resources>

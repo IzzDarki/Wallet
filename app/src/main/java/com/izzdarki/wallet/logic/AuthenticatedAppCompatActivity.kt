@@ -19,7 +19,7 @@ open class AuthenticatedAppCompatActivity : AppCompatActivity() {
             startActivity(
                 Intent(this, AuthenticationActivity::class.java).apply {
                     if (authenticationMessage != null)
-                        putExtra(AuthenticationActivity.EXTRA_AUTHENTICATION_MESSAGE, authenticationMessage)
+                        putExtra(AuthenticationActivity.EXTRA_DETAILED_AUTHENTICATION_MESSAGE, authenticationMessage)
                 }
             )
         }
@@ -29,11 +29,13 @@ open class AuthenticatedAppCompatActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
-        // update authentication time, because the user is considered authenticated as long as the app is in foreground
-        if (wasAuthenticatedOnActivityResume) // Only do it if the user was authenticated on activity resume (activity can be started without authentication, see onResume)
+        // Update authentication time, because the user is considered authenticated as long as the app is in foreground
+        // But only if the user was authenticated on activity resume (activity can be started without authentication, see onResume)
+        if (wasAuthenticatedOnActivityResume && isAuthenticationEnabled(this))
             updateAuthenticationTime(this)
 
-        if (wasAuthenticatedOnActivityResume) {
+        // TODO remove logging
+        if (wasAuthenticatedOnActivityResume && isAuthenticationEnabled(this)) {
             val authenticationTime = authenticationStorage.readLastAuthenticationTime(this)
             val authenticationTimeFormatted = SimpleDateFormat("HH:mm:ss").format(Date(authenticationTime))
             Log.d("asdf", "Activity ${this.javaClass.simpleName} updated authentication time to $authenticationTimeFormatted")

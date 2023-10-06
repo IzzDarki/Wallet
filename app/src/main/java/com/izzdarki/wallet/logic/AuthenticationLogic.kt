@@ -53,7 +53,15 @@ fun isAuthenticationEnabled(context: Context): Boolean {
     return authenticationStorage.readEncodedAppPassword(context) != null
 }
 
-fun hashPassword(password: String): String =
+/**
+ * Get the encoded password (uses a random salt).
+ * It contains everything needed to verify a password.
+ * Uses argon2id with 46 MiB memory cost, 2 iterations and 1 parallelism.
+ * Recommended on Wikipedia (https://en.wikipedia.org/wiki/Argon2) is 46 MiB memory, 1 iteration, 1 parallelism
+ * or other configurations with less memory but more iterations.
+ * Changing this only affects passwords set after the change.
+ */
+fun encodePassword(password: String): String =
     Argon2.Builder(Version.LATEST)
         .type(Type.Argon2id)
         .memoryCost(MemoryCost.MiB(46))

@@ -15,7 +15,7 @@ import izzdarki.wallet.databinding.ActivityAuthenticationBinding
 class AuthenticationActivity : AppCompatActivity() {
 
     companion object {
-        const val EXTRA_AUTHENTICATION_MESSAGE = "authentication_message"
+        const val EXTRA_DETAILED_AUTHENTICATION_MESSAGE = "authentication_message"
     }
 
     private lateinit var binding: ActivityAuthenticationBinding
@@ -36,8 +36,8 @@ class AuthenticationActivity : AppCompatActivity() {
         // Prevent error icon from overlapping with password visibility toggle
         binding.authenticationPasswordLayout.errorIconDrawable = null
 
-        // Authentication message
-        binding.authenticationText.text = intent.getStringExtra(EXTRA_AUTHENTICATION_MESSAGE) ?: getString(R.string.authenticate_to_use_app_text)
+        // Detailed authentication message
+        binding.authenticationDetailedText.text = intent.getStringExtra(EXTRA_DETAILED_AUTHENTICATION_MESSAGE) ?: ""
 
         // Authenticate button
         binding.authenticationButton.setOnClickListener {
