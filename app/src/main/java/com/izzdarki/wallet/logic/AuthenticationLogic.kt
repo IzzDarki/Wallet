@@ -49,8 +49,31 @@ fun updateAuthenticationTime(context: Context) {
     }
 }
 
+/**
+ * Remove last authentication time (only if authentication is enabled).
+ * Can be used to force the user to authenticate again.
+ */
+fun removeLastAuthenticationTime(context: Context) {
+    if (isAuthenticationEnabled(context))
+        authenticationStorage.writeLastAuthenticationTime(context, 0)
+}
+
 fun isAuthenticationEnabled(context: Context): Boolean {
     return authenticationStorage.readEncodedAppPassword(context) != null
+}
+
+fun disableAuthentication(context: Context): Boolean {
+    removeLastAuthenticationTime(context) // sets to 0
+    return authenticationStorage.removeEncodedAppPasswort(context)
+}
+
+/**
+ * Update the app password.
+ * @param password New password in plain text
+ * @return `true` if the password was updated successfully
+ */
+fun setNewAppPassword(context: Context, password: String): Boolean {
+    return authenticationStorage.writeEncodedAppPassword(context, encodePassword(password))
 }
 
 /**

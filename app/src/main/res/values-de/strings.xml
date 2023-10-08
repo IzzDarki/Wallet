@@ -156,7 +156,24 @@
     <string name="app_password">App-Passwort</string>
     <string name="authenticate">Authentifizieren</string>
     <string name="enter_your_app_password">Gib dein App-Passwort ein</string>
-    <string name="forget_app_password_text">Wenn du dein App-Passwort vergisst,\nist es unmöglich es zurückzusetzen.\nDu kannst auf deine Karten und Passwörter\nohne das App-Passwort nicht mehr zugreifen.</string>
+    <string name="forget_app_password_text">Wenn du dein App-Passwort vergisst, ist es unmöglich es zurückzusetzen. Du kannst auf deine Karten und Passwörter ohne das App-Passwort nicht mehr zugreifen.</string>
     <string name="app_password_is_incorrect">App-Passwort ist falsch</string>
-
+    <string name="preferences_enable_authentication_summary">Lege ein App-Passwort fest, das beim Öffnen der App abgefragt wird</string>
+    <string name="authentication">Authentifizierung</string>
+    <string name="authentication_full_explanation">Authentifizierung stellt sicher, dass diese App von niemandem außer dir benutzt werden kann. Dazu musst du beim Öffnen der App ein App-Passwort eingeben.</string>
+    <string name="old_app_password">Altes App-Passwort</string>
+    <string name="new_app_password">Neues App-Passwort</string>
+    <string name="new_app_password_repeat">Neues App-Passwort wiederholen</string>
+    <string name="set_app_password">App-Passwort festlegen</string>
+    <string name="app_password_cant_be_empty">App-Passwort darf nicht leer sein</string>
+    <string name="app_passwords_dont_match">Passwörter stimmen nicht überein</string>
+    <string name="set_app_password_message">Dein App-Passwort sollte sicher sein. Merke dir es gut und schreibe es an einem sicheren Ort auf.</string>
+    <string name="app_password_set_successfully">App-Passwort erfolgreich festgelegt</string>
+    <string name="app_password_set_unknown_error">Unbekannter Fehler beim Festlegen des App-Passworts. App-Passwort wurde nicht verändert.</string>
+    <string name="authentication_disabled_successfully">Authentifizierung erfolgreich deaktiviert</string>
+    <string name="authentication_disabled_unknown_error">Unbekannter Fehler beim Deaktivieren der Authentifizierung. Authentifizierung wurde nicht deaktiviert.</string>
+    <string name="setup_authentication">Authentifizierung einstellen</string>
+    <string name="disable_authentication">Authentifizierung deaktivieren</string>
+    <string name="disable_authentication_message">Wenn du die Authentifizierung deaktivierst, kann jeder, der Zugriff auf dein Gerät hat deine Karten und Passwörter sehen. Ein App-Locker könnte sinnvoll sein.</string>
+    <string name="hint_change_password_on_disable_authentication_fragment">Tipp: Wenn du dein App-Passwort ändern willst, deaktiviere die Authentifizierung und richte sie dann mit einem neuen App-Passwort wieder ein.</string>
 </resources>

@@ -47,6 +47,9 @@
     </string-array>
     <string name="changing_app_functions_requires_restart">Changing app functions requires an app restart. Close the app and reopen it.</string>
 
+    <string name="preferences_enable_authentication_key" translatable="false">preferences.enable_authentication_key</string>
+    <string name="preferences_enable_authentication_summary">Setup an app password to use when opening the app</string>
+
     <string name="preferences_advanced_title">Advanced</string>
 
     <string name="preferences_back_confirm_key" translatable="false">preferences.confirm_back_key</string>
@@ -276,6 +279,23 @@
     <string name="app_password">App password</string>
     <string name="authenticate">Authenticate</string>
     <string name="enter_your_app_password">Enter your app password</string>
-    <string name="forget_app_password_text">If you forget your app password,\nthere is no way to reset it.\nYou cannot access your cards and passwords\nwithout the app password.</string>
+    <string name="forget_app_password_text">If you forget your app password, there is no way to reset it. You cannot access your cards and passwords without it.</string> <!-- used in multiple places -->
     <string name="app_password_is_incorrect">App password is incorrect</string>
+    <string name="authentication">Authentication</string>
+    <string name="authentication_full_explanation">Authentication ensures that this app can only be used by you. To achieve this, you will need to enter an app password when opening the application.</string>
+    <string name="old_app_password">Old app password</string>
+    <string name="new_app_password">New app password</string>
+    <string name="new_app_password_repeat">Repeat new app password</string>
+    <string name="set_app_password">Set app password</string>
+    <string name="app_password_cant_be_empty">App password can\'t be empty</string>
+    <string name="app_passwords_dont_match">App passwords don\'t match</string>
+    <string name="set_app_password_message">Make sure that your app password is secure and that you can remember it. Write it down in a safe place.</string>
+    <string name="app_password_set_successfully">App password set successfully</string>
+    <string name="app_password_set_unknown_error">Unknown error while setting app password. Your app password did not change.</string>
+    <string name="authentication_disabled_successfully">Authentication disabled successfully</string>
+    <string name="authentication_disabled_unknown_error">Unknown error while disabling authentication. Authentication was not disabled.</string>
+    <string name="setup_authentication">Setup authentication</string>
+    <string name="disable_authentication">Disable authentication</string>
+    <string name="disable_authentication_message">If you disable authentication, anyone who has access to your device will be able to see your cards and passwords. Consider using an app locker instead.</string>
+    <string name="hint_change_password_on_disable_authentication_fragment">Hint: If you want to change your app password, first disable authentication and then set it up with your new password.</string>
 </resources>

@@ -19,10 +19,17 @@ interface AuthenticationStorageInterface {
     fun readLastAuthenticationTime(context: Context): Long
 
     /**
-     * Writes the authentication passwordHash to the storage
+     * Writes the encoded authentication password to the storage.
+     * It contains everything needed to verify a password (e.g. salt)
      * @return `true` if successful
      */
-    fun writeEncodedAppPassword(context: Context, passwordHash: String): Boolean
+    fun writeEncodedAppPassword(context: Context, encodedPassword: String): Boolean
+
+    /**
+     * Remove the encoded password from the storage.
+     * Calling [readEncodedAppPassword] will then return `null`
+     */
+    fun removeEncodedAppPasswort(context: Context): Boolean
 
     /**
      * Reads the authentication passwordHash from the storage

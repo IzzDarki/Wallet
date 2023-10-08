@@ -4,17 +4,10 @@ import android.app.Application
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
-import androidx.security.crypto.EncryptedFile
-import androidx.security.crypto.MasterKey
 import com.google.android.material.color.DynamicColors
-import com.izzdarki.wallet.ui.SettingsFragment
+import com.izzdarki.wallet.ui.settings.SettingsFragment
 import com.izzdarki.wallet.preferences.AppPreferenceManager
-import com.izzdarki.wallet.preferences.CardPreferenceManager
-import com.izzdarki.wallet.utils.Utility
 import izzdarki.wallet.BuildConfig
-import izzdarki.wallet.R
-import java.io.*
-import java.security.GeneralSecurityException
 
 class Application : Application() {
     override fun onCreate() {
@@ -40,11 +33,11 @@ class Application : Application() {
         }
     }
 
+    /*
     /**
      * Will execute the code only once (first time Application gets created after installation or data removal)
      */
     private fun initFirstRun() {
-        /*
         final String APPLICATION_FIRST_RUN_DONE = "com.izzdarki.wallet.application_first_run_done";
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if (!sharedPreferences.getBoolean(APPLICATION_FIRST_RUN_DONE, false)) {
@@ -54,8 +47,8 @@ class Application : Application() {
             // set first run preference to false
             sharedPreferences.edit().putBoolean(APPLICATION_FIRST_RUN_DONE, true).apply();
         }
-         */
     }
+     */
 
     /**
      * Reads old version number from preferences and eventually runs code if the app has been updated
@@ -64,7 +57,7 @@ class Application : Application() {
         val APPLICATION_LAST_VERSION_NUMBER = "com.izzdarki.wallet.application_last_version_number"
 
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val lastVersionNumber = sharedPreferences.getInt(APPLICATION_LAST_VERSION_NUMBER, -1)
+        // val lastVersionNumber = sharedPreferences.getInt(APPLICATION_LAST_VERSION_NUMBER, -1)
 
         // -1 means new install
         // No update code required at the moments

@@ -15,34 +15,72 @@
 
     <fragment
         android:id="@+id/nav_settings"
-        android:name="com.izzdarki.wallet.ui.SettingsFragment"
+        android:name="com.izzdarki.wallet.ui.settings.SettingsFragment"
         android:label="@string/settings" >
         <action
             android:id="@+id/action_nav_settings_to_default_values"
-            app:destination="@id/nav_settings_default_values" />
+            app:destination="@id/nav_settings_default_values"
+            app:enterAnim="@animator/nav_default_enter_anim"
+            app:exitAnim="@animator/nav_default_exit_anim"
+            app:popEnterAnim="@animator/nav_default_pop_enter_anim"
+            app:popExitAnim="@animator/nav_default_pop_exit_anim"/>
         <action
             android:id="@+id/action_nav_settings_to_credits"
-            app:destination="@id/nav_settings_credits" />
+            app:destination="@id/nav_settings_credits"
+            app:enterAnim="@animator/nav_default_enter_anim"
+            app:exitAnim="@animator/nav_default_exit_anim"
+            app:popEnterAnim="@animator/nav_default_pop_enter_anim"
+            app:popExitAnim="@animator/nav_default_pop_exit_anim"/>
         <action
             android:id="@+id/action_nav_settings_to_app_info"
-            app:destination="@id/nav_settings_app_info" />
+            app:destination="@id/nav_settings_app_info"
+            app:enterAnim="@animator/nav_default_enter_anim"
+            app:exitAnim="@animator/nav_default_exit_anim"
+            app:popEnterAnim="@animator/nav_default_pop_enter_anim"
+            app:popExitAnim="@animator/nav_default_pop_exit_anim"/>
+        <action
+            android:id="@+id/action_nav_settings_to_authentication_setup"
+            app:destination="@id/nav_setup_authentication"
+            app:enterAnim="@animator/nav_default_enter_anim"
+            app:exitAnim="@animator/nav_default_exit_anim"
+            app:popEnterAnim="@animator/nav_default_pop_enter_anim"
+            app:popExitAnim="@animator/nav_default_pop_exit_anim"/>
+        <action
+            android:id="@+id/action_nav_settings_to_authentication_disable"
+            app:destination="@id/nav_disable_authentication"
+            app:enterAnim="@animator/nav_default_enter_anim"
+            app:exitAnim="@animator/nav_default_exit_anim"
+            app:popEnterAnim="@animator/nav_default_pop_enter_anim"
+            app:popExitAnim="@animator/nav_default_pop_exit_anim"/>
     </fragment>
 
     <fragment
         android:id="@+id/nav_settings_default_values"
-        android:name="com.izzdarki.wallet.ui.DefaultValuesSettingsFragment"
+        android:name="com.izzdarki.wallet.ui.settings.DefaultValuesSettingsFragment"
         android:label="@string/preferences_default_values_title" />
 
     <fragment
         android:id="@+id/nav_settings_credits"
-        android:name="com.izzdarki.wallet.ui.CreditsSettingsFragment"
+        android:name="com.izzdarki.wallet.ui.settings.CreditsSettingsFragment"
         android:label="@string/preferences_credits">
     </fragment>
 
     <fragment
         android:id="@+id/nav_settings_app_info"
-        android:name="com.izzdarki.wallet.ui.AppInfoSettingsFragment"
+        android:name="com.izzdarki.wallet.ui.settings.AppInfoSettingsFragment"
         android:label="@string/preferences_app_info">
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_setup_authentication"
+        android:name="com.izzdarki.wallet.ui.settings.SetupAuthenticationFragment"
+        android:label="@string/setup_authentication">
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_disable_authentication"
+        android:name="com.izzdarki.wallet.ui.settings.DisableAuthenticationFragment"
+        android:label="@string/disable_authentication">
     </fragment>
 
 </navigation>

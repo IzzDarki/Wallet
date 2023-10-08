@@ -13,12 +13,16 @@ object AuthenticationPreferences : AuthenticationStorageInterface {
         return getPreferences(context).getLong(LAST_AUTHENTICATION_TIME_KEY, 0)
     }
 
-    override fun writeEncodedAppPassword(context: Context, passwordHash: String): Boolean {
-        return getPreferences(context).edit().putString(AUTHENTICATION_PASSWORD_HASH_KEY, passwordHash).commit()
+    override fun writeEncodedAppPassword(context: Context, encodedPassword: String): Boolean {
+        return getPreferences(context).edit().putString(ENCODED_AUTHENTICATION_PASSWORD, encodedPassword).commit()
+    }
+
+    override fun removeEncodedAppPasswort(context: Context): Boolean {
+        return getPreferences(context).edit().remove(ENCODED_AUTHENTICATION_PASSWORD).commit()
     }
 
     override fun readEncodedAppPassword(context: Context): String? {
-        return getPreferences(context).getString(AUTHENTICATION_PASSWORD_HASH_KEY, null)
+        return getPreferences(context).getString(ENCODED_AUTHENTICATION_PASSWORD, null)
     }
 
     @Synchronized private fun getPreferences(context: Context): SharedPreferences {
@@ -34,5 +38,5 @@ object AuthenticationPreferences : AuthenticationStorageInterface {
     private var preferences: SharedPreferences? = null
     private const val AUTHENTICATION_PREFERENCES_NAME = "authentication_preferences"
     private const val LAST_AUTHENTICATION_TIME_KEY = "last_authentication_time"
-    private const val AUTHENTICATION_PASSWORD_HASH_KEY = "authentication_password_hash"
+    private const val ENCODED_AUTHENTICATION_PASSWORD = "authentication_password_hash"
 }

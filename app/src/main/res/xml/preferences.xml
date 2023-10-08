@@ -19,6 +19,12 @@
         android:entries="@array/preferences_app_functions_entries"
         android:entryValues="@array/preferences_app_functions_entry_values" />
 
+    <SwitchPreferenceCompat
+        android:key="@string/preferences_enable_authentication_key"
+        android:title="@string/authentication"
+        android:summary="@string/preferences_enable_authentication_summary"
+        android:persistent="false" />
+
     <PreferenceCategory
         android:title="@string/preferences_advanced_title">
 

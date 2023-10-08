@@ -1,4 +1,4 @@
-package com.izzdarki.wallet.ui
+package com.izzdarki.wallet.ui.settings
 
 import android.content.Context
 import androidx.preference.PreferenceFragmentCompat
@@ -10,6 +10,8 @@ import androidx.navigation.Navigation
 import androidx.preference.ListPreference
 import androidx.preference.MultiSelectListPreference
 import androidx.preference.Preference
+import androidx.preference.SwitchPreferenceCompat
+import com.izzdarki.wallet.logic.isAuthenticationEnabled
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
@@ -54,9 +56,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
+        // App functions
         val appFunctionsPreference: MultiSelectListPreference? = findPreference(getString(R.string.preferences_app_functions_key))
         appFunctionsPreference?.setOnPreferenceChangeListener { _, newValue ->
-            if ((newValue as Set<*>).size == 0) {
+            if ((newValue as Set<*>).isEmpty()) {
                 Toast.makeText(
                     requireContext(),
                     R.string.preferences_app_functions_error_too_few_items,
@@ -72,6 +75,25 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 true
             }
         }
+
+        // Authentication
+        val authenticationPreference: SwitchPreferenceCompat = findPreference(getString(R.string.preferences_enable_authentication_key))!!
+        authenticationPreference.setOnPreferenceChangeListener { _, newValue ->
+            if (newValue == true)
+                navController.navigate(R.id.action_nav_settings_to_authentication_setup)
+            else
+                navController.navigate(R.id.action_nav_settings_to_authentication_disable)
+            true
+        }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        // Authentication
+        val authenticationPreference: SwitchPreferenceCompat = findPreference(getString(R.string.preferences_enable_authentication_key))!!
+        authenticationPreference.isChecked = isAuthenticationEnabled(requireContext())
     }
 
     companion object {

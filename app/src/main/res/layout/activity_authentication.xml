@@ -30,6 +30,7 @@
         android:paddingTop="8dp"
 
         android:textAlignment="center"
+        android:breakStrategy="balanced"
         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
 
         app:layout_constraintTop_toBottomOf="@id/authentication_text"
@@ -93,6 +94,7 @@
 
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:text="@string/forget_app_password_text"
+        android:breakStrategy="balanced"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
 
