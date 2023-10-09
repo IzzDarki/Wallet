@@ -39,6 +39,9 @@ class AuthenticationActivity : AppCompatActivity() {
         // Detailed authentication message
         binding.authenticationDetailedText.text = intent.getStringExtra(EXTRA_DETAILED_AUTHENTICATION_MESSAGE) ?: ""
 
+        // Password input
+        binding.authenticationPasswordInput.requestFocus() // focus input field when activity starts
+
         // Authenticate button
         binding.authenticationButton.setOnClickListener {
             val enteredPassword = binding.authenticationPasswordInput.text.toString()

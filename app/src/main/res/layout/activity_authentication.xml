@@ -19,15 +19,16 @@
         android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
 
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/authentication_password_layout"
+        app:layout_constraintBottom_toTopOf="@+id/authentication_detailed_text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/authentication_detailed_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="8dp"
+        android:paddingTop="16dp"
 
         android:textAlignment="center"
         android:breakStrategy="balanced"
@@ -59,7 +60,7 @@
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.33">
+        app:layout_constraintVertical_bias="0.4">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/authentication_password_input"

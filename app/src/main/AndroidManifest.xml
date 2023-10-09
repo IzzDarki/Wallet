@@ -36,6 +36,7 @@
         <activity
             android:name="com.izzdarki.wallet.ui.authentication.AuthenticationActivity"
             android:exported="true"
+            android:windowSoftInputMode="stateVisible"
             android:noHistory="true"
             android:excludeFromRecents="true" /> <!-- noHistory and excludeFromRecents means the user cannot return to this activity using the back button -->
         <activity
