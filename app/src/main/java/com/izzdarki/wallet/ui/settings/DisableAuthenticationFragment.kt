@@ -10,7 +10,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.navigation.Navigation
 import com.izzdarki.wallet.logic.disableAuthentication
 import com.izzdarki.wallet.logic.isPasswordCorrect
-import com.izzdarki.wallet.preferences.authenticationStorage
+import com.izzdarki.wallet.storage.authenticationStorage
 import izzdarki.wallet.R
 import izzdarki.wallet.databinding.FragmentDisableAuthenticationBinding
 

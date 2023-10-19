@@ -5,10 +5,8 @@ import androidx.preference.PreferenceFragmentCompat
 import android.os.Bundle
 import izzdarki.wallet.R
 import androidx.appcompat.app.AppCompatDelegate
-import android.widget.Toast
 import androidx.navigation.Navigation
 import androidx.preference.ListPreference
-import androidx.preference.MultiSelectListPreference
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import com.izzdarki.wallet.logic.isAuthenticationEnabled
@@ -56,26 +54,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
-        // App functions
-        val appFunctionsPreference: MultiSelectListPreference? = findPreference(getString(R.string.preferences_app_functions_key))
-        appFunctionsPreference?.setOnPreferenceChangeListener { _, newValue ->
-            if ((newValue as Set<*>).isEmpty()) {
-                Toast.makeText(
-                    requireContext(),
-                    R.string.preferences_app_functions_error_too_few_items,
-                    Toast.LENGTH_LONG
-                ).show()
-                false
-            }
-            else {
-                Toast.makeText(requireContext(),
-                    R.string.changing_app_functions_requires_restart,
-                    Toast.LENGTH_LONG
-                ).show()
-                true
-            }
-        }
-
         // Authentication
         val authenticationPreference: SwitchPreferenceCompat = findPreference(getString(R.string.preferences_enable_authentication_key))!!
         authenticationPreference.setOnPreferenceChangeListener { _, newValue ->
@@ -85,7 +63,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 navController.navigate(R.id.action_nav_settings_to_authentication_disable)
             true
         }
-
+        authenticationPreference.isChecked = isAuthenticationEnabled(requireContext()) // Causes no switch animation when set here
     }
 
     override fun onResume() {
@@ -93,7 +71,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         // Authentication
         val authenticationPreference: SwitchPreferenceCompat = findPreference(getString(R.string.preferences_enable_authentication_key))!!
-        authenticationPreference.isChecked = isAuthenticationEnabled(requireContext())
+        authenticationPreference.isChecked = isAuthenticationEnabled(requireContext()) // Causes switch animation
     }
 
     companion object {

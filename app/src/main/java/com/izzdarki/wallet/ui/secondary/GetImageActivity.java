@@ -32,6 +32,8 @@ public class GetImageActivity extends AuthenticatedAppCompatActivity {
 
     public static final String EXTRA_FILE_PROVIDER_AUTHORITY = "com.izzdarki.get_image_activity.file_provider_authority";
     public static final String EXTRA_FOLDER_PATH = "com.izzdarki.get_image_activity.extra_folder_path";
+
+    /** file name without extension, extension gets copied from selected file */
     public static final String EXTRA_FILE_NAME = "com.izzdarki.get_image_activity.extra_file_name";
     public static final String EXTRA_IMAGE_MAX_NEEDED_SHORT_SIDE = "com.izzdarki.get_image_activity.extra_image_max_short_side";
     public static final String EXTRA_IMAGE_MAX_NEEDED_LONG_SIDE = "com.izzdarki.get_image_activity.extra_image_max_long_side";

@@ -40,7 +40,6 @@ android {
         jvmTarget = '1.8'
     }
     namespace 'izzdarki.wallet'
-    testNamespace 'izzdarki.wallet.test'
 }
 
 dependencies {

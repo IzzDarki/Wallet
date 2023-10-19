@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
-            android:hint="@string/text_input_dialog_property_name"
+            android:hint="@string/text_input_dialog_field_name"
             android:inputType="text"
             android:selectAllOnFocus="true"/>
 
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:layout_marginStart="4dp"
-        android:text="@string/keep_property_secret"
+        android:text="@string/keep_field_secret"
         app:switchPadding="20dp"/>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

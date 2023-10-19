@@ -2,6 +2,7 @@ package com.izzdarki.wallet.services;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.JobIntentService;
@@ -21,6 +22,12 @@ public class ClearDirectoryService extends JobIntentService {
         enqueueWork(context, ClearDirectoryService.class, JOB_ID, intent);
     }
 
+    public static void enqueueWork(Context context, String directoryName) {
+        Intent intent = new Intent(context, ClearDirectoryService.class);
+        intent.putExtra(ClearDirectoryService.EXTRA_DIRECTORY_NAME, directoryName);
+        enqueueWork(context, intent);
+    }
+
     @Override
     protected void onHandleWork(@NonNull Intent intent) {
         String directoryName = intent.getStringExtra(EXTRA_DIRECTORY_NAME);
@@ -36,19 +43,10 @@ public class ClearDirectoryService extends JobIntentService {
             Log.d("ClearCachedCardImgS", directory.getName() + " is empty");
          */
 
+        // Log.d("asd", "Clearing " + directory.getAbsolutePath() + ", which is " + (files.length > 0 ? "not " : "") + "empty");
+
         for (File file : files) {
-            if (!file.delete()) {
-                /*
-                if (BuildConfig.DEBUG)
-                    Log.e("ClearCachedCardImgS", "Couldn't delete file: " + file.getName() + " from cache");
-                 */
-            }
-            else {
-                /*
-                if (BuildConfig.DEBUG)
-                    Log.d("ClearCachedCardImgS", "Deleted file: " + file.getName() + " from cache");
-                 */
-            }
+            file.delete();
         }
     }
 

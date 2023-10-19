@@ -3,12 +3,19 @@ package com.izzdarki.wallet.logic
 import android.content.Intent
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.izzdarki.wallet.preferences.authenticationStorage
+import com.izzdarki.wallet.storage.authenticationStorage
 import com.izzdarki.wallet.ui.authentication.AuthenticationActivity
 import java.text.SimpleDateFormat
 import java.util.Date
 
 open class AuthenticatedAppCompatActivity : AppCompatActivity() {
+
+    // Possible issue
+    // It would be great if the user could interact with AuthenticationActivity while
+    // the onCreate of the actual activity happens in the background
+    // Would allow for ex. reading from storage to take place in the background
+    // But even if AuthenticationActivity is started in the onCreate method in the beginning,
+    // the rest of it will be executed before the AuthenticationActivity is actually created
 
     protected var authenticationMessage: String? = null
     private var wasAuthenticatedOnActivityResume = false
@@ -34,13 +41,12 @@ open class AuthenticatedAppCompatActivity : AppCompatActivity() {
         if (wasAuthenticatedOnActivityResume && isAuthenticationEnabled(this))
             updateAuthenticationTime(this)
 
-        // TODO remove logging
-        if (wasAuthenticatedOnActivityResume && isAuthenticationEnabled(this)) {
-            val authenticationTime = authenticationStorage.readLastAuthenticationTime(this)
-            val authenticationTimeFormatted = SimpleDateFormat("HH:mm:ss").format(Date(authenticationTime))
-            Log.d("asdf", "Activity ${this.javaClass.simpleName} updated authentication time to $authenticationTimeFormatted")
-        }
+        // Logging
+//        if (wasAuthenticatedOnActivityResume && isAuthenticationEnabled(this)) {
+//            val authenticationTime = authenticationStorage.readLastAuthenticationTime(this)
+//            val authenticationTimeFormatted = SimpleDateFormat("HH:mm:ss").format(Date(authenticationTime))
+//            Log.d("asdf", "Activity ${this.javaClass.simpleName} updated authentication time to $authenticationTimeFormatted")
+//        }
         super.onPause()
     }
-
 }

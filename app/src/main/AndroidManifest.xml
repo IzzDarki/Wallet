@@ -40,26 +40,20 @@
             android:noHistory="true"
             android:excludeFromRecents="true" /> <!-- noHistory and excludeFromRecents means the user cannot return to this activity using the back button -->
         <activity
-            android:name="com.izzdarki.wallet.ui.cards.ShowCardActivity"
+            android:name="com.izzdarki.wallet.ui.credentials.ShowCredentialActivity"
             android:configChanges="orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.izzdarki.wallet.ui.cards.EditCardActivity"
+            android:name="com.izzdarki.wallet.ui.credentials.EditCredentialActivity"
             android:configChanges="orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.izzdarki.wallet.ui.cards.ShowCardActivity" />
+                android:value="com.izzdarki.wallet.ui.credentials.ShowCredentialActivity" />
         </activity>
-        <activity
-            android:name="com.izzdarki.wallet.ui.passwords.ShowPasswordActivity"
-            android:launchMode="singleTop" />
-        <activity
-            android:name="com.izzdarki.wallet.ui.passwords.EditPasswordActivity"
-            android:windowSoftInputMode="adjustResize" />
 
         <!-- other activities -->
         <activity android:name="com.izzdarki.wallet.ui.secondary.GetContentImageActivity" />
@@ -69,10 +63,20 @@
 
         <!-- services -->
         <service
+            android:name="com.izzdarki.wallet.services.WalletAutofillService"
+            android:label="@string/wallet_autofill_service"
+            android:permission="android.permission.BIND_AUTOFILL_SERVICE"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.service.autofill.AutofillService" />
+            </intent-filter>
+        </service>
+
+        <service
             android:name="com.izzdarki.wallet.services.ClearDirectoryService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
-            android:name="com.izzdarki.wallet.services.CreateExampleCardService"
+            android:name="com.izzdarki.wallet.services.CreateExampleCredentialService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <provider

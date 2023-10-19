@@ -1,6 +1,5 @@
 package com.izzdarki.wallet.ui
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.core.view.GravityCompat
 import androidx.navigation.findNavController
@@ -47,12 +46,7 @@ class MainActivity : AuthenticatedAppCompatActivity() {
 
         // Since onStop is probably(?) guaranteed to be called, this is a good place to clear cached card images
         // Clear cached card images
-        val intent = Intent(this, ClearDirectoryService::class.java)
-        intent.putExtra(
-            ClearDirectoryService.EXTRA_DIRECTORY_NAME,
-            cacheDir.toString() + "/" + getString(R.string.cards_images_folder_name)
-        )
-        ClearDirectoryService.enqueueWork(this, intent)
+        ClearDirectoryService.enqueueWork(this, cacheDir.toString() + "/" + getString(R.string.cards_images_folder_name))
     }
 
     override fun onBackPressed() {

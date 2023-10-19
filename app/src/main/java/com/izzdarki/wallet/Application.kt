@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
 import com.google.android.material.color.DynamicColors
 import com.izzdarki.wallet.ui.settings.SettingsFragment
-import com.izzdarki.wallet.preferences.AppPreferenceManager
+import com.izzdarki.wallet.storage.AppPreferenceManager
 import izzdarki.wallet.BuildConfig
 
 class Application : Application() {

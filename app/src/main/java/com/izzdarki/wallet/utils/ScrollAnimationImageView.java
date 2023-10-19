@@ -30,8 +30,8 @@ public class ScrollAnimationImageView
     protected NestedScrollView scrollView;
     protected LinearLayoutCompat linearLayout;
     protected Space spaceInLinearLayout;
-    protected Bitmap frontImage = null;
-    protected Bitmap backImage = null;
+    private Bitmap frontImage = null;
+    private Bitmap backImage = null;
     protected Bitmap.Config config;
     protected boolean hidden = false;
     protected String frontText = null;
@@ -106,7 +106,7 @@ public class ScrollAnimationImageView
         setFrontImage(frontImage);
     }
 
-    public void setFrontImage(Bitmap frontImage) {
+    public void setFrontImage(@NonNull Bitmap frontImage) {
         setImage(frontImage, true);
     }
 
@@ -126,7 +126,7 @@ public class ScrollAnimationImageView
         drawAnimation();
     }
 
-    public void setBackImage(Bitmap backImage) {
+    public void setBackImage(@NonNull Bitmap backImage) {
         setImage(backImage, false);
     }
 

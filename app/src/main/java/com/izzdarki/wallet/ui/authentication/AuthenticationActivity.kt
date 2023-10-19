@@ -1,13 +1,14 @@
 package com.izzdarki.wallet.ui.authentication
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import com.izzdarki.wallet.logic.isPasswordCorrect
 
 import com.izzdarki.wallet.logic.isAuthenticationEnabled
 import com.izzdarki.wallet.logic.updateAuthenticationTime
-import com.izzdarki.wallet.preferences.authenticationStorage
+import com.izzdarki.wallet.storage.authenticationStorage
 import izzdarki.wallet.R
 import izzdarki.wallet.databinding.ActivityAuthenticationBinding
 
@@ -23,6 +24,8 @@ class AuthenticationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Log.d("asdf", "onCreate in AuthenticationActivity")
 
         // directly finish if authentication is not enabled, activity shouldn't have been started in that case
         if (!isAuthenticationEnabled(this)) {

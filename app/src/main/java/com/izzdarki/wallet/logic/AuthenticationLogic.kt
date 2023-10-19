@@ -2,7 +2,7 @@ package com.izzdarki.wallet.logic
 
 import android.content.Context
 import android.util.Log
-import com.izzdarki.wallet.preferences.authenticationStorage
+import com.izzdarki.wallet.storage.authenticationStorage
 import org.signal.argon2.Argon2
 import org.signal.argon2.MemoryCost
 import org.signal.argon2.Type

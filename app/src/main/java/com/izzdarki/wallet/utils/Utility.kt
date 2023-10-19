@@ -2,7 +2,6 @@ package com.izzdarki.wallet.utils
 
 import androidx.annotation.ColorInt
 import android.util.TypedValue
-import izzdarki.wallet.R
 import kotlin.Throws
 import android.app.Activity
 import android.content.Context
@@ -43,19 +42,6 @@ object Utility {
         InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
     const val inputTypeTextVisiblePassword =
         InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-
-    class IDGenerator(
-        private val idsList: List<Int>
-    ) {
-        fun generateID(): Int {
-            var ID: Int
-            val random = Random()
-            do {
-                ID = random.nextInt()
-            } while (idsList.contains(ID))
-            return ID
-        }
-    }
 
     @JvmStatic
     fun openEncryptedPreferences(context: Context, preferencesName: String): SharedPreferences {
@@ -125,7 +111,21 @@ object Utility {
             android.R.attr.colorBackground,
             value,
             true
-        ) // kind of works
+        ) // kind of works, but seems fine with documentation
+        return value.data
+    }
+
+    /**
+     * Get a color referenced by `R.attr.attributeName` from the theme
+     */
+    @ColorInt
+    fun Context.getAttributeColor(attributeReference: Int): Int {
+        val value = TypedValue()
+        this.theme.resolveAttribute(
+            attributeReference,
+            value,
+            true
+        )
         return value.data
     }
 
@@ -171,11 +171,6 @@ object Utility {
         for (i in 0 until n)
             str.append(copies)
         return str.toString()
-    }
-
-    @JvmStatic
-    fun isMahlerFile(context: Context, imageFile: File): Boolean {
-        return imageFile.name.contains(context.getString(R.string.mahler_card_front_image_file_name))
     }
 
     @JvmStatic
@@ -576,8 +571,7 @@ object Utility {
         restartInput(editText)
     }
 
-    open class Timer internal constructor(name: String) {
-        protected var name: String = name
+    open class Timer internal constructor(protected var name: String) {
         private var startMillis: Long = -1
 
         companion object {
@@ -616,6 +610,7 @@ object Utility {
      * Array class, that can be saved and extracted from preferences
      * @param T type of the elements
      */
+    @Deprecated("Use `joinToString()` and split().filter{ it.isNotEmpty() } instead")
     open class PreferenceArray<T> : ArrayList<T> {
 
         protected var operations: Operations<T>
@@ -720,6 +715,7 @@ object Utility {
         }
     }
 
+    @Deprecated("Use `joinToString()` and split().filter{ it.isNotEmpty() } instead")
     class PreferenceArrayString : PreferenceArray<String> {
         @JvmOverloads
         constructor(preferenceString: String? = null) : super(
@@ -744,6 +740,7 @@ object Utility {
     /**
      * Wrapper around an [ArrayList<Int>]. Has functionality for converting the list to a String and creating the list from a String
      */
+    @Deprecated("Use `joinToString()` and split().filter{ it.isNotEmpty() } instead")
     class PreferenceArrayInt : PreferenceArray<Int> {
 
         @JvmOverloads
