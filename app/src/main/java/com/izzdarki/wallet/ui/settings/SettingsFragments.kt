@@ -12,13 +12,17 @@ import androidx.preference.MultiSelectListPreference
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import com.izzdarki.wallet.logic.isAuthenticationEnabled
+import com.izzdarki.wallet.utils.FingerprintAuthenticationHelper
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
     private val navController get() = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main)
 
+    private lateinit var fingerprintAuthenticationHelper: FingerprintAuthenticationHelper
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
+        fingerprintAuthenticationHelper = FingerprintAuthenticationHelper(requireActivity())
 
         // Sub preferences
         val defaultValuesPref: Preference? = findPreference(getString(R.string.preferences_default_values_key))
@@ -83,6 +87,20 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 navController.navigate(R.id.action_nav_settings_to_authentication_setup)
             else
                 navController.navigate(R.id.action_nav_settings_to_authentication_disable)
+            true
+        }
+
+        // FingerPrint Authentication
+        val fingerPrintAuthenticationPreference: SwitchPreferenceCompat =
+            findPreference(getString(R.string.preferences_enable_fingerprint_authentication_key))!!
+        fingerPrintAuthenticationPreference.setOnPreferenceChangeListener { _, newValue ->
+            if (newValue == true) {
+                fingerprintAuthenticationHelper.doAuthentication {
+
+                }
+            } else {
+            }
+
             true
         }
 

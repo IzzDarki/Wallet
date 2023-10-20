@@ -159,6 +159,8 @@
     <string name="forget_app_password_text">Wenn du dein App-Passwort vergisst, ist es unmöglich es zurückzusetzen. Du kannst auf deine Karten und Passwörter ohne das App-Passwort nicht mehr zugreifen.</string>
     <string name="app_password_is_incorrect">App-Passwort ist falsch</string>
     <string name="preferences_enable_authentication_summary">Lege ein App-Passwort fest, das beim Öffnen der App abgefragt wird</string>
+    <string name="preferences_enable_fingerprint_authentication_summary">Richten Sie einen App-Fingerabdruck ein, der beim Öffnen der App verwendet werden soll</string>
+    <string name="fingerprint_authentication">Authentifizierung per Fingerabdruck</string>
     <string name="authentication">Authentifizierung</string>
     <string name="authentication_full_explanation">Authentifizierung stellt sicher, dass diese App von niemandem außer dir benutzt werden kann. Dazu musst du beim Öffnen der App ein App-Passwort eingeben.</string>
     <string name="old_app_password">Altes App-Passwort</string>

@@ -25,6 +25,12 @@
         android:summary="@string/preferences_enable_authentication_summary"
         android:persistent="false" />
 
+    <SwitchPreferenceCompat
+        android:key="@string/preferences_enable_fingerprint_authentication_key"
+        android:title="@string/fingerprint_authentication"
+        android:summary="@string/preferences_enable_fingerprint_authentication_summary"
+        android:persistent="false" />
+
     <PreferenceCategory
         android:title="@string/preferences_advanced_title">
 
