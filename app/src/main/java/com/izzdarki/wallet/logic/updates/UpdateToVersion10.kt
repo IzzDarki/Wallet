@@ -1,4 +1,5 @@
-package com.izzdarki.wallet.utils
+@file:Suppress("DEPRECATION")
+package com.izzdarki.wallet.logic.updates
 
 import android.content.Context
 import com.izzdarki.wallet.data.Barcode
@@ -10,6 +11,7 @@ import com.izzdarki.wallet.storage.CardStorage
 import com.izzdarki.wallet.storage.CredentialPreferenceStorage
 import com.izzdarki.wallet.storage.PasswordStorage
 import izzdarki.wallet.R
+import java.io.File
 
 /**
  * Moves all cards and passwords from [CardStorage] and [PasswordStorage]
@@ -20,7 +22,7 @@ import izzdarki.wallet.R
  *
  * Also moves custom sorting orders (just without group by labels) to [AppPreferenceManager].
  * The new sorting order will reflect the new ids and will
- * combine first what previously was a card and then what previously was a password.
+ * contain first the cards and then the passwords.
  */
 fun updateToCredentialPreferences(context: Context) {
 
@@ -48,6 +50,26 @@ fun updateToCredentialPreferences(context: Context) {
         .mapNotNull { id -> idMap[id] }
     val combinedSortingOrder = (cardsCustomSortingOrder + passwordsCustomSortingOrder).distinct()
     AppPreferenceManager.setCredentialsCustomSortingOrder(context, combinedSortingOrder)
+}
+
+
+/**
+ * Clear and delete the preferences of [CardStorage] and [PasswordStorage]
+ */
+fun removeOldPreferences(context: Context) {
+    CardStorage.getPreferences(context).edit().clear().commit()
+    PasswordStorage.getPreferences(context).edit().clear().commit()
+
+    val sharedPrefDir = "${context.applicationInfo.dataDir}/shared_prefs"
+
+    val cardStorageFile = File(sharedPrefDir, "${CardStorage.CARDS_PREFERENCES_NAME_ENCRYPTED}.xml")
+    val passwordStorageFile = File(sharedPrefDir, "${PasswordStorage.PASSWORDS_PREFERENCES_NAME}.xml")
+
+    if (cardStorageFile.exists())
+        cardStorageFile.delete()
+
+    if (passwordStorageFile.exists())
+        passwordStorageFile.delete()
 }
 
 private fun readAllCards(context: Context): List<Credential> {

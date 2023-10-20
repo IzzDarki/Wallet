@@ -28,6 +28,7 @@ import com.izzdarki.wallet.ui.credentials.EditCredentialActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.izzdarki.wallet.data.Credential
 import com.izzdarki.wallet.data.CredentialStableIDKeyProvider
+import com.izzdarki.wallet.logic.updates.removeOldPreferences
 import com.izzdarki.wallet.ui.credentials.CredentialActivity
 import com.izzdarki.wallet.storage.AppPreferenceManager
 import com.izzdarki.wallet.storage.AppPreferenceManager.SortingType

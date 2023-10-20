@@ -1,3 +1,4 @@
+@file:Suppress("DEPRECATION")
 package com.izzdarki.wallet.storage
 
 import android.content.Context
@@ -6,6 +7,7 @@ import com.izzdarki.wallet.data.CredentialField
 import com.izzdarki.wallet.utils.Utility
 import java.util.*
 
+@Deprecated("CredentialReadStorage and CredentialWriteStorage are used now for cards and passwords together")
 sealed interface CardOrPasswordStorage {
     fun readName(context: Context, ID: Int): String
     fun readColor(context: Context, ID: Int): Int

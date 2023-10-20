@@ -7,6 +7,7 @@ import androidx.preference.PreferenceManager
 import com.google.android.material.color.DynamicColors
 import com.izzdarki.wallet.ui.settings.SettingsFragment
 import com.izzdarki.wallet.storage.AppPreferenceManager
+import com.izzdarki.wallet.logic.updates.updateToCredentialPreferences
 import izzdarki.wallet.BuildConfig
 
 class Application : Application() {
@@ -54,15 +55,21 @@ class Application : Application() {
      * Reads old version number from preferences and eventually runs code if the app has been updated
      */
     private fun runUpdateCode() {
-        val APPLICATION_LAST_VERSION_NUMBER = "com.izzdarki.wallet.application_last_version_number"
-
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        // val lastVersionNumber = sharedPreferences.getInt(APPLICATION_LAST_VERSION_NUMBER, -1)
+        val lastVersionNumber = sharedPreferences.getInt(APPLICATION_LAST_VERSION_NUMBER, -1) // -1 means new installation
 
-        // -1 means new install
-        // No update code required at the moments
+        // Update to 2.2.0-alpha.0 (version code 10)
+        if (lastVersionNumber < 10)
+            updateToCredentialPreferences(this)
+            // Well-tested update, however issues can always arise => Keeping old data
+            // In a future update the old preferences should be deleted (removeOldPreferences function does that (manually tested))
 
+        // Write new version code for future updates
         sharedPreferences.edit().putInt(APPLICATION_LAST_VERSION_NUMBER, BuildConfig.VERSION_CODE).apply()
+    }
+
+    companion object {
+        const val APPLICATION_LAST_VERSION_NUMBER = "com.izzdarki.wallet.application_last_version_number"
     }
 
 }

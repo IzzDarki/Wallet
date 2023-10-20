@@ -1,4 +1,5 @@
-package com.izzdarki.wallet.updates
+@file:Suppress("DEPRECATION")
+package com.izzdarki.wallet.logic.updates
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -8,7 +9,6 @@ import com.izzdarki.wallet.storage.CardStorage
 import com.izzdarki.wallet.storage.CredentialPreferenceStorage
 import com.izzdarki.wallet.storage.PasswordStorage
 import com.izzdarki.wallet.utils.Utility
-import com.izzdarki.wallet.utils.updateToCredentialPreferences
 import izzdarki.wallet.R
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull

@@ -14,8 +14,8 @@ android {
         applicationId "com.izzdarki.wallet"
         minSdkVersion 23
         targetSdk 34
-        versionCode 8 // corresponds to 2.0.0-alpha.0 // TODO version code, keep up to date
-        versionName "2.1.0-alpha.0" // TODO version name, keep up to date
+        versionCode 10 // corresponds to 2.2.0-alpha.0 // version code, keep up to date
+        versionName "2.2.0-alpha.0" // version name, keep up to date
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

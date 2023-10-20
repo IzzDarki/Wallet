@@ -123,8 +123,15 @@
     <string name="preferences_email_content" translatable="false">izzdarki.dev@gmail.com</string>
     <string name="preferences_mailto_link" translatable="false">mailto:izzdarki.dev@gmail.com?subject=Wallet</string>
     <string name="preferences_version_title">Version</string>
-    <string name="version_name" translatable="false">2.1.0-alpha.0</string> <!-- TODO version name, keep up to date -->
     <string name="preferences_releases_link" translatable="false">https://github.com/IzzDarki/Wallet/releases</string>
+    <string name="version_name" translatable="false">2.2.0-alpha.0</string> <!-- version name, keep up to date -->
+
+    <!-- update dialogs -->
+    <string name="version_name_2_2_0" translatable="false">2.2.0</string>
+    <string name="new_feature_authentication">New feature: Authentication</string>
+    <string name="new_feature_authentication_text"></string> <!-- TODO -->
+    <string name="cards_and_passwords_in_one_place">Cards and passwords in one place</string>
+    <string name="cards_and_passwords_in_one_place_text">Cards and passwords are in one place now.</string>
 
     <!-- language -->
     <string name="no">No</string>
@@ -271,4 +278,5 @@
     <string name="example_password_username">gustav_mahler</string>
     <string name="example_password_value">Alma</string>
     <string name="the_image_will_be_removed_when_you_save_the_entry">The image will be removed if you save the entry.</string>
+    <string name="updated_to_x">Updated to %s</string>
 </resources>

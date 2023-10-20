@@ -1,3 +1,4 @@
+@file:Suppress("DEPRECATION")
 package com.izzdarki.wallet.storage
 
 import android.content.Context
@@ -11,8 +12,9 @@ import com.izzdarki.wallet.utils.Utility.PreferenceArrayInt
 import com.izzdarki.wallet.utils.Utility.getAttributeColor
 import java.util.*
 
+@Deprecated("Implementations of interfaces CredentialReadStorage and CredentialWriteStorage are used now for cards and passwords together")
 object PasswordStorage : CardOrPasswordStorage {
-    private const val PASSWORDS_PREFERENCES_NAME = "passwords"
+    const val PASSWORDS_PREFERENCES_NAME = "passwords"
 
     private const val PREFERENCE_ALL_PASSWORD_IDS = "password_ids"
     private const val PREFERENCE_CUSTOM_SORTING_NO_GROUPING = "custom_sorting_no_grouping" // String (PreferenceArrayInt)

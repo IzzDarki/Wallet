@@ -7,8 +7,11 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.preference.PreferenceManager
 import com.izzdarki.wallet.logic.AuthenticatedAppCompatActivity
+import com.izzdarki.wallet.logic.updates.showUpdateAlert
 import com.izzdarki.wallet.services.ClearDirectoryService
+import izzdarki.wallet.BuildConfig
 import izzdarki.wallet.R
 import izzdarki.wallet.databinding.ActivityMainBinding
 
@@ -39,6 +42,7 @@ class MainActivity : AuthenticatedAppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.navView.setupWithNavController(navController)
 
+        showUpdateAlerts() // Show update alerts if new version has been installed
     }
 
     override fun onStop() {
@@ -60,6 +64,30 @@ class MainActivity : AuthenticatedAppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    /**
+     * Shows update alerts if new version has been installed
+     * This cannot be part of `Application.runUpdateCode` because it's not possible to show an AlertDialog from there
+     */
+    private fun showUpdateAlerts() {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val lastVersionNumber = sharedPreferences.getInt(LAST_VERSION_UPDATE_DIALOG_SHOWN, -1) // -1 means never shown any update dialog
+
+        // Update to 2.2.0-alpha.0 (version code 10)
+        if (lastVersionNumber < 10)
+            showUpdateAlert(getString(R.string.version_name_2_2_0), listOf(
+                Pair(getString(R.string.new_feature_authentication), getString(R.string.new_feature_authentication_text)),
+                Pair(getString(R.string.cards_and_passwords_in_one_place), getString(R.string.cards_and_passwords_in_one_place_text)),
+                // TODO more
+            ))
+
+        // Write new version code for future update dialog
+        sharedPreferences.edit().putInt(LAST_VERSION_UPDATE_DIALOG_SHOWN, BuildConfig.VERSION_CODE).apply()
+    }
+
+    companion object {
+        const val LAST_VERSION_UPDATE_DIALOG_SHOWN = "last_version_dialog_shown"
     }
 
 }
