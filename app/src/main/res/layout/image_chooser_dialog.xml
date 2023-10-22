@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
     android:orientation="vertical"
@@ -14,7 +15,7 @@
         android:paddingTop="15dp"
         android:paddingBottom="12dp"
         android:text="@string/choose_image_app"
-        android:textSize="24sp"/>
+        android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"/>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/image_chooser_dialog_delete"
@@ -42,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="@string/delete"
-            android:textSize="18sp"/>
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -72,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="@string/choose_image_app_storage"
-            android:textSize="18sp"/>
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -102,7 +103,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="@string/choose_image_app_camera"
-            android:textSize="18sp"/>
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

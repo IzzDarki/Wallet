@@ -14,11 +14,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.util.Pair
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.materialswitch.MaterialSwitch
 import izzdarki.wallet.R
 import com.izzdarki.wallet.preferences.AppPreferenceManager
 import com.izzdarki.wallet.utils.ItemProperty
 import com.izzdarki.wallet.utils.Utility
-import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
@@ -70,7 +70,7 @@ class EditPropertyAdapter(properties: MutableList<ItemProperty>, onPropertyRemov
             )
             val dialogView = View.inflate(context, R.layout.edit_property_input_dialog, null)
             val editText: TextInputEditText = dialogView.findViewById(R.id.edit_property_input_dialog_name_input_edit_text)
-            val visibilitySwitch: SwitchMaterial = dialogView.findViewById(R.id.edit_property_input_dialog_visibility_switch)
+            val visibilitySwitch: MaterialSwitch = dialogView.findViewById(R.id.edit_property_input_dialog_visibility_switch)
 
             editText.setText(properties[adapterPosition].name)
             editText.requestFocus()

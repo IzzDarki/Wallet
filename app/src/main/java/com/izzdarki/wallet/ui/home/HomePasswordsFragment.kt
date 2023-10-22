@@ -5,7 +5,9 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.*
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.selection.SelectionPredicates
@@ -40,6 +42,8 @@ class HomePasswordsFragment()
     private val passwords: MutableList<CardOrPasswordPreviewData> = mutableListOf()
     private lateinit var selectionTracker: SelectionTracker<Long>
     private var init = false
+    private var searchQuery: String = ""
+    private lateinit var clearSelectionOnBackPressedCallback: OnBackPressedCallback
 
     // lifecycle
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +59,16 @@ class HomePasswordsFragment()
         recyclerView = view.findViewById(R.id.fragment_home_passwords_recycler_view)
 
         updatePasswords()
+
+        // back button
+        clearSelectionOnBackPressedCallback = object : OnBackPressedCallback(enabled = false) {
+            override fun handleOnBackPressed() {
+                selectionTracker.clearSelection()
+            }
+        }
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner,
+            clearSelectionOnBackPressedCallback
+        )
 
         // plus button
         plusButton.setOnClickListener {
@@ -99,6 +113,8 @@ class HomePasswordsFragment()
 
         selectionTracker.addObserver(object : SelectionTracker.SelectionObserver<Long>() {
             override fun onSelectionChanged() {
+                clearSelectionOnBackPressedCallback.isEnabled =
+                    (selectionTracker.selection.size() > 0)
                 activity?.invalidateOptionsMenu() // reload action bar menu
             }
         })
@@ -107,18 +123,18 @@ class HomePasswordsFragment()
     override fun onPause() {
         super.onPause()
         selectionTracker.clearSelection() // When fragment is no longer visible clear selection
+        clearSelectionOnBackPressedCallback.isEnabled = false
     }
 
     override fun onResume() {
         super.onResume()
-
         if (init) {
             // This code does not run if this is the first time that onResume is being called
-            if (updatePasswords())
-                recyclerView.adapter?.notifyDataSetChanged()
+            updatePasswordsAndNotifyAdapter()
         }
         else
             init = true // if this is the first run of onResume, don't update passwords
+        clearSelectionOnBackPressedCallback.isEnabled = (selectionTracker.selection.size() > 0)
     }
 
 
@@ -187,6 +203,22 @@ class HomePasswordsFragment()
             else -> inflater.inflate(R.menu.home_action_bar_menu, menu)
         }
 
+        // SearchView
+        val searchItem = menu.findItem(R.id.home_action_bar_search)
+        val searchView = searchItem.actionView as SearchView
+        searchView.queryHint = getString(R.string.home_search_hint)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                searchQuery = query ?: ""
+                updatePasswordsAndNotifyAdapter() // updates passwords (also filters according to searchQuery)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return this.onQueryTextSubmit(newText) // submit on every change
+            }
+        })
+
         // Set checkboxes
         when (AppPreferenceManager.getPasswordsSortingType(requireContext())) {
             SortingType.ByName -> menu.findItem(R.id.home_action_bar_sort_by_name)?.isChecked = true
@@ -236,9 +268,6 @@ class HomePasswordsFragment()
         return true
     }
 
-    // TODO onBackPressed: https://stackoverflow.com/questions/5448653/how-to-implement-onbackpressed-in-fragments
-
-
     // screen orientation change
     override fun onConfigurationChanged(newConfig: Configuration) {
         recyclerView.layoutManager = getPasswordGridLayoutManager()
@@ -247,11 +276,22 @@ class HomePasswordsFragment()
 
 
     // helper
+    private fun updatePasswordsAndNotifyAdapter() {
+        if (updatePasswords())
+            recyclerView.adapter?.notifyDataSetChanged()
+    }
     private fun updatePasswords(): Boolean {
         val oldList = passwords.toList()
         passwords.clear()
         passwords.addAll(PasswordPreferenceManager.readAll(requireContext()))
         sortPasswordsArray(AppPreferenceManager.getPasswordsSortingType(requireContext())) // sort the list according to saved sorting type
+
+        if (searchQuery != "") {
+            passwords.retainAll {
+                it.name.contains(searchQuery, ignoreCase = true)
+                        || it.labels.any { label -> label.contains(searchQuery, ignoreCase = true) }
+            }
+        }
 
         return oldList != passwords
     }

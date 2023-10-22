@@ -136,7 +136,7 @@
     <string name="preferences_email_content" translatable="false">izzdarki.dev@gmail.com</string>
     <string name="preferences_mailto_link" translatable="false">mailto:izzdarki.dev@gmail.com?subject=Wallet</string>
     <string name="preferences_version_title">Version</string>
-    <string name="version_name" translatable="false">2.0.0-alpha.0</string> <!-- TODO keep this updated -->
+    <string name="version_name" translatable="false">2.1.0</string> <!-- TODO version name, keep up to date -->
     <string name="preferences_releases_link" translatable="false">https://github.com/IzzDarki/Wallet/releases</string>
 
     <!-- language -->
@@ -222,7 +222,7 @@
     <string name="mahler_image_summary">Emil Orlik, 1902</string>
     <string name="components_title">Components</string>
     <string name="color_picker_library_title">Color picker</string>
-    <string name="color_picker_library_summary">Library made by danielnilsson9\nCopied from Github under Apache License 2.0\nModification in ColorPickerDialogFragment.java and corresponding layout file for an extra custom button in the view</string>
+    <string name="color_picker_library_summary">Library made by danielnilsson9\nCopied from Github under Apache License 2.0\nModification in ColorPickerDialogFragment.java and corresponding layout file</string>
     <string name="image_crop_library_title">Image Cropping</string>
     <string name="image_crop_library_summary">Library made by ArthurHub\nFrom Github under Apache License 2.0</string>
     <string name="barcode_library_title">Barcode</string>
@@ -268,4 +268,9 @@
     <string name="new_label">New label</string>
     <string name="all_passwords">All password</string>
     <string name="all_cards">All cards</string>
+    <string name="select_color">Select color</string>
+    <string name="search">Search</string>
+    <string name="home_search_hint">Search for name or label</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="secret_text">Secret text</string>
 </resources>

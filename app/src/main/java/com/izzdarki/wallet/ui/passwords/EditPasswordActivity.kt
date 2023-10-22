@@ -14,6 +14,7 @@ import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,10 +32,9 @@ import com.izzdarki.wallet.utils.Utility.hideKeyboard
 import com.izzdarki.wallet.utils.Utility.setImeOptionsAndRestart
 import com.izzdarki.editlabelscomponent.EditLabelsComponent
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.chip.Chip
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.izzdarki.wallet.preferences.CardPreferenceManager
 import java.util.*
 
 class EditPasswordActivity
@@ -55,9 +55,9 @@ class EditPasswordActivity
     private lateinit var nameInputEditText: TextInputEditText
     private lateinit var passwordInputLayout: TextInputLayout
     private lateinit var passwordInputEditText: TextInputEditText
-    private lateinit var passwordColorChip: Chip
+    private lateinit var passwordColorButton: MaterialButton
     private lateinit var propertiesRecyclerView: RecyclerView
-    private lateinit var addPasswordPropertyChip: Chip
+    private lateinit var addPasswordPropertyButton: MaterialButton
     private lateinit var editLabelsComponent: EditLabelsComponent
     // endregion
 
@@ -90,13 +90,13 @@ class EditPasswordActivity
         nameInputEditText = findViewById(R.id.edit_password_name_edit_text)
         passwordInputLayout = findViewById(R.id.edit_password_password_input_layout)
         passwordInputEditText = findViewById(R.id.edit_password_password_edit_text)
-        passwordColorChip = findViewById(R.id.edit_password_color_chip)
+        passwordColorButton = findViewById(R.id.edit_password_color_chip)
         propertiesRecyclerView = findViewById(R.id.edit_password_recycler_view)
-        addPasswordPropertyChip = findViewById(R.id.edit_password_add_password_property_chip)
+        addPasswordPropertyButton = findViewById(R.id.edit_password_add_password_property_button)
         editLabelsComponent = EditLabelsComponent(
             findViewById(R.id.edit_password_labels_chip_group),
             findViewById(R.id.edit_password_labels_add_chip),
-            allLabels = CardPreferenceManager.collectAllLabelsSorted(this)
+            allLabels = PasswordPreferenceManager.collectAllLabelsSorted(this)
         )
 
         // toolbar
@@ -154,13 +154,13 @@ class EditPasswordActivity
         }
 
         // create new password property button
-        addPasswordPropertyChip.setOnClickListener { addNewProperty() }
+        addPasswordPropertyButton.setOnClickListener { addNewProperty() }
 
         // labels chip group
         editLabelsComponent.displayLabels(labels)
 
         // password color
-        passwordColorChip.setOnClickListener { pickColor() }
+        passwordColorButton.setOnClickListener { pickColor() }
         updateColorButtonColor()
 
         // recycler view
@@ -337,6 +337,7 @@ class EditPasswordActivity
         return requestCancel()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         requestCancel()
     }
@@ -347,7 +348,7 @@ class EditPasswordActivity
     private fun pickColor() {
         val dialogFragment = ColorPickerDialogFragment.newInstance(
             PICK_COLOR_DIALOG_ID,
-            null,
+            getString(R.string.select_color),
             null,
             passwordColor,
             false
@@ -367,11 +368,11 @@ class EditPasswordActivity
     override fun onDialogDismissed(dialogId: Int) {}
 
     private fun updateColorButtonColor() {
-        passwordColorChip.chipBackgroundColor = ColorStateList.valueOf(passwordColor)
+        passwordColorButton.setBackgroundColor(passwordColor)
         if (Utility.isColorDark(passwordColor))
-            passwordColorChip.setTextColor(resources.getColor(R.color.on_dark_text_color))
+            passwordColorButton.setTextColor(ResourcesCompat.getColor(resources, R.color.on_dark_text_color, theme))
         else
-            passwordColorChip.setTextColor(resources.getColor(R.color.on_light_text_color))
+            passwordColorButton.setTextColor(ResourcesCompat.getColor(resources, R.color.on_light_text_color, theme))
 
         if (Utility.areColorsSimilar(
                 Utility.getDefaultBackgroundColor(this),
@@ -379,11 +380,12 @@ class EditPasswordActivity
             )
         ) {
             // draw outline
-            passwordColorChip.chipStrokeWidth = resources.getDimension(R.dimen.outline_for_similar_colors_stroke_width)
-            passwordColorChip.chipStrokeColor = ColorStateList.valueOf(resources.getColor(R.color.card_view_outline_color))
+            passwordColorButton.strokeWidth =
+                resources.getDimension(R.dimen.outline_for_similar_colors_stroke_width).toInt()
+            passwordColorButton.strokeColor = ColorStateList.valueOf(ResourcesCompat.getColor(resources, R.color.card_view_outline_color, theme))
         } else {
             // remove outline
-            passwordColorChip.chipStrokeWidth = 0F
+            passwordColorButton.strokeWidth = 0
         }
     }
     // endregion
@@ -425,7 +427,7 @@ class EditPasswordActivity
 
     private fun readAndCheckLabels() {
         val oldLabels = PasswordPreferenceManager.readLabels(this, ID)
-        labels = PreferenceArrayString(editLabelsComponent.currentLabels.iterator())
+        labels = PreferenceArrayString(editLabelsComponent.currentLabels.sorted().iterator())
         if (!oldLabels.containsAll(labels) || !labels.containsAll(oldLabels))
             hasBeenModified = true
     }

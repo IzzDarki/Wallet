@@ -1,7 +1,6 @@
 package com.izzdarki.wallet.ui.cards
 
 import android.content.Context
-import com.izzdarki.wallet.utils.Utility.isMahlerFile
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.FrameLayout
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -17,6 +16,8 @@ import android.widget.Toast
 import androidx.core.widget.NestedScrollView
 import com.izzdarki.wallet.preferences.CardPreferenceManager
 import com.google.zxing.BarcodeFormat
+import com.izzdarki.wallet.utils.ItemProperty
+import com.izzdarki.wallet.utils.Utility
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
@@ -41,6 +42,8 @@ open class CardActivity : AppCompatActivity() {
     protected var cardCodeTypeText = false
     protected var cardCreationDate = Date(0)
     protected var cardAlterationDate = Date(0)
+    protected var cardProperties: MutableList<ItemProperty> = mutableListOf()
+    protected lateinit var labels: Utility.PreferenceArrayString  // will not be kept up to date in edit activity
 
     @ColorInt
     protected var cardColor = 0
@@ -88,6 +91,7 @@ open class CardActivity : AppCompatActivity() {
             return BitmapFactory.decodeStream(inputStream)
         }
 
+        @Deprecated("Deprecated in Java")
         override fun doInBackground(vararg params: Void?): Bitmap? {
             return try {
                 //val timer = Utility.Timer("decode bitmap " + (if (isFront) "front" else "back")); // debug timer
@@ -97,7 +101,6 @@ open class CardActivity : AppCompatActivity() {
                 val bitmap: Bitmap? = if (parentActivityReference.get()!!.isInFilesDir(imageFile!!)
                     && imageFile.name != context!!.getString(R.string.example_card_front_image_file_name)
                     && imageFile.name != context.getString(R.string.example_card_back_image_file_name)
-                    && !isMahlerFile(parentActivityReference.get()!!, imageFile)
                 ) { // these files don't need to be encrypted
                     decodeEncryptedFile()
                 }
@@ -111,6 +114,7 @@ open class CardActivity : AppCompatActivity() {
             }
         }
 
+        @Deprecated("Deprecated in Java")
         override fun onPostExecute(bitmap: Bitmap?) {
             val parentActivity = parentActivityReference.get()
             if (error == Error.NoError) {
@@ -192,6 +196,8 @@ open class CardActivity : AppCompatActivity() {
         currentBackImage = CardPreferenceManager.readBackImageFile(this, ID)
         cardCreationDate = CardPreferenceManager.readCreationDate(this, ID)
         cardAlterationDate = CardPreferenceManager.readAlterationDate(this, ID)
+        cardProperties = CardPreferenceManager.readProperties(this, ID)
+        labels = CardPreferenceManager.readLabels(this, ID)
     }
 
     protected fun updateFrontImage() {

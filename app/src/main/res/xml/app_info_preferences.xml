@@ -4,12 +4,12 @@
     <Preference
         android:title="@string/preferences_author_title"
         android:summary="@string/preferences_author_name"
-        android:icon="@drawable/ic_person_24dp"/>
+        android:icon="@drawable/icon_person_24dp"/>
 
     <Preference
         android:title="@string/preferences_email_title"
         android:summary="@string/preferences_email_content"
-        android:icon="@drawable/ic_email_24dp">
+        android:icon="@drawable/icon_email_24dp">
         <intent android:action="android.intent.action.SENDTO"
             android:data="@string/preferences_mailto_link" />
     </Preference>
@@ -17,7 +17,7 @@
     <Preference
         android:title="@string/preferences_version_title"
         android:summary="@string/version_name"
-        android:icon="@drawable/ic_label_24dp">
+        android:icon="@drawable/icon_label_24dp">
         <intent android:action="android.intent.action.VIEW"
             android:data="@string/preferences_releases_link" />
     </Preference>

@@ -72,7 +72,7 @@
     <string name="mahler_image_title">Bild von Gustav Mahler</string>
     <string name="mahler_image_summary">Radierung von Emil Orlik, 1902</string>
     <string name="components_title">Komponenten</string>
-    <string name="color_picker_library_summary">Library von danielnilsson9\nKopiert von Github unter Apache License 2.0\nModifikation in ColorPickerDialogFragment.java und dem zugehörigen Layout für einen zusätzlichen Button</string>
+    <string name="color_picker_library_summary">Library von danielnilsson9\nKopiert von Github unter Apache License 2.0\nModifikation in ColorPickerDialogFragment.java und dem zugehörigen Layout</string>
     <string name="image_crop_library_title">Zuschneiden von Bildern</string>
     <string name="color_picker_library_title">Farbauswahl</string>
     <string name="image_crop_library_summary">Library von ArthurHub\nVon Github unter Apache License 2.0</string>
@@ -148,4 +148,9 @@
     <string name="preferences_email_title">E-Mail</string>
     <string name="preferences_version_title">Version</string>
     <string name="changing_app_functions_requires_restart">Änderungen der App Funktionen benötigen einen App-Neustart. Schließe die App und öffne sie wieder.</string>
+    <string name="select_color">Wähle eine Farbe</string>
+    <string name="search">Suchen</string>
+    <string name="home_search_hint">Suche nach Name oder Label</string>
+    <string name="copied_to_clipboard">In Ziwschenablage kopiert</string>
+    <string name="secret_text">Geheimer Text</string>
 </resources>

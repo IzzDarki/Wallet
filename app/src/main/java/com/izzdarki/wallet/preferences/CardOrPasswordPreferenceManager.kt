@@ -110,7 +110,8 @@ sealed interface CardOrPasswordPreferenceManager {
             CardOrPasswordPreviewData(
                 ID,
                 readName(context, ID),
-                readColor(context, ID)
+                readColor(context, ID),
+                readLabels(context, ID)
             )
         }
     }

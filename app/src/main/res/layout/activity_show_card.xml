@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context="com.izzdarki.wallet.ui.cards.ShowCardActivity">
 
     <include layout="@layout/toolbar"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/show_card_scroll_view"
@@ -49,32 +53,48 @@
                     android:textIsSelectable="true" />
 
                 <!-- divider with no bottom padding, because adapter does it -->
-                <View
+                <com.google.android.material.divider.MaterialDivider
                     android:id="@+id/show_card_divider_card_properties"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="20dp"
-                    android:background="?android:attr/listDivider" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/default_padding"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/show_card_property_list_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clipToPadding="false"
-                    android:nestedScrollingEnabled="false" />
+                    android:nestedScrollingEnabled="false"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/adapter_show_property"/>
+
+                <!-- no top padding below adapter -->
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/labels_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/labels_chip_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/list_item_start_margin"
+                    android:paddingTop="@dimen/vertical_divider_padding"
+                    android:paddingBottom="@dimen/vertical_divider_padding">
+
+                </com.google.android.material.chip.ChipGroup>
 
                 <Space
                     android:id="@+id/show_card_extra_space_card_images"
                     android:layout_width="match_parent"
                     android:layout_height="10dp" />
 
-                <!-- divider with no top padding, because adapter does it -->
-                <View
+                <!-- divider top padding, labels chip group has bottom padding, otherwise below adapter -->
+                <com.google.android.material.divider.MaterialDivider
                     android:id="@+id/show_card_divider_card_images"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="?android:attr/listDivider" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/default_padding"/>
 
                 <!-- card (space) is displayed at the bottom, programmatically -->
 
@@ -92,4 +112,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

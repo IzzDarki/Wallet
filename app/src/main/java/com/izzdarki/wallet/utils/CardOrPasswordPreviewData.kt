@@ -7,6 +7,7 @@ data class CardOrPasswordPreviewData(
     val ID: Int,
     val name: String,
     @ColorInt val color: Int,
+    val labels: List<String>,
 )
 
 /**

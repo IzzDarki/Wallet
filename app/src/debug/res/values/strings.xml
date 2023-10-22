@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="fileprovider_authority" translatable="false">izzdarki.wallpaper.debug.fileprovider</string>
-    <string name="version_name" translatable="false">2.0.0-alpha.0 (Debug)</string> <!-- TODO keep this updated -->
+    <string name="version_name" translatable="false">2.1.0 (Debug)</string> <!-- TODO version name, keep up to date -->
     <string name="app_name">Wallet Debug</string>
 </resources>

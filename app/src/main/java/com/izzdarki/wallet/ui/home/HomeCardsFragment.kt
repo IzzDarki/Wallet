@@ -15,7 +15,9 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
@@ -52,9 +54,8 @@ class HomeCardsFragment
     private var cards: MutableList<CardOrPasswordPreviewData> = mutableListOf()
     private lateinit var selectionTracker: SelectionTracker<Long>
     private var init = false
-
-    // preferences
-    private lateinit var cardIDs: PreferenceArrayInt
+    private var searchQuery: String = ""
+    private lateinit var clearSelectionOnBackPressedCallback: OnBackPressedCallback
 
 
     // lifecycle
@@ -71,6 +72,16 @@ class HomeCardsFragment
         plusButton = view.findViewById(R.id.fragment_home_cards_plus_button)
 
         updateCards()
+
+        // back button
+        clearSelectionOnBackPressedCallback = object : OnBackPressedCallback(enabled = false) {
+            override fun handleOnBackPressed() {
+                selectionTracker.clearSelection()
+            }
+        }
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner,
+            clearSelectionOnBackPressedCallback
+        )
 
         // Plus button (FAB)
         plusButton.setOnClickListener {
@@ -115,6 +126,8 @@ class HomeCardsFragment
 
         selectionTracker.addObserver(object : SelectionTracker.SelectionObserver<Long>() {
             override fun onSelectionChanged() {
+                clearSelectionOnBackPressedCallback.isEnabled =
+                    (selectionTracker.selection.size() > 0)
                 activity?.invalidateOptionsMenu() // reload action bar menu
             }
         })
@@ -125,6 +138,7 @@ class HomeCardsFragment
     override fun onPause() {
         super.onPause()
         selectionTracker.clearSelection() // When fragment is no longer visible clear selection
+        clearSelectionOnBackPressedCallback.isEnabled = false
     }
     
     override fun onResume() {
@@ -135,6 +149,7 @@ class HomeCardsFragment
         }
         else
             init = true
+        clearSelectionOnBackPressedCallback.isEnabled = (selectionTracker.selection.size() > 0)
     }
 
 
@@ -163,18 +178,16 @@ class HomeCardsFragment
 
     private fun updateCards(): Boolean {
         val oldCards = cards.toList()
-        cardIDs = CardPreferenceManager.readAllIDs(requireContext())
         cards.clear()
-        for (cardID in cardIDs) {
-            cards.add(
-                CardOrPasswordPreviewData(
-                    cardID,
-                    CardPreferenceManager.readName(requireContext(), cardID),
-                    CardPreferenceManager.readColor(requireContext(), cardID)
-                )
-            )
-        }
+
+        cards.addAll(CardPreferenceManager.readAll(requireContext()))
         sortCardsArray(AppPreferenceManager.getCardsSortingType(requireContext())) // sort the list according to saved sorting type
+        if (searchQuery != "") {
+            cards.retainAll {
+                it.name.contains(searchQuery, ignoreCase = true)
+                        || it.labels.any { label -> label.contains(searchQuery, ignoreCase = true) }
+            }
+        }
 
         return cards != oldCards
     }
@@ -220,11 +233,27 @@ class HomeCardsFragment
     // action bar
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear() // Needed because HomePasswordsFragment also accesses this menu
-        when {
+        when { // Inflate the correct menu
             selectionTracker.selection.size() == 1 -> inflater.inflate(R.menu.home_action_bar_with_one_item_selected_menu, menu)
             selectionTracker.selection.size() > 1 -> inflater.inflate(R.menu.home_action_bar_with_multiple_items_selected_menu, menu)
             else -> inflater.inflate(R.menu.home_action_bar_menu, menu)
         }
+
+        // SearchView
+        val searchItem = menu.findItem(R.id.home_action_bar_search)
+        val searchView = searchItem.actionView as SearchView
+        searchView.queryHint = getString(R.string.home_search_hint)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                searchQuery = query ?: ""
+                updateCardsAndNotifyAdapter() // updates card (also filters according to searchQuery)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return this.onQueryTextSubmit(newText) // submit on every change
+            }
+        })
 
         // Set checkboxes
         when (AppPreferenceManager.getCardsSortingType(requireContext())) {
@@ -272,8 +301,6 @@ class HomeCardsFragment
         }
         return true
     }
-
-    // TODO onBackPressed: https://stackoverflow.com/questions/5448653/how-to-implement-onbackpressed-in-fragments
 
     // screen orientation change
     override fun onConfigurationChanged(newConfig: Configuration) {

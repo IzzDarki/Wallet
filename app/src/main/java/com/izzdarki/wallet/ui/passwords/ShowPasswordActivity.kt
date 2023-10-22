@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.ContextThemeWrapper
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +16,9 @@ import com.izzdarki.wallet.ui.adapters.ShowPropertyAdapter
 import com.izzdarki.wallet.preferences.PasswordPreferenceManager
 import com.izzdarki.wallet.utils.ItemProperty
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
+import com.google.android.material.divider.MaterialDivider
 
 class ShowPasswordActivity : AppCompatActivity() {
 
@@ -26,6 +30,8 @@ class ShowPasswordActivity : AppCompatActivity() {
 
     // region UI
     private lateinit var passwordPropertiesView: RecyclerView
+    private lateinit var passwordLabelsChipGroup: ChipGroup
+    private lateinit var passwordLabelsDivider: MaterialDivider
     // endregion
 
 
@@ -34,6 +40,7 @@ class ShowPasswordActivity : AppCompatActivity() {
     private lateinit var passwordName: String
     private lateinit var passwordValue: String
     private var passwordProperties: MutableList<ItemProperty> = mutableListOf()
+    private lateinit var passwordLabels: List<String>
     // endregion
 
 
@@ -44,6 +51,8 @@ class ShowPasswordActivity : AppCompatActivity() {
 
         // hooks
         passwordPropertiesView = findViewById(R.id.show_password_recycler_view)
+        passwordLabelsChipGroup = findViewById(R.id.show_password_labels_chip_group)
+        passwordLabelsDivider = findViewById(R.id.labels_divider)
 
         // init
         initFromPreferences()
@@ -57,6 +66,16 @@ class ShowPasswordActivity : AppCompatActivity() {
         // password properties recycler view
         passwordPropertiesView.layoutManager = LinearLayoutManager(this)
         passwordPropertiesView.adapter = createShowPropertyAdapter()
+
+        // password labels
+        if (passwordLabels.isEmpty()) {
+            passwordLabelsDivider.visibility = View.GONE
+            passwordLabelsChipGroup.visibility = View.GONE
+        } else {
+            passwordLabelsDivider.visibility = View.VISIBLE
+            passwordLabelsChipGroup.visibility = View.VISIBLE
+            addLabelsToChipGroup()
+        }
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -65,6 +84,17 @@ class ShowPasswordActivity : AppCompatActivity() {
         // re-init and notify adapter
         initFromPreferences()
         passwordPropertiesView.adapter = createShowPropertyAdapter() // because passwordProperties has been reassigned, a new adapter, that holds the new passwordProperties is needed
+
+        // hide/show labels chip group
+        if (passwordLabels.isEmpty()) {
+            passwordLabelsDivider.visibility = View.GONE
+            passwordLabelsChipGroup.visibility = View.GONE
+        } else {
+            passwordLabelsDivider.visibility = View.VISIBLE
+            passwordLabelsChipGroup.visibility = View.VISIBLE
+            passwordLabelsChipGroup.removeAllViews()
+            addLabelsToChipGroup()
+        }
 
         // toolbar
         setActionBarName()
@@ -96,6 +126,7 @@ class ShowPasswordActivity : AppCompatActivity() {
         passwordName = PasswordPreferenceManager.readName(this, ID)
         passwordValue = PasswordPreferenceManager.readPasswordValue(this, ID)
         passwordProperties = PasswordPreferenceManager.readProperties(this, ID)
+        passwordLabels = PasswordPreferenceManager.readLabels(this, ID)
 
         if (passwordValue != "") {
             // Add password value to password properties (will also be part of recycler view)
@@ -161,6 +192,14 @@ class ShowPasswordActivity : AppCompatActivity() {
         for (position in passwordProperties.indices) {
             val holder = passwordPropertiesView.findViewHolderForAdapterPosition(position) as? ShowPropertyAdapter.ViewHolder
             holder?.setValueHidden(passwordProperties[position].secret)
+        }
+    }
+
+    private fun addLabelsToChipGroup() {
+        for (label in passwordLabels) {
+            val chip = Chip(this)
+            chip.text = label
+            passwordLabelsChipGroup.addView(chip)
         }
     }
 

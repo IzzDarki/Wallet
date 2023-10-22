@@ -3,6 +3,8 @@
 /.idea/caches
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
+/.idea/misc.xml
+/.idea/deploymentTargetDropDown.xml
 
 # User-specific stuff
 .idea/**/workspace.xml
@@ -42,6 +44,7 @@
 .idea/modules
 *.iml
 *.ipr
+/.idea/render.experimental.xml
 
 
 .DS_Store

@@ -7,10 +7,8 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.*
 import android.view.View.OnFocusChangeListener
-import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -19,7 +17,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.view.doOnPreDraw
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -44,7 +42,7 @@ import com.izzdarki.wallet.utils.Utility.IDGenerator
 import com.izzdarki.wallet.utils.Utility.hideKeyboard
 import com.izzdarki.editlabelscomponent.EditLabelsComponent
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.chip.Chip
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -77,11 +75,12 @@ class EditCardActivity
     private lateinit var cardCodeTypeInput: MaterialAutoCompleteTextView
     private lateinit var cardCodeTypeTextInput: MaterialAutoCompleteTextView
     private lateinit var propertiesRecyclerView: RecyclerView
-    private lateinit var addNewPropertyChip: Chip
+    private lateinit var addNewPropertyButton: MaterialButton
+    private lateinit var cardColorButton: MaterialButton
+    private lateinit var cardFrontImageButton: MaterialButton
+    private lateinit var cardBackImageButton: MaterialButton
     private lateinit var editLabelsComponent: EditLabelsComponent
-    private lateinit var cardColorChip: Chip
-    private lateinit var cardFrontImageChip: Chip
-    private lateinit var cardBackImageChip: Chip
+    private lateinit var spaceForKeyboard: View
     // endregion
 
 
@@ -92,13 +91,6 @@ class EditCardActivity
     private var lastFrontImage: File? = null
     private var lastBackImage: File? = null
     // endregion
-
-
-    // region card properties (some others are inherited from CardActivity)
-    private var cardProperties: MutableList<ItemProperty> = mutableListOf()
-    private lateinit var labels: PreferenceArrayString  // will not be kept up to date (only readAndCheckLabels updates labels)
-    // endregion
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,10 +111,11 @@ class EditCardActivity
         cardCodeTypeInput = findViewById(R.id.edit_card_code_type_input)
         cardCodeTypeTextInput = findViewById(R.id.edit_card_code_type_text_input)
         propertiesRecyclerView = findViewById(R.id.edit_card_recycler_view)
-        addNewPropertyChip = findViewById(R.id.edit_card_add_new_property_chip)
-        cardColorChip = findViewById(R.id.edit_card_color_chip)
-        cardFrontImageChip = findViewById(R.id.edit_card_front_image_chip)
-        cardBackImageChip = findViewById(R.id.edit_card_back_image_chip)
+        addNewPropertyButton = findViewById(R.id.edit_card_add_new_property_button)
+        cardColorButton = findViewById(R.id.edit_card_color_button)
+        cardFrontImageButton = findViewById(R.id.edit_card_front_image_button)
+        cardBackImageButton = findViewById(R.id.edit_card_back_image_button)
+        spaceForKeyboard = findViewById(R.id.edit_card_space_for_keyboard)
         editLabelsComponent = EditLabelsComponent(
             findViewById(R.id.edit_card_labels_chip_group),
             findViewById(R.id.edit_card_labels_add_chip),
@@ -238,15 +231,15 @@ class EditCardActivity
         editLabelsComponent.displayLabels(labels)
 
         // create new card property button
-        addNewPropertyChip.setOnClickListener { addNewProperty() }
+        addNewPropertyButton.setOnClickListener { addNewProperty() }
 
         // card color
-        cardColorChip.setOnClickListener { pickColor() }
+        cardColorButton.setOnClickListener { pickColor() }
         updateColorButtonColor()
 
         // card images
-        cardFrontImageChip.setOnClickListener { chooseImage(true) }
-        cardBackImageChip.setOnClickListener { chooseImage(false) }
+        cardFrontImageButton.setOnClickListener { chooseImage(true) }
+        cardBackImageButton.setOnClickListener { chooseImage(false) }
 
         // card view
         createCardView()
@@ -259,6 +252,8 @@ class EditCardActivity
             onPropertyRemoval()
         }
         propertiesRecyclerView.adapter = adapter
+
+        updateSpaceForKeyboard()
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
@@ -278,9 +273,6 @@ class EditCardActivity
     // region main functions
     override fun initFromPreferences() {
         super.initFromPreferences()
-
-        labels = CardPreferenceManager.readLabels(this, ID)
-        cardProperties = CardPreferenceManager.readProperties(this, ID)
 
         if (cardProperties.isEmpty()) {
             // set IME options on last input field to done
@@ -498,6 +490,7 @@ class EditCardActivity
         return requestCancel()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         requestCancel()
     }
@@ -519,10 +512,7 @@ class EditCardActivity
         dialog = builder.create()
         deleteImageGroup.setOnClickListener {
             dialog.dismiss()
-            if (isFront)
-                removeFrontImage()
-            else
-                removeBackImage()
+            removeImage(isFront)
         }
         selectImageGroup.setOnClickListener {
             dialog.dismiss()
@@ -574,11 +564,11 @@ class EditCardActivity
         getContentIntent.putExtra(GetImageActivity.EXTRA_FILE_NAME, createImageName(isFront))
         getContentIntent.putExtra(
             GetImageActivity.EXTRA_IMAGE_MAX_NEEDED_SHORT_SIDE,
-            calculatedLayoutWidth
+            calculatedLayoutWidth.toInt()
         )
         getContentIntent.putExtra(
             GetImageActivity.EXTRA_IMAGE_MAX_NEEDED_LONG_SIDE,
-            calculatedLayoutHeight
+            calculatedLayoutHeight.toInt()
         )
         getContentIntent.putExtra(GetContentImageActivity.EXTRA_TYPE, "image/*")
 
@@ -599,7 +589,7 @@ class EditCardActivity
     private fun pickColor() {
         val dialogFragment = ColorPickerDialogFragment.newInstance(
             PICK_COLOR_DIALOG_ID,
-            null,
+            getString(R.string.select_color),
             null,
             cardColor,
             false
@@ -623,11 +613,11 @@ class EditCardActivity
     override fun onDialogDismissed(dialogId: Int) {}
 
     private fun updateColorButtonColor() {
-        cardColorChip.chipBackgroundColor = ColorStateList.valueOf(cardColor)
+        cardColorButton.setBackgroundColor(cardColor)
         if (Utility.isColorDark(cardColor))
-            cardColorChip.setTextColor(resources.getColor(R.color.on_dark_text_color))
+            cardColorButton.setTextColor(ResourcesCompat.getColor(resources, R.color.on_dark_text_color,theme))
         else
-            cardColorChip.setTextColor(resources.getColor(R.color.on_light_text_color))
+            cardColorButton.setTextColor(ResourcesCompat.getColor(resources, R.color.on_light_text_color, theme))
 
         if (Utility.areColorsSimilar(
                 Utility.getDefaultBackgroundColor(this),
@@ -635,11 +625,11 @@ class EditCardActivity
             )
         ) {
             // draw outline
-            cardColorChip.chipStrokeWidth = resources.getDimension(R.dimen.outline_for_similar_colors_stroke_width)
-            cardColorChip.chipStrokeColor = ColorStateList.valueOf(resources.getColor(R.color.card_view_outline_color))
+            cardColorButton.strokeWidth = resources.getDimension(R.dimen.outline_for_similar_colors_stroke_width).toInt()
+            cardColorButton.strokeColor = ColorStateList.valueOf(resources.getColor(R.color.card_view_outline_color))
         } else {
             // remove outline
-            cardColorChip.chipStrokeWidth = 0F
+            cardColorButton.strokeWidth = 0
         }
     }
 
@@ -691,7 +681,7 @@ class EditCardActivity
 
     private fun readAndCheckLabels() {
         val oldLabels = CardPreferenceManager.readLabels(this, ID)
-        labels = PreferenceArrayString(editLabelsComponent.currentLabels.iterator())
+        labels = PreferenceArrayString(editLabelsComponent.currentLabels.sorted().iterator())
         if (!oldLabels.containsAll(labels) || !labels.containsAll(oldLabels))
             hasBeenModified = true
     }
@@ -750,12 +740,24 @@ class EditCardActivity
 
     // region image helpers
     /**
+     * If no images are there, extra space is added so that the keyboard does not cover
+     * editable input fields
+     */
+    private fun updateSpaceForKeyboard() {
+        if (currentFrontImage == null && currentBackImage == null)
+            spaceForKeyboard.visibility = View.INVISIBLE  // invisible but takes space
+        else
+            spaceForKeyboard.visibility = View.GONE
+    }
+
+    /**
      * deletes current image file (if it's not the same as last image) and replaces it with `imageFile`, while not changing anything about last image
      * @param isFront true, when setting front image, false when setting back image
      * @param imageFile file to set as image
      */
     private fun setCardImage(isFront: Boolean, imageFile: File) {
         hasBeenModified = true
+        removeImage(isFront)  // make sure old image is removed before adding new one
         if (isFront) {
             if (currentFrontImage !== lastFrontImage)
                 deleteFrontImage()
@@ -771,6 +773,8 @@ class EditCardActivity
         check(!(isFront && currentFrontImage == null || !isFront && currentBackImage == null)) {
             "EditCardActivity.setCardImage: Image was not set for whatever reason. isFront: $isFront, currentFrontImage: $currentFrontImage, currentBackImage: $currentBackImage"
         }
+
+        updateSpaceForKeyboard()
     }
 
     /**
@@ -788,7 +792,7 @@ class EditCardActivity
                     val imagesDirectory =
                         File(filesDir.toString() + "/" + getString(R.string.cards_images_folder_name))
                     if (!imagesDirectory.exists()) imagesDirectory.mkdirs()
-                    val newFrontImage = File(imagesDirectory, currentFrontImage?.name)
+                    val newFrontImage = File(imagesDirectory, currentFrontImage?.name!!)
                     val mainKey = MasterKey.Builder(this)
                         .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
                         .build()
@@ -883,11 +887,19 @@ class EditCardActivity
         }
     }
 
+    private fun removeImage(isFront: Boolean) {
+        if (isFront)
+            removeFrontImage()
+        else
+            removeBackImage()
+    }
+
     private fun removeFrontImage() {
         if (currentFrontImage != null) {
             cardView.removeFrontImage()
             CardPreferenceManager.deleteFrontImage(this, ID)
             currentFrontImage = null
+            updateSpaceForKeyboard()
         }
     }
 
@@ -896,6 +908,7 @@ class EditCardActivity
             cardView.removeBackImage()
             CardPreferenceManager.deleteBackImage(this, ID)
             currentBackImage = null
+            updateSpaceForKeyboard()
         }
     }
 
@@ -1036,7 +1049,7 @@ class EditCardActivity
         }
         if (cardProperties.size == 1) {
             // the last item is going to be removed
-            if (cardCodeTypeTextInput.visibility == VISIBLE)
+            if (cardCodeTypeTextInput.visibility == View.VISIBLE)
                 Utility.setImeOptionsAndRestart(cardCodeTypeTextInput, EditorInfo.IME_ACTION_DONE)
             else
                 Utility.setImeOptionsAndRestart(cardCodeInputEditText, EditorInfo.IME_ACTION_DONE)
@@ -1056,17 +1069,17 @@ class EditCardActivity
         if (!isMahlerCardInit) {
             deleteFrontImage()
 
-            val frontImageStream = resources.openRawResource(R.raw.front_mahler_image)
+            val mahlerImageStream = resources.openRawResource(R.raw.front_mahler_image)
 
             // ensure cards images folder exists
-            val cardsImagesFolder = File(filesDir.toString() + "/" + getString(R.string.cards_images_folder_name))
-            if (!cardsImagesFolder.exists()) cardsImagesFolder.mkdirs()
+            val cashCardsImagesFolder = File(cacheDir.toString() + "/" + getString(R.string.cards_images_folder_name))
+            if (!cashCardsImagesFolder.exists()) cashCardsImagesFolder.mkdirs()
             currentFrontImage = CreateExampleCardService.copyCardImage(
                 this,
-                frontImageStream,
-                cardsImagesFolder,
+                mahlerImageStream,
+                cashCardsImagesFolder,
                 "JPEG_" + ID + "_" + getString(R.string.mahler_card_front_image_file_name)
-            ) // The filename of Mahler card should not change in future versions of the app (It's checked by Utility.isMahlerFile(...))
+            ) // The filename of Mahler card should not change in future versions of the app (It's checked by Utility.isMahlerFile(...)) // TODO from now on it is not used anymore
             updateFrontImage()
 
             cardName = "Gustav Mahler"

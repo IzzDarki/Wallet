@@ -8,15 +8,13 @@
     android:paddingRight="16dp"
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
-    android:background="@drawable/navbar_header_background"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    android:background="@drawable/navbar_header_background">
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
-        android:textSize="24sp"
         android:layout_marginBottom="16dp"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"/>
+        android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"/>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_marginStart="@dimen/list_item_start_margin">
+    android:layout_marginStart="@dimen/list_item_start_margin"
+    android:orientation="vertical">
 
-    <View
+    <com.google.android.material.divider.MaterialDivider
         android:id="@+id/show_property_divider"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginStart="5dp"
-        android:background="?android:attr/listDivider" />
+        android:layout_height="wrap_content"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -32,21 +32,19 @@
                 android:id="@+id/show_property_name_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
-                android:textSize="16sp"
-                android:textColor="@color/material_on_background_emphasis_high_type"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                 android:maxLines="1"
-                android:textIsSelectable="true" />
+                android:textIsSelectable="true"
+                tools:text="Property name"/>
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/show_property_value_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
                 android:layout_marginBottom="5dp"
-                android:textSize="16sp"
-                android:textColor="@color/material_on_background_emphasis_medium"/>
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                tools:text="Property value"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -54,12 +52,24 @@
             android:id="@+id/show_property_visibility_toggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="8dp"
+            android:padding="10dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/show_property_text_views_linear_layout"
+            app:layout_constraintEnd_toStartOf="@id/show_property_copy_clipboard"
+            app:srcCompat="@drawable/icon_visibility_24dp"
+            android:background="@android:color/transparent"/>
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/show_property_copy_clipboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/show_property_visibility_toggle"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/icon_visibility_30dp"
+            app:srcCompat="@drawable/icon_content_copy_24dp"
             android:background="@android:color/transparent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
