@@ -16,7 +16,6 @@ Securely store passwords and cards
 - The app is designed to store your data securely, but no software is perfect. Be aware that there can always be **unknown bugs or security risks**
 
 ### Screenshots
-
 <img src="example-images/home-cards.jpg" alt="Home" width="300px"> <img src="example-images/home-passwords.jpg" alt="Home" width="300px"> <img src="example-images/home-passwords.jpg" alt="Home" width="300px">
 
 
