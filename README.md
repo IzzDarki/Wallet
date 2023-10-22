@@ -8,19 +8,17 @@ Securely store passwords and cards
 - All data is stored locally and encrypted
 - Organize everything with labels
 - Dark and light mode (follows the system)
-- Languages: English and german (follows the system)
+- Languages: English and German (follows the system)
 
 ### Important notes
 - Set an app password or use fingerprint for the app (see app settings). Alternatively, you could also use an app locker to protect the app.
 - **Don't rely on this app as the only place to store your passwords.** If you lose your phone or the app data gets corrupted, your data is lost.
-- The app is designed to securely store your data, but no software is perfect. Be aware that there can always be **unknown bugs or security risks**
+- The app is designed to store your data securely, but no software is perfect. Be aware that there can always be **unknown bugs or security risks**
 
 ### Screenshots
-<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(3cm, 8cm)); gap: 10px;">
-  <img src="example-images/home-cards.jpg" alt="Home" />
-  <img src="example-images/home-passwords.jpg" alt="Home" />
-  <!-- Insert images here -->
-</div>
+
+<img src="example-images/home-cards.jpg" alt="Home" width="300px"> <img src="example-images/home-passwords.jpg" alt="Home" width="300px"> <img src="example-images/home-passwords.jpg" alt="Home" width="300px">
+
 
 ### Technical notes
 #### App authentication
