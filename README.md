@@ -1,6 +1,6 @@
 ![App icon](app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png)
 # Wallet
-Securely store passwords and cards 
+Securely store passwords and cards
 
 ## Features
 - Store passwords
@@ -22,9 +22,9 @@ Securely store passwords and cards
 ### Technical notes
 #### App authentication
 The app password or fingerprint is not used to encrypt the data. It is just required to open the app.
-The Argon2id method is used to store and verify the app password.
+Argon2id is used to store and verify the app password.
 
 #### Data encryption
 All data is encrypted with AES-256-GCM using [encrypted shared preferences](https://developer.android.com/reference/kotlin/androidx/security/crypto/EncryptedSharedPreferences).
 Image files are encrypted using AES-256-GCM-HKDF-4KB.
-All key material is stored in the [Android Keystore](https://developer.android.com/privacy-and-security/keystore). 
+All key material is stored in the [android keystore](https://developer.android.com/privacy-and-security/keystore). 
