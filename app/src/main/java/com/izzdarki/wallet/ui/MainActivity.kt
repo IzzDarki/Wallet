@@ -9,6 +9,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import com.izzdarki.wallet.logic.AuthenticatedAppCompatActivity
+import com.izzdarki.wallet.logic.updates.getUpdateToVersion10Log
 import com.izzdarki.wallet.logic.updates.showUpdateAlert
 import com.izzdarki.wallet.services.ClearDirectoryService
 import izzdarki.wallet.BuildConfig
@@ -76,11 +77,7 @@ class MainActivity : AuthenticatedAppCompatActivity() {
 
         // Update to 2.2.0-alpha.0 (version code 10)
         if (lastVersionNumber < 10)
-            showUpdateAlert(getString(R.string.version_name_2_2_0), listOf(
-                Pair(getString(R.string.new_feature_authentication), getString(R.string.new_feature_authentication_text)),
-                Pair(getString(R.string.cards_and_passwords_in_one_place), getString(R.string.cards_and_passwords_in_one_place_text)),
-                // TODO more
-            ))
+            showUpdateAlert(getUpdateToVersion10Log(this))
 
         // Write new version code for future update dialog
         sharedPreferences.edit().putInt(LAST_VERSION_UPDATE_DIALOG_SHOWN, BuildConfig.VERSION_CODE).apply()

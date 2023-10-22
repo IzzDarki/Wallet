@@ -9,15 +9,19 @@ import com.google.android.material.textview.MaterialTextView
 import com.izzdarki.wallet.utils.Utility.setPaddingBottom
 import izzdarki.wallet.R
 
-fun Context.showUpdateAlert(versionName: String, content: List<Pair<String, String>>) {
-    val linearLayout = createUpdateView(content)
+data class UpdateLog(
+    val versionName: String,
+    val sections: List<Pair<String, String>>,
+)
 
-    // Add title
-    val titleView = MaterialTextView(this)
-    titleView.setTextAppearance(R.style.TextAppearance_Material3_TitleLarge)
-    titleView.setPaddingBottom(resources.getDimension(R.dimen.default_padding).toInt())
-    titleView.text = getString(R.string.updated_to_x).format(versionName)
-    linearLayout.addView(titleView, 0)
+fun Context.showUpdateAlert(content: UpdateLog) {
+    val linearLayout = createUpdateView(content)
+    linearLayout.setPadding(
+        resources.getDimension(R.dimen.default_padding).toInt(),
+        resources.getDimension(R.dimen.default_padding).toInt(),
+        resources.getDimension(R.dimen.default_padding).toInt(),
+        resources.getDimension(R.dimen.default_padding).toInt(),
+    )
 
     val scrollView = ScrollView(this)
     scrollView.addView(linearLayout)
@@ -32,17 +36,19 @@ fun Context.showUpdateAlert(versionName: String, content: List<Pair<String, Stri
         .show()
 }
 
-fun Context.createUpdateView(content: List<Pair<String, String>>): LinearLayoutCompat {
+fun Context.createUpdateView(content: UpdateLog): LinearLayoutCompat {
     val linearLayout = LinearLayoutCompat(this)
     linearLayout.orientation = LinearLayoutCompat.VERTICAL
-    linearLayout.setPadding(
-        resources.getDimension(R.dimen.default_padding).toInt(),
-        resources.getDimension(R.dimen.default_padding).toInt(),
-        resources.getDimension(R.dimen.default_padding).toInt(),
-        resources.getDimension(R.dimen.default_padding).toInt(),
-    )
 
-    for ((headline, text) in content) {
+    // Title
+    val titleView = MaterialTextView(this)
+    titleView.setTextAppearance(R.style.TextAppearance_Material3_TitleLarge)
+    titleView.setPaddingBottom(resources.getDimension(R.dimen.default_padding).toInt())
+    titleView.text = getString(R.string.updated_to_x).format(content.versionName)
+    linearLayout.addView(titleView, 0)
+
+    // Sections
+    for ((headline, text) in content.sections) {
         val headlineView = MaterialTextView(this)
         headlineView.setTextAppearance(R.style.TextAppearance_Material3_TitleMedium)
         headlineView.setPaddingBottom(resources.getDimension(R.dimen.title_text_space).toInt())

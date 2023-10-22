@@ -7,7 +7,7 @@
     <string name="example_card_back_image_file_name" translatable="false">example_card_back_image.jpg</string> <!-- see res/raw --> <!-- must stay the same -->
     <string name="mahler_card_front_image_file_name" translatable="false">front_mahler_image.jpg</string> <!-- see res/raw --> <!-- must stay the same -->
     <string name="hidden_password_dots" translatable="false">\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022</string>
-
+    <string name="version_name" translatable="false">2.2.0-alpha.0</string> <!-- version name, keep up to date -->
 
 
     <!-- settings preferences -->
@@ -122,9 +122,16 @@
     <string name="preferences_email_title">E-mail</string>
     <string name="preferences_email_content" translatable="false">izzdarki.dev@gmail.com</string>
     <string name="preferences_mailto_link" translatable="false">mailto:izzdarki.dev@gmail.com?subject=Wallet</string>
+    <string name="preferences_version_key" translatable="false">preferences.version_key</string>
     <string name="preferences_version_title">Version</string>
+    <string name="preferences_version_update_info">Click here to see all releases on GitHub. There, you can always find the latest version to download and install.</string>
     <string name="preferences_releases_link" translatable="false">https://github.com/IzzDarki/Wallet/releases</string>
-    <string name="version_name" translatable="false">2.2.0-alpha.0</string> <!-- version name, keep up to date -->
+    <string name="preferences_source_code_title">Source code</string>
+    <string name="preferences_source_code_summary">Click here to see the app\'s source code on GitHub.</string>
+    <string name="preferences_source_code_link" translatable="false">https://github.com/IzzDarki/Wallet/tree/2.2.0</string> <!-- includes version name, keep up to date -->
+    <string name="preferences_update_log_key" translatable="false">preferences.update_log_key</string>
+    <string name="preferences_update_log_title">Update log</string>
+    <string name="preferences_update_log_summary">See what changed in recent versions</string>
 
     <!-- update dialogs -->
     <string name="version_name_2_2_0" translatable="false">2.2.0</string>

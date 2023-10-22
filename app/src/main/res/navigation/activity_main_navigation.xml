@@ -69,6 +69,19 @@
         android:id="@+id/nav_settings_app_info"
         android:name="com.izzdarki.wallet.ui.settings.AppInfoSettingsFragment"
         android:label="@string/preferences_app_info">
+        <action
+            android:id="@+id/action_nav_app_info_to_update_log"
+            app:destination="@id/nav_settings_update_log"
+            app:enterAnim="@animator/nav_default_enter_anim"
+            app:exitAnim="@animator/nav_default_exit_anim"
+            app:popEnterAnim="@animator/nav_default_pop_enter_anim"
+            app:popExitAnim="@animator/nav_default_pop_exit_anim"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_settings_update_log"
+        android:name="com.izzdarki.wallet.ui.settings.UpdateLogFragment"
+        android:label="@string/preferences_update_log_title">
     </fragment>
 
     <fragment

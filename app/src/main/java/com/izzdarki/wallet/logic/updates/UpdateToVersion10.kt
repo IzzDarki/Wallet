@@ -13,6 +13,15 @@ import com.izzdarki.wallet.storage.PasswordStorage
 import izzdarki.wallet.R
 import java.io.File
 
+fun getUpdateToVersion10Log(context: Context) = UpdateLog(
+    versionName = context.getString(R.string.version_name_2_2_0),
+    sections = listOf(
+        Pair(context.getString(R.string.new_feature_authentication), context.getString(R.string.new_feature_authentication_text)),
+        Pair(context.getString(R.string.cards_and_passwords_in_one_place), context.getString(R.string.cards_and_passwords_in_one_place_text)),
+        // TODO more
+    )
+)
+
 /**
  * Moves all cards and passwords from [CardStorage] and [PasswordStorage]
  * to [CredentialPreferenceStorage].

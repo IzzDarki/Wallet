@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <Preference
         android:title="@string/preferences_author_title"
@@ -15,11 +16,26 @@
     </Preference>
 
     <Preference
+        android:title="@string/preferences_source_code_title"
+        android:summary="@string/preferences_source_code_summary"
+        android:icon="@drawable/icon_code_24dp">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="@string/preferences_source_code_link" />
+    </Preference>
+
+    <Preference
+        android:key="@string/preferences_version_key"
         android:title="@string/preferences_version_title"
-        android:summary="@string/version_name"
+        tools:summary="@string/version_name"
         android:icon="@drawable/icon_label_24dp">
         <intent android:action="android.intent.action.VIEW"
             android:data="@string/preferences_releases_link" />
     </Preference>
+
+    <Preference
+        android:key="@string/preferences_update_log_key"
+        android:title="@string/preferences_update_log_title"
+        android:summary="@string/preferences_update_log_summary"
+        android:icon="@drawable/icon_update_24dp"/>
 
 </PreferenceScreen>
