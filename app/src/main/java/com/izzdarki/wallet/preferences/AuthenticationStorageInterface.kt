@@ -37,5 +37,8 @@ interface AuthenticationStorageInterface {
      */
     fun readEncodedAppPassword(context: Context): String?
 
+    fun enableFingerprint(context: Context, enable:Boolean): Boolean
+    fun isFingerPrintEnable(context: Context): Boolean
+
 
 }

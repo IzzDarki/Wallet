@@ -12,6 +12,9 @@ import androidx.preference.MultiSelectListPreference
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import com.izzdarki.wallet.logic.isAuthenticationEnabled
+import com.izzdarki.wallet.logic.isFingerPrintEnable
+import com.izzdarki.wallet.logic.isPasswordAuthenticationEnable
+import com.izzdarki.wallet.logic.setFingerPrint
 import com.izzdarki.wallet.utils.FingerprintAuthenticationHelper
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -80,29 +83,52 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
         }
 
-        // Authentication
-        val authenticationPreference: SwitchPreferenceCompat = findPreference(getString(R.string.preferences_enable_authentication_key))!!
+        // Password Authentication
+        // Disable the password Authentication if FingerPrint is enabled
+        val authenticationPreference: SwitchPreferenceCompat =
+            findPreference(getString(R.string.preferences_enable_authentication_key))!!
         authenticationPreference.setOnPreferenceChangeListener { _, newValue ->
-            if (newValue == true)
-                navController.navigate(R.id.action_nav_settings_to_authentication_setup)
-            else
-                navController.navigate(R.id.action_nav_settings_to_authentication_disable)
+                if (newValue == true)
+                    navController.navigate(R.id.action_nav_settings_to_authentication_setup)
+                else
+                    navController.navigate(R.id.action_nav_settings_to_authentication_disable)
+
             true
         }
+
 
         // FingerPrint Authentication
         val fingerPrintAuthenticationPreference: SwitchPreferenceCompat =
             findPreference(getString(R.string.preferences_enable_fingerprint_authentication_key))!!
-        fingerPrintAuthenticationPreference.setOnPreferenceChangeListener { _, newValue ->
-            if (newValue == true) {
-                fingerprintAuthenticationHelper.doAuthentication {
+        fingerPrintAuthenticationPreference.setOnPreferenceClickListener { it ->
+                if (fingerPrintAuthenticationPreference.isChecked) {
 
+                    fingerPrintAuthenticationPreference.isChecked = false
+                    setFingerPrint(requireContext(), false)
+
+                    fingerprintAuthenticationHelper.doAuthentication {
+                        fingerPrintAuthenticationPreference.isChecked = true
+                        setFingerPrint(requireContext(), true)
+                        authenticationPreference.isEnabled = false
+
+
+                    }
+                } else{
+
+                    fingerPrintAuthenticationPreference.isChecked = true
+                    setFingerPrint(requireContext(), true)
+
+                    fingerprintAuthenticationHelper.doAuthentication {
+                        fingerPrintAuthenticationPreference.isChecked = false
+                        setFingerPrint(requireContext(), false)
+                        authenticationPreference.isEnabled = true
+
+                    }
                 }
-            } else {
-            }
 
             true
         }
+
 
     }
 
@@ -111,7 +137,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         // Authentication
         val authenticationPreference: SwitchPreferenceCompat = findPreference(getString(R.string.preferences_enable_authentication_key))!!
-        authenticationPreference.isChecked = isAuthenticationEnabled(requireContext())
+        authenticationPreference.isChecked = isPasswordAuthenticationEnable(requireContext())
+        authenticationPreference.isEnabled= isFingerPrintEnable(requireContext()).not()
+
+        // FingerPrint
+        val fingerPrintAuthenticationPreference: SwitchPreferenceCompat = findPreference(getString(R.string.preferences_enable_fingerprint_authentication_key))!!
+        fingerPrintAuthenticationPreference.isChecked = isFingerPrintEnable(requireContext())
+        fingerPrintAuthenticationPreference.isEnabled = isPasswordAuthenticationEnable(requireContext()).not()
     }
 
     companion object {

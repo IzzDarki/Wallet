@@ -25,6 +25,16 @@ object AuthenticationPreferences : AuthenticationStorageInterface {
         return getPreferences(context).getString(ENCODED_AUTHENTICATION_PASSWORD, null)
     }
 
+    override fun enableFingerprint(context: Context, enable:Boolean): Boolean {
+        return  getPreferences(context).edit().putBoolean(USE_FINGERPRINT_AUTH, enable).commit()
+    }
+
+
+
+    override fun isFingerPrintEnable(context: Context): Boolean {
+        return  getPreferences(context).getBoolean(USE_FINGERPRINT_AUTH, false)
+    }
+
     @Synchronized private fun getPreferences(context: Context): SharedPreferences {
         if (preferences == null)
             // preferences = context.getSharedPreferences("authentication-test", MODE_PRIVATE) // not encrypted for testing
@@ -39,4 +49,5 @@ object AuthenticationPreferences : AuthenticationStorageInterface {
     private const val AUTHENTICATION_PREFERENCES_NAME = "authentication_preferences"
     private const val LAST_AUTHENTICATION_TIME_KEY = "last_authentication_time"
     private const val ENCODED_AUTHENTICATION_PASSWORD = "authentication_password_hash"
+    private const val USE_FINGERPRINT_AUTH = "authentication_finger_print"
 }

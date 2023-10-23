@@ -46,6 +46,8 @@
         <item>@string/preferences_app_functions_entries_passwords</item>
     </string-array>
     <string name="changing_app_functions_requires_restart">Changing app functions requires an app restart. Close the app and reopen it.</string>
+    <string name="first_disable_password_then_enable_finger_print">To enable password authentication first disable the finger print</string>
+    <string name="first_disable_finger_print_then_enable_password">To enable finger print authentication first disable the password authentication</string>
 
     <string name="preferences_enable_authentication_key" translatable="false">preferences.enable_authentication_key</string>
     <string name="preferences_enable_fingerprint_authentication_key" translatable="false">preferences.enable_fingerprint_authentication_key</string>
@@ -282,6 +284,7 @@
     <string name="enter_your_app_password">Enter your app password</string>
     <string name="forget_app_password_text">If you forget your app password, there is no way to reset it. You cannot access your cards and passwords without it.</string> <!-- used in multiple places -->
     <string name="app_password_is_incorrect">App password is incorrect</string>
+    <string name="authentication_using_finger_print">Authenticate using biometric</string>
     <string name="authentication">Authentication</string>
     <string name="authentication_full_explanation">Authentication ensures that this app can only be used by you. To achieve this, you will need to enter an app password when opening the application.</string>
     <string name="old_app_password">Old app password</string>
@@ -301,4 +304,7 @@
     <string name="hint_change_password_on_disable_authentication_fragment">Hint: If you want to change your app password, first disable authentication and then set it up with your new password.</string>
     <string name="preferences_enable_fingerprint_authentication_summary">Setup an app fingerprint to use when opening the app</string>
     <string name="fingerprint_authentication">Fingerprint Authentication</string>
+    <string name="no_finger_print_enrolled_first_setup_device_finger_print">No fingerprint enrolled first setup device fingerprint</string>
+    <string name="no_biometric_hardware_available">No biometric hardware available</string>
+    <string name="biometric_hardware_is_unavailable">Biometric hardware is unavailable</string>
 </resources>
