@@ -29,11 +29,6 @@ import izzdarki.wallet.R
 @RequiresApi(Build.VERSION_CODES.O)
 class WalletAutofillService : AutofillService() {
 
-    override fun onCreate() {
-        super.onCreate()
-        // TODO Do I need to implement something here?
-    }
-
     override fun onFillRequest(fillRequest: FillRequest, cancellationSignal: CancellationSignal, fillCallback: FillCallback) {
 
         // Find out where the user is trying to fill

@@ -7,8 +7,6 @@ import androidx.annotation.RequiresApi
 import com.izzdarki.wallet.data.Credential
 import com.izzdarki.wallet.data.CredentialField
 
-// TODO There was something about never autofilling two different categories of data to prevent stealing data using hidden input views
-
 /**
  * A data source is a list of [CredentialField]s, that can be used to fill a request.
  */
@@ -63,13 +61,13 @@ fun valueGivenAutofillHints(dataSource: DataSource, autofillHints: Array<String>
             isEmailAutofillHint(hint) -> valueForEmail(dataSource)
             isUsernameAutofillHint(hint) -> valueForUsername(dataSource)
             isPasswordAutofillHint(hint) -> valueForPassword(dataSource)
-            else -> null
+            else -> null // Could not find value using autofill hints
         }
     }.firstOrNull()
 }
 
 fun valueGivenHintAndText(dataSource: DataSource, hint: String?, text: String?): CredentialField? {
-    if (hint != null || text != null) Log.d("autofill", "Looking for hint = $hint, text = $text")
+    if (hint != null && hint != "" || text != null && text != "") Log.d("autofill", "Looking for hint = $hint, text = $text")
     val hintNonNull = hint ?: "" // empty strings don't describe anything
     val textNonNull = text ?: ""
     return when {
@@ -77,7 +75,7 @@ fun valueGivenHintAndText(dataSource: DataSource, hint: String?, text: String?):
             valueForEmail(dataSource)
         describesUsername(hintNonNull) -> valueForUsername(dataSource)
         describesPassword(hintNonNull) -> valueForPassword(dataSource)
-        else -> null
+        else -> valueForGivenHint(dataSource, hintNonNull)
     }
 }
 
@@ -92,6 +90,12 @@ private fun valueForEmail(dataSource: DataSource): CredentialField? {
 
 private fun valueForPassword(dataSource: DataSource): CredentialField? {
     return dataSource.data.find { describesPassword(it.name) }
+}
+
+private fun valueForGivenHint(dataSource: DataSource, hint: String): CredentialField? {
+    return dataSource.data.find {
+        it.name.withoutWhitespaceOrDashes().lowercase() == hint.withoutWhitespaceOrDashes().lowercase()
+    }
 }
 
 
@@ -111,12 +115,10 @@ private fun isEmailAutofillHint(hint: String): Boolean {
 private fun isPasswordAutofillHint(hint: String): Boolean {
     return hint == View.AUTOFILL_HINT_PASSWORD
             || hint == W3C_CURRENT_PASSWORD_HINT
-            || hint == W3C_NEW_PASSWORD_HINT
 }
 
 // According to https://developer.android.com/guide/topics/text/autofill-services
 // the following hints are more likely some views (probably on web pages)
 const val W3C_USERNAME_HINT = "username"
 const val W3C_CURRENT_PASSWORD_HINT = "current-password"
-const val W3C_NEW_PASSWORD_HINT = "new-password"
 const val W3C_EMAIL_HINT = "email"
