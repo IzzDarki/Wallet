@@ -286,4 +286,5 @@
     <string name="example_password_value">Alma</string>
     <string name="the_image_will_be_removed_when_you_save_the_entry">The image will be removed if you save the entry.</string>
     <string name="updated_to_x">Updated to %s</string>
+    <string name="x_for_y">%s for %s</string>
 </resources>
