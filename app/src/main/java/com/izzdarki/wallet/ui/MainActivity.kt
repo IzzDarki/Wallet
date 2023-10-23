@@ -73,11 +73,16 @@ class MainActivity : AuthenticatedAppCompatActivity() {
      */
     private fun showUpdateAlerts() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val lastVersionNumber = sharedPreferences.getInt(LAST_VERSION_UPDATE_DIALOG_SHOWN, -1) // -1 means never shown any update dialog
+        val lastVersionNumber = sharedPreferences.getInt(LAST_VERSION_UPDATE_DIALOG_SHOWN, -1) // -1 means fresh install
 
-        // Update to 2.2.0-alpha.0 (version code 10)
-        if (lastVersionNumber < 10)
-            showUpdateAlert(getUpdateToVersion10Log(this))
+        if (lastVersionNumber == -1) {
+            // Fresh install
+            // TODO show dialog about authentication, then autofill service
+        } else {
+            // Update to 2.2.0-alpha.0 (version code 10)
+            if (lastVersionNumber < 10)
+                showUpdateAlert(getUpdateToVersion10Log(this))
+        }
 
         // Write new version code for future update dialog
         sharedPreferences.edit().putInt(LAST_VERSION_UPDATE_DIALOG_SHOWN, BuildConfig.VERSION_CODE).apply()

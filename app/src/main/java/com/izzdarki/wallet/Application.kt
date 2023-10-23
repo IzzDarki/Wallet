@@ -58,11 +58,13 @@ class Application : Application() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         val lastVersionNumber = sharedPreferences.getInt(APPLICATION_LAST_VERSION_NUMBER, -1) // -1 means new installation
 
-        // Update to 2.2.0-alpha.0 (version code 10)
-        if (lastVersionNumber < 10)
-            updateToCredentialPreferences(this)
+        if (lastVersionNumber != -1) {
+            // Update to 2.2.0-alpha.0 (version code 10)
+            if (lastVersionNumber < 10)
+                updateToCredentialPreferences(this)
             // Well-tested update, however issues can always arise => Keeping old data
             // In a future update the old preferences should be deleted (removeOldPreferences function does that (manually tested))
+        }
 
         // Write new version code for future updates
         sharedPreferences.edit().putInt(APPLICATION_LAST_VERSION_NUMBER, BuildConfig.VERSION_CODE).apply()
