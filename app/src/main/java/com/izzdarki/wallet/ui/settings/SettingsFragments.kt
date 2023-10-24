@@ -77,6 +77,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         // Fingerprint authentication
         val fingerprintAuthenticationPreference: SwitchPreferenceCompat = findPreference(getString(R.string.preferences_enable_fingerprint_authentication_key))!!
+        fingerprintAuthenticationPreference.isChecked = isFingerprintEnabled(requireContext()) // Causes no switch animation when set here
         fingerprintAuthenticationPreference.setOnPreferenceChangeListener { _, newValue ->
             if (newValue !is Boolean) return@setOnPreferenceChangeListener false // cannot happen, but needed for type safety
 
