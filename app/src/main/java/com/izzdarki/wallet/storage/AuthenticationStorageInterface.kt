@@ -29,13 +29,17 @@ interface AuthenticationStorageInterface {
      * Remove the encoded password from the storage.
      * Calling [readEncodedAppPassword] will then return `null`
      */
-    fun removeEncodedAppPasswort(context: Context): Boolean
+    fun removeEncodedAppPassword(context: Context): Boolean
 
     /**
      * Reads the authentication passwordHash from the storage
      * @return the authentication passwordHash or `null` if no password has been set yet
      */
     fun readEncodedAppPassword(context: Context): String?
+
+    fun writeFingerprintEnabled(context: Context, enabled :Boolean): Boolean
+
+    fun readFingerprintEnabled(context: Context): Boolean
 
 
 }

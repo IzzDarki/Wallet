@@ -13,11 +13,23 @@
         android:entryValues="@array/preferences_theme_entry_values"/>
 
     <SwitchPreferenceCompat
-        android:key="@string/preferences_enable_authentication_key"
-        android:title="@string/authentication"
-        android:summary="@string/preferences_enable_authentication_summary"
+        android:key="@string/preferences_enable_app_password_key"
+        android:title="@string/password_authentication"
+        android:summary="@string/preferences_enable_app_password_summary"
         android:icon="@drawable/icon_lock_24dp"
         android:persistent="false" />
+
+    <SwitchPreferenceCompat
+        android:key="@string/preferences_enable_fingerprint_authentication_key"
+        android:title="@string/fingerprint_authentication"
+        android:summary="@string/preferences_enable_fingerprint_authentication_summary"
+        android:icon="@drawable/icon_fingerprint_24dp"
+        android:persistent="false" />
+
+    <Preference
+        android:key="@string/preferences_authentication_warning_key"
+        android:icon="@drawable/icon_warning_24dp"
+        android:summary="@string/disable_authentication_completely_warning"/>
 
     <PreferenceCategory
         android:title="@string/preferences_advanced_title">

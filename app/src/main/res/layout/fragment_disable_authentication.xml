@@ -7,10 +7,10 @@
 
     android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
 
-    tools:context="com.izzdarki.wallet.ui.settings.DisableAuthenticationFragment">
+    tools:context="com.izzdarki.wallet.ui.settings.DisableAppPasswordFragment">
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/explanation_text"
+        android:id="@+id/warning_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
@@ -23,7 +23,7 @@
 
         android:breakStrategy="high_quality"
         style="@style/TextAppearance.Material3.BodyLarge"
-        android:text="@string/disable_authentication_message"/>
+        android:text="@string/disable_authentication_completely_warning"/>
 
 
     <com.google.android.material.textfield.TextInputLayout
@@ -34,7 +34,7 @@
 
         android:layout_marginBottom="8dp"
 
-        app:layout_constraintTop_toBottomOf="@id/explanation_text"
+        app:layout_constraintTop_toBottomOf="@id/warning_text"
         app:layout_constraintBottom_toTopOf="@+id/disable_authentication_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -68,7 +68,7 @@
         app:layout_constraintEnd_toEndOf="parent"
 
         style="@style/Widget.Material3.Button.IconButton.Filled"
-        android:text="@string/disable_authentication"/>
+        android:text="@string/disable_app_password"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/hint_change_password_text"
@@ -82,7 +82,7 @@
         app:layout_constraintEnd_toEndOf="parent"
 
         android:breakStrategy="high_quality"
-        android:text="@string/hint_change_password_on_disable_authentication_fragment"
+        android:text="@string/hint_change_password_on_disable_app_password_fragment"
         style="@style/TextAppearance.Material3.BodyMedium"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

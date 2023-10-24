@@ -16,7 +16,7 @@ import izzdarki.wallet.R
 import izzdarki.wallet.databinding.FragmentSetupAuthenticationBinding
 
 
-class SetupAuthenticationFragment : Fragment() {
+class SetupAppPasswordFragment : Fragment() {
 
     private lateinit var binding: FragmentSetupAuthenticationBinding
     private val navController get() = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main)
@@ -34,7 +34,7 @@ class SetupAuthenticationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Set explanation text
-        val explanationText = getString(R.string.authentication_full_explanation) +
+        val explanationText = getString(R.string.setup_app_password_message) +
                 " " + getString(R.string.forget_app_password_text)
         binding.explanationText.text = explanationText
 

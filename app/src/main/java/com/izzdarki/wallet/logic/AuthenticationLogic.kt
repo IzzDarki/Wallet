@@ -59,12 +59,12 @@ fun removeLastAuthenticationTime(context: Context) {
 }
 
 fun isAuthenticationEnabled(context: Context): Boolean {
-    return authenticationStorage.readEncodedAppPassword(context) != null
+    return isAppPasswordEnabled(context) || isFingerprintEnabled(context)
 }
 
 fun disableAuthentication(context: Context): Boolean {
     removeLastAuthenticationTime(context) // sets to 0
-    return authenticationStorage.removeEncodedAppPasswort(context)
+    return authenticationStorage.removeEncodedAppPassword(context)
 }
 
 /**
@@ -75,6 +75,19 @@ fun disableAuthentication(context: Context): Boolean {
 fun setNewAppPassword(context: Context, password: String): Boolean {
     return authenticationStorage.writeEncodedAppPassword(context, encodePassword(password))
 }
+
+fun isAppPasswordEnabled(context: Context): Boolean {
+    return authenticationStorage.readEncodedAppPassword(context) != null
+}
+
+fun setFingerprintEnabled(context: Context, enabled: Boolean): Boolean {
+    return authenticationStorage.writeFingerprintEnabled(context, enabled)
+}
+
+fun isFingerprintEnabled(context: Context): Boolean {
+    return authenticationStorage.readFingerprintEnabled(context)
+}
+
 
 /**
  * Get the encoded password (uses a random salt).

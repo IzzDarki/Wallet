@@ -9,13 +9,14 @@ import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.navigation.Navigation
 import com.izzdarki.wallet.logic.disableAuthentication
+import com.izzdarki.wallet.logic.isFingerprintEnabled
 import com.izzdarki.wallet.logic.isPasswordCorrect
 import com.izzdarki.wallet.storage.authenticationStorage
 import izzdarki.wallet.R
 import izzdarki.wallet.databinding.FragmentDisableAuthenticationBinding
 
 
-class DisableAuthenticationFragment : Fragment() {
+class DisableAppPasswordFragment : Fragment() {
 
     lateinit var binding: FragmentDisableAuthenticationBinding
     private val navController get() = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main)
@@ -30,6 +31,10 @@ class DisableAuthenticationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Warning text
+        if (isFingerprintEnabled(requireContext()))
+            binding.warningText.visibility = View.GONE // Only show if fingerprint is also disabled
 
         // App password input
         // Prevent error icon from overlapping with password visibility toggle
@@ -53,11 +58,11 @@ class DisableAuthenticationFragment : Fragment() {
 
             val success = disableAuthentication(requireContext())
             if (success) {
-                Toast.makeText(requireContext(), R.string.authentication_disabled_successfully, Toast.LENGTH_SHORT).show() // Show success toast
+                Toast.makeText(requireContext(), R.string.app_password_disabled_successfully, Toast.LENGTH_SHORT).show() // Show success toast
                 navController.popBackStack() // Close fragment
 
             } else
-                Toast.makeText(requireContext(), R.string.authentication_disabled_unknown_error, Toast.LENGTH_SHORT).show() // Show error toast
+                Toast.makeText(requireContext(), R.string.app_password_disabled_unknown_error, Toast.LENGTH_SHORT).show() // Show error toast
         }
     }
 

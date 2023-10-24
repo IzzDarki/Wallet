@@ -8,7 +8,7 @@
 
     android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
 
-    tools:context="com.izzdarki.wallet.ui.settings.SetupAuthenticationFragment">
+    tools:context="com.izzdarki.wallet.ui.settings.SetupAppPasswordFragment">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/explanation_text"
@@ -25,7 +25,7 @@
         android:breakStrategy="high_quality"
         style="@style/TextAppearance.Material3.BodyLarge"
 
-        tools:text="@string/authentication_full_explanation"/>
+        tools:text="@string/preferences_enable_app_password_summary"/>
 
 
     <com.google.android.material.textfield.TextInputLayout
