@@ -86,14 +86,14 @@
 
     <fragment
         android:id="@+id/nav_setup_authentication"
-        android:name="com.izzdarki.wallet.ui.settings.SetupAuthenticationFragment"
-        android:label="@string/setup_authentication">
+        android:name="com.izzdarki.wallet.ui.settings.SetupAppPasswordFragment"
+        android:label="@string/setup_app_password">
     </fragment>
 
     <fragment
         android:id="@+id/nav_disable_authentication"
-        android:name="com.izzdarki.wallet.ui.settings.DisableAuthenticationFragment"
-        android:label="@string/disable_authentication">
+        android:name="com.izzdarki.wallet.ui.settings.DisableAppPasswordFragment"
+        android:label="@string/disable_app_password">
     </fragment>
 
 </navigation>

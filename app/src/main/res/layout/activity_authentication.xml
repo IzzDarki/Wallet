@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:text="@string/enter_your_app_password"
+        tools:text="@string/enter_your_app_password"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
 

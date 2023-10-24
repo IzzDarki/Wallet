@@ -17,12 +17,20 @@ object AuthenticationPreferences : AuthenticationStorageInterface {
         return getPreferences(context).edit().putString(ENCODED_AUTHENTICATION_PASSWORD, encodedPassword).commit()
     }
 
-    override fun removeEncodedAppPasswort(context: Context): Boolean {
+    override fun removeEncodedAppPassword(context: Context): Boolean {
         return getPreferences(context).edit().remove(ENCODED_AUTHENTICATION_PASSWORD).commit()
     }
 
     override fun readEncodedAppPassword(context: Context): String? {
         return getPreferences(context).getString(ENCODED_AUTHENTICATION_PASSWORD, null)
+    }
+
+    override fun writeFingerprintEnabled(context: Context, enabled: Boolean): Boolean {
+        return  getPreferences(context).edit().putBoolean(USE_FINGERPRINT_AUTH, enabled).commit()
+    }
+
+    override fun readFingerprintEnabled(context: Context): Boolean {
+        return  getPreferences(context).getBoolean(USE_FINGERPRINT_AUTH, false)
     }
 
     @Synchronized private fun getPreferences(context: Context): SharedPreferences {
@@ -39,4 +47,5 @@ object AuthenticationPreferences : AuthenticationStorageInterface {
     private const val AUTHENTICATION_PREFERENCES_NAME = "authentication_preferences"
     private const val LAST_AUTHENTICATION_TIME_KEY = "last_authentication_time"
     private const val ENCODED_AUTHENTICATION_PASSWORD = "authentication_password_hash"
+    private const val USE_FINGERPRINT_AUTH = "authentication_finger_print"
 }

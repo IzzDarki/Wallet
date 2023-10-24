@@ -31,8 +31,10 @@
         <item>@string/preferences_theme_entries_light</item>
     </string-array>
 
-    <string name="preferences_enable_authentication_key" translatable="false">preferences.enable_authentication_key</string>
-    <string name="preferences_enable_authentication_summary">Setup an app password to use when opening the app</string>
+    <string name="preferences_enable_app_password_key" translatable="false">preferences.enable_authentication_key</string>
+    <string name="preferences_enable_fingerprint_authentication_key" translatable="false">preferences.enable_fingerprint_authentication_key</string>
+    <string name="preferences_enable_app_password_summary">Use an app password to open the app</string>
+    <string name="preferences_authentication_warning_key" translatable="false">preferences.authentication_warning</string>
 
     <string name="preferences_advanced_title">Advanced</string>
 
@@ -258,8 +260,8 @@
     <string name="enter_your_app_password">Enter your app password</string>
     <string name="forget_app_password_text">If you forget your app password, there is no way to reset it. You cannot access your data without it.</string> <!-- used in multiple places -->
     <string name="app_password_is_incorrect">App password is incorrect</string>
-    <string name="authentication">Authentication</string>
-    <string name="authentication_full_explanation">Authentication ensures that this app can only be used by you. To achieve this, you will need to enter an app password when opening the application.</string>
+    <string name="authenticate_using_fingerprint">Authenticate using fingerprint</string>
+    <string name="password_authentication">Password authentication</string>
     <string name="new_app_password">New app password</string>
     <string name="new_app_password_repeat">Repeat new app password</string>
     <string name="set_app_password">Set app password</string>
@@ -268,12 +270,13 @@
     <string name="set_app_password_message">Make sure that your app password is secure and that you can remember it. Write it down in a safe place.</string>
     <string name="app_password_set_successfully">App password set successfully</string>
     <string name="app_password_set_unknown_error">Unknown error while setting app password. Your app password did not change.</string>
-    <string name="authentication_disabled_successfully">Authentication disabled successfully</string>
-    <string name="authentication_disabled_unknown_error">Unknown error while disabling authentication. Authentication was not disabled.</string>
-    <string name="setup_authentication">Setup authentication</string>
-    <string name="disable_authentication">Disable authentication</string>
-    <string name="disable_authentication_message">If you disable authentication, anyone who has access to your device will be able to see your data. Consider using an app locker instead.</string>
-    <string name="hint_change_password_on_disable_authentication_fragment">Hint: If you want to change your app password, first disable authentication and then set it up with your new password.</string>
+    <string name="app_password_disabled_successfully">App password disabled successfully</string>
+    <string name="app_password_disabled_unknown_error">Unknown error while disabling app password. App password was not disabled.</string>
+    <string name="setup_app_password">Setup app password</string>
+    <string name="disable_app_password">Disable app password</string>
+    <string name="disable_authentication_completely">Disable authentication completely</string>
+    <string name="disable_authentication_completely_warning">If both the app password and fingerprint authentication are disabled, anyone who has access to your device will be able to see your data. At least one of both methods should be enabled.</string>
+    <string name="hint_change_password_on_disable_app_password_fragment">Hint: If you want to change your app password, first disable the app password and then set it up with your new password.</string>
     <string name="wallet_autofill_service">Wallet Autofill Service</string>
     <string name="card">Card</string>
     <string name="image_file_got_lost">An image file got lost.</string>
@@ -287,4 +290,16 @@
     <string name="the_image_will_be_removed_when_you_save_the_entry">The image will be removed if you save the entry.</string>
     <string name="updated_to_x">Updated to %s</string>
     <string name="x_for_y">%s for %s</string>
+    <string name="preferences_enable_fingerprint_authentication_summary">Use your fingerprint to open the app</string>
+    <string name="fingerprint_authentication">Fingerprint authentication</string>
+    <string name="no_finger_print_enrolled_first_setup_device_finger_print">No fingerprint enrolled</string>
+    <string name="no_biometric_hardware_available">No biometric hardware available</string>
+    <string name="biometric_hardware_is_unavailable">Biometric hardware is unavailable</string>
+    <string name="biometrics_unavailable_for_unknown_reasons">Biometric hardware is not available for unknown reasons</string>
+    <string name="touch_the_sensor_to_authenticate">Touch the sensor to authenticate</string>
+    <string name="fingerprint_authentication_failed">Fingerprint authentication failed</string>
+    <string name="fingerprint_needed_to_change_the_setting">Touch the sensor to change the setting</string>
+    <string name="fingerprint_needed_to_open_the_app">Touch the sensor to open the app</string>
+    <string name="authenticate_using_fingerprint_and_app_password">Authenticate using fingerprint and app password</string>
+    <string name="setup_app_password_message">Setup an app password that you will need to enter when opening the app.</string>
 </resources>

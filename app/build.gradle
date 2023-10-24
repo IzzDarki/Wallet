@@ -50,7 +50,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.preference:preference-ktx:1.2.1'
     implementation 'androidx.activity:activity-ktx:1.8.0'
-    implementation 'androidx.security:security-crypto:1.1.0-alpha06'
+    implementation 'androidx.security:security-crypto-ktx:1.1.0-alpha06'
     implementation 'androidx.fragment:fragment-ktx:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation "androidx.viewpager2:viewpager2:1.0.0"
@@ -61,6 +61,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.7.4'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.2'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2'
+    implementation 'androidx.biometric:biometric-ktx:1.2.0-alpha05' // for fingerprint
 
     implementation 'com.google.android.material:material:1.10.0'
 
@@ -71,6 +72,7 @@ dependencies {
     // TODO replace these dependencies (from jcenter)
     implementation 'me.dm7.barcodescanner:zxing:1.9.13' // TODO maybe replace with https://github.com/journeyapps/zxing-android-embedded, why?
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
+
 
     // Test dependencies
     testImplementation 'junit:junit:4.13.2'
