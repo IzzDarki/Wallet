@@ -571,41 +571,6 @@ object Utility {
         restartInput(editText)
     }
 
-    open class Timer internal constructor(protected var name: String) {
-        private var startMillis: Long = -1
-
-        companion object {
-            protected var count = 0
-        }
-
-        init {
-            if (BuildConfig.DEBUG) {
-                this.name = name
-                startMillis = System.currentTimeMillis()
-                count++
-            }
-        }
-
-        @JvmOverloads
-        fun end(text: String? = null) {
-            if (BuildConfig.DEBUG) {
-                val endMillis = System.currentTimeMillis()
-                Log.d(
-                    "timing",
-                    indentation + name + ": " + (endMillis - startMillis).toInt() + "ms" + if (text != null && text != "") " ($text)" else ""
-                )
-                count--
-            }
-        }
-
-        private val indentation: String
-            get() {
-                val indentation = StringBuilder()
-                for (i in 0 until count) indentation.append("\t")
-                return indentation.toString()
-            }
-    }
-
     /**
      * Array class, that can be saved and extracted from preferences
      * @param T type of the elements
