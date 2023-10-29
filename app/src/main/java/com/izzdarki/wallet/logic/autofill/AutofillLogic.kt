@@ -54,7 +54,7 @@ fun findDataSourcesForRequest(allCredentials: List<Credential>, webDomain: Strin
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun valueGivenAutofillHints(dataSource: DataSource, autofillHints: Array<String>): CredentialField? {
+fun valueGivenAutofillHints(dataSource: DataSource, autofillHints: Collection<String>): CredentialField? {
     // Go through all hints individually
     return autofillHints.map { hint ->
         when {

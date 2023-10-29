@@ -184,4 +184,5 @@
     <string name="fingerprint_needed_to_open_the_app">Berühre den Sensor um die App zu öffnen</string>
     <string name="authenticate_using_fingerprint_and_app_password">Authentifizierung per Fingerabdruck und App-Passwort</string>
     <string name="setup_app_password_message">Lege ein App-Passwort fest, das beim Öffnen der App abgefragt wird.</string>
+    <string name="authenticate_to_use_x_autofill">Authentifizieren für %s Autofill</string>
 </resources>

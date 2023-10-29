@@ -16,7 +16,7 @@ import izzdarki.wallet.R
 import izzdarki.wallet.databinding.ActivityAuthenticationBinding
 
 
-class AuthenticationActivity : AppCompatActivity() {
+sealed class AuthenticationActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_DETAILED_AUTHENTICATION_MESSAGE = "authentication_message"
@@ -30,7 +30,6 @@ class AuthenticationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        fingerprintAuthenticationHelper = FingerprintAuthenticationHelper(this)
 
         // directly finish if authentication is not enabled, activity shouldn't have been started in that case
         if (!isAuthenticationEnabled(this)) {
@@ -38,6 +37,7 @@ class AuthenticationActivity : AppCompatActivity() {
             return
         }
 
+        fingerprintAuthenticationHelper = FingerprintAuthenticationHelper(this)
         binding = ActivityAuthenticationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -109,6 +109,10 @@ class AuthenticationActivity : AppCompatActivity() {
             binding.authenticationPasswordInput.requestFocus() // focus password input on activity resume
     }
 
+    protected open fun onSuccessfulAuthentication() {
+        // can be overridden to do something else
+    }
+
     private fun promptFingerprint() {
         fingerprintAuthenticationHelper.doAuthentication(
             activity = this,
@@ -122,6 +126,7 @@ class AuthenticationActivity : AppCompatActivity() {
     private fun finishIfAuthenticated() {
         if (fingerprintDone && appPasswordDone) {
             updateAuthenticationTime(this)
+            onSuccessfulAuthentication()
             finish()
         } else if (fingerprintDone) { // fingerprint done but app password still missing
             binding.authenticationPasswordLayout.requestFocus() // app password is next, focus it

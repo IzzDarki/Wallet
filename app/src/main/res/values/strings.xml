@@ -302,4 +302,5 @@
     <string name="fingerprint_needed_to_open_the_app">Touch the sensor to open the app</string>
     <string name="authenticate_using_fingerprint_and_app_password">Authenticate using fingerprint and app password</string>
     <string name="setup_app_password_message">Setup an app password that you will need to enter when opening the app.</string>
+    <string name="authenticate_to_use_x_autofill">Authenticate to use %s Autofill</string>
 </resources>
