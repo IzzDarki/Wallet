@@ -21,6 +21,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
 
+        app:drawableStartCompat="@drawable/icon_warning_24dp"
+        android:drawablePadding="8dp"
+
         android:breakStrategy="high_quality"
         style="@style/TextAppearance.Material3.BodyLarge"
         android:text="@string/disable_authentication_completely_warning"/>
