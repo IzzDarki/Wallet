@@ -69,21 +69,18 @@ sealed class AuthenticationActivity : AppCompatActivity() {
 
         // Authenticate button
         binding.authenticationButton.setOnClickListener {
-            if (!fingerprintDone && isFingerprintEnabled(this)) { // Fingerprint authentication
-                promptFingerprint()
-            }
-            if (isAppPasswordEnabled(this)) { // App password authentication
-                val enteredPassword = binding.authenticationPasswordInput.text.toString()
-                val storedEncodedPassword = authenticationStorage.readEncodedAppPassword(this)!!
-                if (isPasswordCorrect(storedEncodedPassword, enteredPassword)) {
-                    binding.authenticationPasswordLayout.error = null
-                    appPasswordDone = true
-                    finishIfAuthenticated()
-                } else {
-                    binding.authenticationPasswordLayout.error = getString(R.string.app_password_is_incorrect)
-                }
-            }
+            authenticate()
         }
+
+        // IME action also triggers authentication
+//        binding.authenticationPasswordInput.setOnEditorActionListener { _, actionId: Int, _ ->
+//            if (actionId == EditorInfo.IME_ACTION_DONE) {
+//                authenticate()
+//                true
+//            } else {
+//                false
+//            }
+//        }
 
         // Editing listener
         binding.authenticationPasswordInput.doOnTextChanged { _, _, _, _ ->
@@ -111,6 +108,23 @@ sealed class AuthenticationActivity : AppCompatActivity() {
 
     protected open fun onSuccessfulAuthentication() {
         // can be overridden to do something else
+    }
+
+    private fun authenticate() {
+        if (!fingerprintDone && isFingerprintEnabled(this)) { // Fingerprint authentication
+            promptFingerprint()
+        }
+        if (isAppPasswordEnabled(this)) { // App password authentication
+            val enteredPassword = binding.authenticationPasswordInput.text.toString()
+            val storedEncodedPassword = authenticationStorage.readEncodedAppPassword(this)!!
+            if (isPasswordCorrect(storedEncodedPassword, enteredPassword)) {
+                binding.authenticationPasswordLayout.error = null
+                appPasswordDone = true
+                finishIfAuthenticated()
+            } else {
+                binding.authenticationPasswordLayout.error = getString(R.string.app_password_is_incorrect)
+            }
+        }
     }
 
     private fun promptFingerprint() {
