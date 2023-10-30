@@ -2,6 +2,7 @@ package com.izzdarki.wallet.ui.authentication
 
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import com.izzdarki.wallet.logic.isAppPasswordEnabled
@@ -16,7 +17,7 @@ import izzdarki.wallet.R
 import izzdarki.wallet.databinding.ActivityAuthenticationBinding
 
 
-sealed class AuthenticationActivity : AppCompatActivity() {
+open class AuthenticationActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_DETAILED_AUTHENTICATION_MESSAGE = "authentication_message"
@@ -73,14 +74,14 @@ sealed class AuthenticationActivity : AppCompatActivity() {
         }
 
         // IME action also triggers authentication
-//        binding.authenticationPasswordInput.setOnEditorActionListener { _, actionId: Int, _ ->
-//            if (actionId == EditorInfo.IME_ACTION_DONE) {
-//                authenticate()
-//                true
-//            } else {
-//                false
-//            }
-//        }
+        binding.authenticationPasswordInput.setOnEditorActionListener { _, actionId: Int, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                authenticate()
+                true
+            } else {
+                false
+            }
+        }
 
         // Editing listener
         binding.authenticationPasswordInput.doOnTextChanged { _, _, _, _ ->
