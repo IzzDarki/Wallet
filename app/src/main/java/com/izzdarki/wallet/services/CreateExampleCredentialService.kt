@@ -1,14 +1,9 @@
 package com.izzdarki.wallet.services
 
-import com.izzdarki.wallet.storage.CardStorage.readFrontImagePath
-import com.izzdarki.wallet.storage.CardStorage.deleteFrontImage
-import com.izzdarki.wallet.storage.CardStorage.readBackImagePath
-import com.izzdarki.wallet.storage.CardStorage.deleteBackImage
 import com.izzdarki.wallet.utils.Utility.scaleBitmapToFile
 import com.izzdarki.wallet.utils.Utility.getScaleForMaxSize
 import android.content.Intent
 import izzdarki.wallet.R
-import com.izzdarki.wallet.storage.CardStorage
 import androidx.annotation.ColorInt
 import android.app.Activity
 import android.content.Context
@@ -31,17 +26,13 @@ import java.util.*
  */
 class CreateExampleCredentialService : JobIntentService() {
     override fun onHandleWork(intent: Intent) {
-        val id = 0
+        val id = generateNewId(CredentialPreferenceStorage.readAllIds(this))
         val cardName = getString(R.string.example_card_name)
         val barcode = getString(R.string.example_barcode)
-        val barcodeType = CardStorage.CARD_CODE_TYPE_QR
+        val barcodeType = Barcode.TYPE_QR
         val barcodeShowText = false
         @ColorInt val cardColor = getColor(R.color.example_card_color)
         val cardIDValue = getString(R.string.example_card_card_id)
-
-        // delete old images if present
-        if (readFrontImagePath(this, id) != null) deleteFrontImage(this, id)
-        if (readBackImagePath(this, id) != null) deleteBackImage(this, id)
 
         // card images from res/raw
         val frontImageStream = resources.openRawResource(R.raw.example_card_front_image)

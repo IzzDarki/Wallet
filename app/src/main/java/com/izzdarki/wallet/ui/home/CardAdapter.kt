@@ -39,7 +39,7 @@ class CardAdapter(
             }
         }
 
-        private fun showCard(cardID: Int) {
+        private fun showCard(cardID: Long) {
             val intent = Intent(cardView.context, ShowCredentialActivity::class.java)
             intent.putExtra(CredentialActivity.EXTRA_CREDENTIAL_ID, cardID)
             cardView.context.startActivity(intent)
@@ -49,7 +49,7 @@ class CardAdapter(
         override val itemDetails: ItemDetailsLookup.ItemDetails<Long>
             get() = object : ItemDetailsLookup.ItemDetails<Long>() {
                 override fun getPosition(): Int = adapterPosition
-                override fun getSelectionKey(): Long = cards[adapterPosition].id.toLong()
+                override fun getSelectionKey(): Long = cards[adapterPosition].id
             }
 
     }
@@ -91,7 +91,7 @@ class CardAdapter(
         else
             holder.textView.setTextColor(context.getColor(R.color.on_light_text_color))
 
-        if (selectionTracker.isSelected(cards[pos].id.toLong()))
+        if (selectionTracker.isSelected(cards[pos].id))
             AppUtility.makeCardViewSelected(holder.cardView)  // if not selected, outline has already been drawn (or not, if it has no outline)
     }
 

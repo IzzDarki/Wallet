@@ -28,7 +28,6 @@ import com.izzdarki.wallet.ui.credentials.EditCredentialActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.izzdarki.wallet.data.Credential
 import com.izzdarki.wallet.data.CredentialStableIDKeyProvider
-import com.izzdarki.wallet.logic.updates.removeOldPreferences
 import com.izzdarki.wallet.ui.credentials.CredentialActivity
 import com.izzdarki.wallet.storage.AppPreferenceManager
 import com.izzdarki.wallet.storage.AppPreferenceManager.SortingType
@@ -194,13 +193,13 @@ class HomeCredentialsFragment
         return cards != oldCards
     }
 
-    private fun editCard(id: Int) {
+    private fun editCard(id: Long) {
         val intent = Intent(requireContext(), EditCredentialActivity::class.java)
         intent.putExtra(CredentialActivity.EXTRA_CREDENTIAL_ID, id)
         startActivity(intent)
     }
 
-    private fun deleteSingleCard(id: Int) {
+    private fun deleteSingleCard(id: Long) {
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.delete_entry)
             .setMessage(R.string.delete_entry_dialog_message)
@@ -215,7 +214,7 @@ class HomeCredentialsFragment
             .show()
     }
 
-    private fun deleteMultipleCards(ids: List<Int>) {
+    private fun deleteMultipleCards(ids: List<Long>) {
         AlertDialog.Builder(requireContext())
             .setTitle(getString(R.string.delete_x_entries).format(ids.size))
             .setMessage(R.string.delete_x_entries_dialog_message)
@@ -291,13 +290,13 @@ class HomeCredentialsFragment
                 sortCards(AppPreferenceManager.getCredentialsSortingType(requireContext())) // sort again
             }
             R.id.home_action_bar_edit_selected_item -> {
-                editCard(id = selectionTracker.selection.first().toInt())
+                editCard(id = selectionTracker.selection.first())
             }
             R.id.home_action_bar_delete_selected_item -> {
                 if (selectionTracker.selection.size() == 1)
-                    deleteSingleCard(selectionTracker.selection.first().toInt())
+                    deleteSingleCard(selectionTracker.selection.first())
                 else
-                    deleteMultipleCards(selectionTracker.selection.map { it.toInt() })
+                    deleteMultipleCards(selectionTracker.selection.toList())
             }
             else -> return super.onOptionsItemSelected(item)
         }
@@ -321,14 +320,14 @@ class HomeCredentialsFragment
         return GridLayoutManager(requireContext(), spanCount)
     }
 
-    private fun deleteCardDirectly(id: Int) {
+    private fun deleteCardDirectly(id: Long) {
         val index = cards.indexOfFirst { it.id == id }
         if (index == -1) // card not found
             return
 
         CredentialActivity.deleteCredentialWithImages(requireContext(), cards[index])
 
-        selectionTracker.deselect(id.toLong())
+        selectionTracker.deselect(id)
         cards.removeAt(index)
         cardGridRecyclerView.adapter?.notifyItemRemoved(index)
 

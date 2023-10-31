@@ -11,7 +11,7 @@ import kotlin.random.Random
 
 object CredentialPreferenceStorage : CredentialReadStorage, CredentialWriteStorage {
 
-    override fun readCredential(context: Context, id: Int): Credential? {
+    override fun readCredential(context: Context, id: Long): Credential? {
         return getPreferences(context).getString("$CREDENTIAL_KEY$id", null)?.let { credentialString ->
             credentialFromString(credentialString, id)
         }
@@ -30,7 +30,7 @@ object CredentialPreferenceStorage : CredentialReadStorage, CredentialWriteStora
     }
 
     @Synchronized
-    override fun removeCredential(context: Context, id: Int): Boolean? {
+    override fun removeCredential(context: Context, id: Long): Boolean? {
         val success = getPreferences(context).edit()
             .putString(ALL_IDS_KEY, (readAllIds(context) - setOf(id)).joinToString(","))
             .commit() // Make sure that ids are updated synchronously
@@ -43,18 +43,18 @@ object CredentialPreferenceStorage : CredentialReadStorage, CredentialWriteStora
         return null // Asynchronous write does not know success
     }
 
-    override fun readAllIds(context: Context): List<Int> {
+    override fun readAllIds(context: Context): List<Long> {
         return getPreferences(context)
             .getString(ALL_IDS_KEY, null)
             ?.split(",")
             ?.filter { it.isNotEmpty() }
-            ?.mapNotNull { it.toIntOrNull() } // null should never occur
+            ?.mapNotNull { it.toLongOrNull() } // null should never occur
             ?: emptyList()
     }
 
 
-    private fun addToAllIds(context: Context, id: Int): Boolean {
-        val newIds: Set<Int> = readAllIds(context).toSet() + id
+    private fun addToAllIds(context: Context, id: Long): Boolean {
+        val newIds: Set<Long> = readAllIds(context).toSet() + id
         return getPreferences(context).edit()
             .putString(ALL_IDS_KEY, newIds.joinToString(","))
             .commit()
@@ -77,7 +77,7 @@ object CredentialPreferenceStorage : CredentialReadStorage, CredentialWriteStora
                 "${separator}1" + credential.imagePaths.joinToString("${separator}2")
     }
 
-    internal fun credentialFromString(credentialString: String, id: Int): Credential {
+    internal fun credentialFromString(credentialString: String, id: Long): Credential {
         val separator = credentialString[0]
         val credentialComponents = credentialString.substring(startIndex = 1).split("${separator}1")
         return Credential(

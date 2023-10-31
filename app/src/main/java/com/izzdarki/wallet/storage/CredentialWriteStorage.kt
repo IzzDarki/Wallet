@@ -20,6 +20,6 @@ sealed interface CredentialWriteStorage {
      * @return `true` on success, `false` on failure,
      *  `null` when success is not checked e. g. on asynchronous writes
      */
-    fun removeCredential(context: Context, id: Int): Boolean?
+    fun removeCredential(context: Context, id: Long): Boolean?
 
 }

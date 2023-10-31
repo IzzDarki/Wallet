@@ -50,8 +50,8 @@ open class CredentialActivity : AuthenticatedAppCompatActivity() {
     }
 
     protected open fun initCredentialFromStorage() {
-        val id = intent.getIntExtra(EXTRA_CREDENTIAL_ID, -1)
-        if (id == -1) { // Start intent without id
+        val id = intent.getLongExtra(EXTRA_CREDENTIAL_ID, -1)
+        if (id == -1L) { // Start intent without id
             finish()
             return
         }

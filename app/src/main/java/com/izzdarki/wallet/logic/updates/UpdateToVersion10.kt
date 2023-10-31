@@ -42,8 +42,8 @@ fun updateToCredentialPreferences(context: Context) {
     val credentials = cards + passwords
 
     // Write all credentials
-    val usedNewIds = mutableListOf<Int>()
-    val idMap = mutableMapOf<Int, Int>()
+    val usedNewIds = mutableListOf<Long>()
+    val idMap = mutableMapOf<Long, Long>()
     for (credential in credentials) {
         // Pick new id
         val newID = generateNewId(usedNewIds)
@@ -54,9 +54,9 @@ fun updateToCredentialPreferences(context: Context) {
 
     // Move custom sorting orders combined to AppPreferenceManager
     val cardsCustomSortingOrder = CardStorage.readCustomSortingNoGrouping(context)
-        .mapNotNull { id -> idMap[id] }
+        .mapNotNull { id -> idMap[id.toLong()] }
     val passwordsCustomSortingOrder = PasswordStorage.readCustomSortingNoGrouping(context)
-        .mapNotNull { id -> idMap[id] }
+        .mapNotNull { id -> idMap[id.toLong()] }
     val combinedSortingOrder = (cardsCustomSortingOrder + passwordsCustomSortingOrder).distinct()
     AppPreferenceManager.setCredentialsCustomSortingOrder(context, combinedSortingOrder)
 }
@@ -85,7 +85,7 @@ private fun readAllCards(context: Context): List<Credential> {
     return CardStorage.readAllIDs(context)
         .map { id ->
             Credential(
-                id,
+                id.toLong(),
                 name = CardStorage.readName(context, id),
                 color = CardStorage.readColor(context, id),
                 creationDate = CardStorage.readCreationDate(context, id),
@@ -106,7 +106,7 @@ private fun readAllPasswords(context: Context): List<Credential> {
     return PasswordStorage.readAllIDs(context)
         .map { id ->
             Credential(
-                id,
+                id.toLong(),
                 name = PasswordStorage.readName(context, id),
                 color = PasswordStorage.readColor(context, id),
                 creationDate = PasswordStorage.readCreationDate(context, id),

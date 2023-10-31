@@ -13,7 +13,7 @@ object AppPreferenceManager {
 
     private const val PREFERENCE_SORTING_TYPE_KEY = "cards.sorting_type" // Int
     private const val PREFERENCE_SORT_REVERSE_KEY = "cards.sort_reverse" // Boolean
-    private const val PREFERENCE_CUSTOM_SORTING_ORDER_KEY = "custom_sorting_order" // List<Int>
+    private const val PREFERENCE_CUSTOM_SORTING_ORDER_KEY = "custom_sorting_order" // List<Long>
 
     enum class SortingType {
         ByName,
@@ -33,12 +33,12 @@ object AppPreferenceManager {
     }
 
     @JvmStatic
-    fun getCredentialsCustomSortingOrder(context: Context): List<Int> {
+    fun getCredentialsCustomSortingOrder(context: Context): List<Long> {
         return PreferenceManager.getDefaultSharedPreferences(context)
             .getString(PREFERENCE_CUSTOM_SORTING_ORDER_KEY, "")!!
             .split(",")
             .filter { it.isNotEmpty() }
-            .mapNotNull { it.toIntOrNull() }
+            .mapNotNull { it.toLongOrNull() }
     }
 
 
@@ -55,7 +55,7 @@ object AppPreferenceManager {
     }
 
     @JvmStatic
-    fun setCredentialsCustomSortingOrder(context: Context, customSortingOrder: List<Int>) {
+    fun setCredentialsCustomSortingOrder(context: Context, customSortingOrder: List<Long>) {
         PreferenceManager.getDefaultSharedPreferences(context).edit()
             .putString(PREFERENCE_CUSTOM_SORTING_ORDER_KEY, customSortingOrder.joinToString(","))
             .apply()

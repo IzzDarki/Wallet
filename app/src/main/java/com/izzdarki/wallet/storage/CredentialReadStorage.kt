@@ -9,14 +9,14 @@ sealed interface CredentialReadStorage {
     /**
      * Read all credential ids from storage.
      */
-    fun readAllIds(context: Context): List<Int>
+    fun readAllIds(context: Context): List<Long>
 
 
     /**
      * Read credential with given `id` from storage.
      * @return `null` if such a credential could not be found in the storage
      */
-    fun readCredential(context: Context, id: Int): Credential?
+    fun readCredential(context: Context, id: Long): Credential?
 
     fun readAllCredentials(context: Context): List<Credential> {
         return readAllIds(context).mapNotNull { readCredential(context, it) }

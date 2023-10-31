@@ -5,7 +5,7 @@ import java.io.File
 import java.util.Date
 
 data class Credential(
-    var id: Int,
+    var id: Long,
     var name: String,
     var color: Int,
     var creationDate: Date,
@@ -23,6 +23,6 @@ data class Credential(
  */
 class CredentialStableIDKeyProvider(private val list: List<Credential>) : ItemKeyProvider<Long>(SCOPE_MAPPED)
 {
-    override fun getKey(position: Int): Long = list[position].id.toLong()
-    override fun getPosition(key: Long): Int = list.indexOfFirst { it.id.toLong() == key }
+    override fun getKey(position: Int): Long = list[position].id
+    override fun getPosition(key: Long): Int = list.indexOfFirst { it.id == key }
 }

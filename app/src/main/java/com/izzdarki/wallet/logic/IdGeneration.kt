@@ -2,14 +2,14 @@ package com.izzdarki.wallet.logic
 
 import kotlin.random.Random
 
-fun generateNewId(usedIds: Collection<Int>): Int {
+fun generateNewId(usedIds: Collection<Long>): Long {
     return generateNewId { id -> id !in usedIds }
 }
 
-fun generateNewId(isIdValid: (Int) -> Boolean): Int {
-    var newId: Int
+fun generateNewId(isIdValid: (Long) -> Boolean): Long {
+    var newId: Long
     do {
-        newId = Random.nextInt()
+        newId = Random.nextLong()
     } while (!isIdValid(newId))
     return newId
 }
