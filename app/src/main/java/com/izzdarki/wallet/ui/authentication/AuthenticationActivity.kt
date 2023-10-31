@@ -107,6 +107,10 @@ open class AuthenticationActivity : AppCompatActivity() {
             binding.authenticationPasswordInput.requestFocus() // focus password input on activity resume
     }
 
+    /**
+     * Called when authentication was successful.
+     * Directly after this method is called, the activity will be finished.
+     */
     protected open fun onSuccessfulAuthentication() {
         // can be overridden to do something else
     }

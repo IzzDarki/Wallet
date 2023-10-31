@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.CancellationSignal
+import android.os.Parcel
+import android.os.Parcelable
 import android.service.autofill.AutofillService
 import android.service.autofill.Dataset
 import android.service.autofill.Field
@@ -21,25 +23,27 @@ import android.view.autofill.AutofillId
 import android.view.autofill.AutofillValue
 import android.widget.RemoteViews
 import androidx.annotation.RequiresApi
+import kotlinx.parcelize.Parcelize
+import com.izzdarki.wallet.data.Credential
 import com.izzdarki.wallet.data.CredentialField
-import com.izzdarki.wallet.logic.autofill.DataSource
 import com.izzdarki.wallet.logic.autofill.findDataSourcesForRequest
 import com.izzdarki.wallet.logic.autofill.valueGivenAutofillHints
 import com.izzdarki.wallet.logic.autofill.valueGivenHintAndText
 import com.izzdarki.wallet.storage.CredentialPreferenceStorage
 import com.izzdarki.wallet.ui.authentication.AutofillAuthenticationActivity
 import izzdarki.wallet.R
-import java.io.Serializable
 
 /**
  * Captures all information about a view that is eligible for autofill.
  */
+@RequiresApi(Build.VERSION_CODES.O)
+@Parcelize
 data class AutofillViewData(
     val autofillId: AutofillId,
-    val autofillHints: Collection<String>,
+    val autofillHints: List<String>,
     val hint: String?,
     val text: String?,
-) : Serializable
+) : Parcelable
 
 @RequiresApi(Build.VERSION_CODES.O)
 class WalletAutofillService : AutofillService() {
@@ -61,45 +65,29 @@ class WalletAutofillService : AutofillService() {
             packageName
         )
 
-        // Find all autofill ids that can be filled using the given data sources
+        // Extract all necessary information from the structure
         val autofillViewsData = traverseStructureToGetAutofillViewData(latestStructure)
+
+        // Find all autofill ids of views that can be filled using the given data sources
         val fillableAutofillIds = suitableDataSources.flatMap { dataSource ->
-            getAutofillValues(dataSource, autofillViewsData).map { it.first }
+            extractValuesToFillViews(dataSource, autofillViewsData).map { it.first }
             // This already determines what to fill for each view, but then only remembers the autofill id
             // The actual filling is done (again) after the user authenticated
+            // It might be not secure to send the actual values through the PendingIntent that is sent to the authentication activity
         }
-
-
 
         if (fillableAutofillIds.isEmpty()) { // No views can be filled
             fillCallback.onSuccess(null) // null means nothing can be filled
-            Log.d("autofill", "No suitable data sources found")
+            Log.d("autofill", "No suitable data sources found") // TODO remove logging
             return
         }
 
-
-        // TODO Authentication
-        //      In this scenario, the user can see nothing before authenticating (just a box saying "Authenticate to use Autofill")
-        //      Implementation: No datasets need to be generated here (but we need the autofill ids)
-        //                      The AuthenticationActivity then creates all datasets (essentially doing what is currently done here)
-
-
         // Create fill response without any data, just for the authentication
-        // Still this leaks information about what kind of data is stored to unauthenticated users, because an unauthenticated user can see what views can be filled
+        // Still, since an unauthenticated user can see what views can be auto-filled, this leaks some information about what data is stored to unauthenticated users
         val fillResponseBuilder = FillResponse.Builder()
-        addAuthenticationToFillResponse(fillResponseBuilder, autofillViewsData, fillableAutofillIds.toTypedArray())
+        addAuthenticationToFillResponse(fillResponseBuilder, suitableDataSources, autofillViewsData, fillableAutofillIds.toTypedArray())
 
         fillCallback.onSuccess(fillResponseBuilder.build())
-
-        // One dataset per data source
-//        val datasets = suitableDataSources.mapNotNull { dataSource ->
-//            // Retrieve pairs of autofill ids and corresponding values for the given structure
-//            val autofillValues = traverseStructureToGetAutofillValues(dataSource, latestStructure)
-//            createDataset(dataSource, autofillValues) // null if for all views no value could be found using this data source
-//        }
-        // Add all datasets to the response
-//        for (dataset in datasets)
-//            fillResponseBuilder.addDataset(dataset)
     }
 
     override fun onSaveRequest(saveRequest: SaveRequest, saveCallback: SaveCallback) {
@@ -110,13 +98,29 @@ class WalletAutofillService : AutofillService() {
 
         private const val AUTHENTICATION_REQUEST_CODE = 417023
 
+        // Method to be called by AutofillAuthenticationActivity after the user authenticated
+        fun Context.createFillResponse(dataSources: List<Credential>, autofillViewsData: List<AutofillViewData>): FillResponse? {
+            val fillResponseBuilder = FillResponse.Builder()
+            val datasets = dataSources.mapNotNull { dataSource ->
+                val valuesForAutofill = extractValuesToFillViews(dataSource, autofillViewsData)
+                createDataset(dataSource, valuesForAutofill) // null if for all views no value could be found using this data source
+            }
+
+            if (datasets.isEmpty()) // No views can be filled
+                return null // null means nothing can be filled
+
+            for (dataset in datasets)
+                fillResponseBuilder.addDataset(dataset)
+            return fillResponseBuilder.build()
+        }
+
         /**
          * Creates a [Dataset] containing all the given `autofillValues`
          * @param dataSource Data source that was used to find the values
          * @param autofillValues Mapping of [AutofillId]s to the [CredentialField]s, that should be used to fill them
          */
-        fun Context.createDataset(
-            dataSource: DataSource,
+        private fun Context.createDataset(
+            dataSource: Credential,
             autofillValues: List<Pair<AutofillId, CredentialField>>
         ): Dataset? {
             if (autofillValues.isEmpty())
@@ -170,11 +174,12 @@ class WalletAutofillService : AutofillService() {
         }
 
         /**
-         * Tries to find a value to be filled for the given [AutofillViewData]s using the given [DataSource].
-         * @return A list of [AutofillId]s and the corresponding [CredentialField]s. AutofillIds that could not be filled are not included.
+         * Tries to find values to be filled for the given [AutofillViewData]s using the given [Credential].
+         * @return A list of [AutofillId]s and the corresponding [CredentialField]s.
+         *  Only includes [AutofillId]s of views that can be filled.
          */
-        private fun getAutofillValues(
-            dataSource: DataSource,
+        private fun extractValuesToFillViews(
+            dataSource: Credential,
             viewsData: List<AutofillViewData>
         ): List<Pair<AutofillId, CredentialField>> {
             return viewsData.mapNotNull { autofillValueForNode(dataSource, it) }
@@ -216,14 +221,21 @@ class WalletAutofillService : AutofillService() {
 
         private fun Context.addAuthenticationToFillResponse(
             fillResponseBuilder: FillResponse.Builder,
+            dataSources: List<Credential>,
             autofillViewsData: List<AutofillViewData>,
             fillableAutofillIds: Array<AutofillId>
         ) {
             // Create intent to start authentication activity
             val authenticationIntent = Intent(this, AutofillAuthenticationActivity::class.java).apply {
                 putExtra(
+                    AutofillAuthenticationActivity.EXTRA_DATA_SOURCE_IDS,
+                    dataSources.map { it.id }.toLongArray()
+                )
+                // TODO write a test case that checks what error occurs during constructing this intent
+                //      Something with parcelable doesn't work
+                putParcelableArrayListExtra(
                     AutofillAuthenticationActivity.EXTRA_AUTOFILL_VIEW_DATA,
-                    autofillViewsData.toTypedArray() as Serializable
+                    autofillViewsData.toCollection(ArrayList())
                 )
             }
             val pendingIntent = PendingIntent.getActivity(
@@ -260,11 +272,11 @@ class WalletAutofillService : AutofillService() {
         }
 
         /**
-         * Tries to find a value for the given [AutofillViewData] using the given [DataSource].
+         * Tries to find a value for the given [AutofillViewData] using the given [Credential].
          * @return A pair of [AutofillId] and the corresponding [CredentialField], or null if no value could be found for the given node.
          */
         private fun autofillValueForNode(
-            dataSource: DataSource,
+            dataSource: Credential,
             viewData: AutofillViewData
         ): Pair<AutofillId, CredentialField>? {
             // Try to use the autofill hints to find a value
@@ -311,35 +323,35 @@ class WalletAutofillService : AutofillService() {
         }
 
         private fun Context.createInlinePresentation(
-            dataSource: DataSource,
+            dataSource: Credential,
             credentialField: CredentialField
         ): InlinePresentation? {
             return null // TODO Not needed but would be nice
         }
 
         private fun Context.createInlineTooltipPresentation(
-            dataSource: DataSource,
+            dataSource: Credential,
             credentialField: CredentialField
         ): InlinePresentation? {
             return null // TODO Not needed but would be nice
         }
 
         private fun Context.createDialogPresentation(
-            dataSource: DataSource,
+            dataSource: Credential,
             credentialField: CredentialField
         ): RemoteViews? {
             return createRemoteViewsPresentation(dataSource, credentialField) // TODO Improve
         }
 
         private fun Context.createMenuPresentation(
-            dataSource: DataSource,
+            dataSource: Credential,
             credentialField: CredentialField
         ): RemoteViews? {
             return createRemoteViewsPresentation(dataSource, credentialField) // TODO Improve
         }
 
         private fun Context.createRemoteViewsPresentation(
-            dataSource: DataSource,
+            dataSource: Credential,
             credentialField: CredentialField
         ): RemoteViews {
             val presentation = RemoteViews(packageName, android.R.layout.simple_list_item_1)

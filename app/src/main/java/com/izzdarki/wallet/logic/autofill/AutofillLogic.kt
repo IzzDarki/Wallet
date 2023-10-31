@@ -8,14 +8,6 @@ import com.izzdarki.wallet.data.Credential
 import com.izzdarki.wallet.data.CredentialField
 
 /**
- * A data source is a list of [CredentialField]s, that can be used to fill a request.
- */
-data class DataSource(
-    val name: String,
-    val data: List<CredentialField>,
-)
-
-/**
  * Finds the data sources that match the given request.
  *
  * @param webDomain The web domain of the request. Primarily used for finding a match.
@@ -23,7 +15,7 @@ data class DataSource(
  * @return A list of data sources that match the request.
  *  For example, if the user has multiple accounts for the same website, there will be multiple data sources.
  */
-fun findDataSourcesForRequest(allCredentials: List<Credential>, webDomain: String?, packageName: String): List<DataSource> {
+fun findDataSourcesForRequest(allCredentials: List<Credential>, webDomain: String?, packageName: String): List<Credential> {
 
     fun isWebDomainMatch(credential: Credential): Boolean {
         if (webDomain == null)
@@ -41,20 +33,23 @@ fun findDataSourcesForRequest(allCredentials: List<Credential>, webDomain: Strin
         return packageNameProperty?.value == packageName
     }
 
-    return allCredentials.mapNotNull { credential ->
+    return allCredentials.filter { credential ->
         // Only use package name if web domain is null (otherwise package name == browser)
-        if ((webDomain != null && isWebDomainMatch(credential)) || (webDomain == null && isPackageNameMatch(credential)))
-            DataSource(
-                name = credential.name,
-                data = credential.apply { Log.d("autofill", "Found data source $name because of ${ if(webDomain != null && isWebDomainMatch(credential)) "web domain match" else "package name match"}") }.fields // TODO Remove logging
-            )
-        else
-            null
+        ((webDomain != null && isWebDomainMatch(credential)) || (webDomain == null && isPackageNameMatch(credential)))
+            .also {
+                if (it)
+                    Log.d(
+                        "autofill",
+                        "Found data source $credential.name because of ${
+                            if (webDomain != null && isWebDomainMatch(credential)) "web domain match" else "package name match"
+                        }"
+                    )
+            } // TODO remove logging
     }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun valueGivenAutofillHints(dataSource: DataSource, autofillHints: Collection<String>): CredentialField? {
+fun valueGivenAutofillHints(dataSource: Credential, autofillHints: Collection<String>): CredentialField? {
     // Go through all hints individually
     return autofillHints.map { hint ->
         when {
@@ -66,7 +61,7 @@ fun valueGivenAutofillHints(dataSource: DataSource, autofillHints: Collection<St
     }.firstOrNull()
 }
 
-fun valueGivenHintAndText(dataSource: DataSource, hint: String?, text: String?): CredentialField? {
+fun valueGivenHintAndText(dataSource: Credential, hint: String?, text: String?): CredentialField? {
     if (hint != null && hint != "" || text != null && text != "") Log.d("autofill", "Looking for hint = $hint, text = $text")
     val hintNonNull = hint ?: "" // empty strings don't describe anything
     val textNonNull = text ?: ""
@@ -79,21 +74,21 @@ fun valueGivenHintAndText(dataSource: DataSource, hint: String?, text: String?):
     }
 }
 
-private fun valueForUsername(dataSource: DataSource): CredentialField? {
-    return dataSource.data.find { describesUsername(it.name) }
+private fun valueForUsername(dataSource: Credential): CredentialField? {
+    return dataSource.fields.find { describesUsername(it.name) }
 }
 
-private fun valueForEmail(dataSource: DataSource): CredentialField? {
+private fun valueForEmail(dataSource: Credential): CredentialField? {
     // First find some value that looks like an email, if that fails, find a field that describes an email
-    return dataSource.data.find { isEmail(it.value) } ?: dataSource.data.find { describesEmail(it.name) }
+    return dataSource.fields.find { isEmail(it.value) } ?: dataSource.fields.find { describesEmail(it.name) }
 }
 
-private fun valueForPassword(dataSource: DataSource): CredentialField? {
-    return dataSource.data.find { describesPassword(it.name) }
+private fun valueForPassword(dataSource: Credential): CredentialField? {
+    return dataSource.fields.find { describesPassword(it.name) }
 }
 
-private fun valueForGivenHint(dataSource: DataSource, hint: String): CredentialField? {
-    return dataSource.data.find {
+private fun valueForGivenHint(dataSource: Credential, hint: String): CredentialField? {
+    return dataSource.fields.find {
         it.name.withoutWhitespaceOrDashes().lowercase() == hint.withoutWhitespaceOrDashes().lowercase()
     }
 }
