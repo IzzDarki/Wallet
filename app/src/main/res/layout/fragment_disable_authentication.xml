@@ -22,7 +22,7 @@
         app:layout_constraintEnd_toEndOf="parent"
 
         app:drawableStartCompat="@drawable/icon_warning_24dp"
-        android:drawablePadding="8dp"
+        android:drawablePadding="12dp"
 
         android:breakStrategy="high_quality"
         style="@style/TextAppearance.Material3.BodyLarge"
