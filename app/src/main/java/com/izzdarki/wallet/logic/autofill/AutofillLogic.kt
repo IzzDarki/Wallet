@@ -12,8 +12,17 @@ import com.izzdarki.wallet.data.CredentialField
  *
  * @param webDomain The web domain of the request. Primarily used for finding a match.
  * @param packageName The package name of the request. Only used if `webDomain` is null.
- * @return A list of data sources that match the request.
- *  For example, if the user has multiple accounts for the same website, there will be multiple data sources.
+ * @return A list of data sources (= [Credential]) that match the request. A given data source matches the request if
+ *
+ *   Case [webDomain] != `null`:
+ *   1. A word of [Credential.name] is contained in the [webDomain] (case insensitive)
+ *      (e.g. "accounts.google.com" is matched by "Google", but also by "Google for work")
+ *   2. A field of the [Credential] matches [webDomain]
+ *      (e.g. webDomain = "accounts.google.com" is matched by "https://www.google.com/some/path")
+ *      (checks if [webDomain] ends with the field values substring after "www." and "://", but before "/", case insensitive)
+ *
+ *   Case [webDomain] == `null`:
+ *   1. A field of the [Credential] equals [packageName] (case insensitive)
  */
 fun findDataSourcesForRequest(allCredentials: List<Credential>, webDomain: String?, packageName: String): List<Credential> {
 
@@ -28,17 +37,21 @@ fun findDataSourcesForRequest(allCredentials: List<Credential>, webDomain: Strin
         ) return true // e.g. "accounts.google.com" is matched by "Google", but also by "Google for work"
 
         // Match based on credential fields
-        val webDomainProperties = credential.fields.filter { isWebDomain(it.value) } + // value is a web domain (probably works better than name)
-                credential.fields.filter { describesWebDomain(it.name) } // name describes a web domain
-        return webDomainProperties.any {
-            val foundWebDomain = it.value.substringAfterLast("://").substringBefore("/")
-            webDomain.endsWith(foundWebDomain, ignoreCase = true)
-        }
+        if (credential.fields.any {
+                val foundWebDomain = it.value
+                    .substringAfterLast("www.")
+                    .substringAfterLast("://")
+                    .substringBefore("/")
+                webDomain.length >= 4 && '.' in webDomain
+                        && webDomain.endsWith(foundWebDomain, ignoreCase = true)
+            }
+        ) return true
+
+        return false
     }
 
     fun isPackageNameMatch(credential: Credential): Boolean {
-        val packageNameProperty = credential.fields.find { describesAndroidPackage(it.name) }
-        return packageNameProperty?.value == packageName
+        return credential.fields.any { it.value.equals(packageName, ignoreCase = true) }
     }
 
     return allCredentials.filter { credential ->
@@ -48,6 +61,18 @@ fun findDataSourcesForRequest(allCredentials: List<Credential>, webDomain: Strin
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
+/**
+ * Finds the value of the given data source that matches the given autofill hints.
+ * If no field matches, null is returned.
+ *
+ * For a supported autofill hint, a matching field is searched in the following order:
+ * 1. First search a field with a value that looks like what the hint describes (e.g. email hint -> look for a field value like "example@mail.com"),
+ * 2. If that fails, search for a field with a name that describes what the hint describes (e.g. email hint -> look for a field name like "email"),
+ * 3. If that fails, try the next hint.
+ *
+ * Note that for many autofill hints one or both of steps 1 and 2 are not supported (yet).
+ * @return A [CredentialField] that matches the given [autofillHints], or `null` if no match was found.
+ */
 fun valueGivenAutofillHints(dataSource: Credential, autofillHints: Collection<String>): CredentialField? {
     // Go through all hints individually
     return autofillHints.map { hint ->
@@ -60,6 +85,19 @@ fun valueGivenAutofillHints(dataSource: Credential, autofillHints: Collection<St
     }.firstOrNull()
 }
 
+/**
+ * Finds the value of the given data source that matches the given hint and text.
+ * If no field matches, null is returned.
+ *
+ * If the hint and text could be interpreted as describing a specific supported type of data (like email),
+ * a matching field is searched in the following order:
+ * 1. First search a field with a value that looks like what the hint describes (e.g. email hint -> look for a field value like "example@mail.com"),
+ * 2. If that fails, search for a field with a name that describes what the hint describes (e.g. email hint -> look for a field name like "email"),
+ * 3. If that fails, search for a field with a name that matches the hint exactly (e.g. hint = "custom field", look for a field name like "custom field").
+ *
+ * Note that for many types of data, one or both of steps 1 and 2 are not supported (yet).
+ * @return A [CredentialField] that matches the given [hint] and [text], or `null` if no match was found.
+ */
 fun valueGivenHintAndText(dataSource: Credential, hint: String?, text: String?): CredentialField? {
     if (hint != null && hint != "" || text != null && text != "") Log.d("autofill", "Looking for hint = $hint, text = $text")
     val hintNonNull = hint ?: "" // empty strings don't describe anything
@@ -73,20 +111,20 @@ fun valueGivenHintAndText(dataSource: Credential, hint: String?, text: String?):
     }
 }
 
-private fun valueForUsername(dataSource: Credential): CredentialField? {
+internal fun valueForUsername(dataSource: Credential): CredentialField? {
     return dataSource.fields.find { describesUsername(it.name) }
 }
 
-private fun valueForEmail(dataSource: Credential): CredentialField? {
+internal fun valueForEmail(dataSource: Credential): CredentialField? {
     // First find some value that looks like an email, if that fails, find a field that describes an email
     return dataSource.fields.find { isEmail(it.value) } ?: dataSource.fields.find { describesEmail(it.name) }
 }
 
-private fun valueForPassword(dataSource: Credential): CredentialField? {
+internal fun valueForPassword(dataSource: Credential): CredentialField? {
     return dataSource.fields.find { describesPassword(it.name) }
 }
 
-private fun valueForGivenHint(dataSource: Credential, hint: String): CredentialField? {
+internal fun valueForGivenHint(dataSource: Credential, hint: String): CredentialField? {
     return dataSource.fields.find {
         it.name.withoutWhitespaceOrDashes().lowercase() == hint.withoutWhitespaceOrDashes().lowercase()
     }
