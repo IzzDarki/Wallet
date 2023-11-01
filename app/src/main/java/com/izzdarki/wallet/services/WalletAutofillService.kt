@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.CancellationSignal
-import android.os.Parcel
 import android.os.Parcelable
 import android.service.autofill.AutofillService
 import android.service.autofill.Dataset
@@ -29,6 +28,7 @@ import com.izzdarki.wallet.data.CredentialField
 import com.izzdarki.wallet.logic.autofill.findDataSourcesForRequest
 import com.izzdarki.wallet.logic.autofill.valueGivenAutofillHints
 import com.izzdarki.wallet.logic.autofill.valueGivenHintAndText
+import com.izzdarki.wallet.logic.isAuthenticationEnabled
 import com.izzdarki.wallet.storage.CredentialPreferenceStorage
 import com.izzdarki.wallet.ui.authentication.AutofillAuthenticationActivity
 import izzdarki.wallet.R
@@ -56,7 +56,7 @@ class WalletAutofillService : AutofillService() {
         val webDomain = getWebDomain(latestStructure)
         val packageName =
             getPackageName(latestStructure)  // If webDomain is not null, this is considered the package name of the browser => use webDomain
-        Log.d("autofill", "Fill request for web domain $webDomain and package name $packageName")
+        Log.d("autofill", "---\nFill request for web domain $webDomain and package name $packageName")
 
         // Find the data sources that match the request (more than one if the user has multiple accounts for the same website)
         val suitableDataSources = findDataSourcesForRequest(
@@ -78,16 +78,27 @@ class WalletAutofillService : AutofillService() {
 
         if (fillableAutofillIds.isEmpty()) { // No views can be filled
             fillCallback.onSuccess(null) // null means nothing can be filled
-            Log.d("autofill", "No suitable data sources found") // TODO remove logging
             return
         }
 
-        // Create fill response without any data, just for the authentication
-        // Still, since an unauthenticated user can see what views can be auto-filled, this leaks some information about what data is stored to unauthenticated users
-        val fillResponseBuilder = FillResponse.Builder()
-        addAuthenticationToFillResponse(fillResponseBuilder, suitableDataSources, autofillViewsData, fillableAutofillIds.toTypedArray())
 
-        fillCallback.onSuccess(fillResponseBuilder.build())
+        val fillResponse = if (isAuthenticationEnabled(this)) {
+            // Create fill response without any data, just for the authentication
+            // Still, since an unauthenticated user can see what views can be auto-filled, this leaks some information about what data is stored to unauthenticated users
+            val fillResponseBuilder = FillResponse.Builder()
+            addAuthenticationToFillResponse(
+                fillResponseBuilder,
+                suitableDataSources,
+                autofillViewsData,
+                fillableAutofillIds.toTypedArray()
+            )
+            fillResponseBuilder.build()
+        } else {
+            // Create fill response with all data
+            createFillResponse(suitableDataSources, autofillViewsData)
+        }
+
+        fillCallback.onSuccess(fillResponse)
     }
 
     override fun onSaveRequest(saveRequest: SaveRequest, saveCallback: SaveCallback) {
@@ -219,7 +230,7 @@ class WalletAutofillService : AutofillService() {
                     }
         }
 
-        private fun Context.addAuthenticationToFillResponse(
+        internal fun Context.addAuthenticationToFillResponse(
             fillResponseBuilder: FillResponse.Builder,
             dataSources: List<Credential>,
             autofillViewsData: List<AutofillViewData>,
@@ -231,8 +242,6 @@ class WalletAutofillService : AutofillService() {
                     AutofillAuthenticationActivity.EXTRA_DATA_SOURCE_IDS,
                     dataSources.map { it.id }.toLongArray()
                 )
-                // TODO write a test case that checks what error occurs during constructing this intent
-                //      Something with parcelable doesn't work
                 putParcelableArrayListExtra(
                     AutofillAuthenticationActivity.EXTRA_AUTOFILL_VIEW_DATA,
                     autofillViewsData.toCollection(ArrayList())
@@ -281,21 +290,7 @@ class WalletAutofillService : AutofillService() {
         ): Pair<AutofillId, CredentialField>? {
             // Try to use the autofill hints to find a value
             val value = valueGivenAutofillHints(dataSource, viewData.autofillHints)
-                .apply {
-                    if (this != null) Log.d(
-                        "autofill",
-                        "Found value ${this.value} for autofillHints = ${
-                            viewData.autofillHints.joinToString(", ")
-                        }"
-                    )
-                } // TODO remove logging
                 ?: valueGivenHintAndText(dataSource, viewData.hint, viewData.text)
-                    .apply {
-                        if (this != null) Log.d(
-                            "autofill",
-                            "Found value ${this.value} for hint = ${viewData.hint}, text = ${viewData.text}"
-                        )
-                    } // TODO remove logging
                 ?: return null // no value found
 
             return Pair(viewData.autofillId, value)

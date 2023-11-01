@@ -109,6 +109,7 @@ open class AuthenticationActivity : AppCompatActivity() {
 
     /**
      * Called when authentication was successful.
+     * NOT called when the activity is finished because authentication is not enabled.
      * Directly after this method is called, the activity will be finished.
      */
     protected open fun onSuccessfulAuthentication() {

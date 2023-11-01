@@ -2,6 +2,8 @@ package com.izzdarki.wallet.ui.authentication
 
 import android.content.Intent
 import android.os.Build
+import android.os.Bundle
+import android.util.Log
 import android.view.autofill.AutofillManager.EXTRA_AUTHENTICATION_RESULT
 import androidx.annotation.RequiresApi
 import com.izzdarki.wallet.services.AutofillViewData
@@ -14,6 +16,11 @@ class AutofillAuthenticationActivity : AuthenticationActivity() {
     companion object {
         const val EXTRA_DATA_SOURCE_IDS = "extra_data_source_ids" // Array<Long>
         const val EXTRA_AUTOFILL_VIEW_DATA = "extra_autofill_view_data" // Array<AutofillViewData> (in the form of Parcelable array list)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d("autofill", "AutofillAuthenticationActivity created")
+        super.onCreate(savedInstanceState)
     }
 
     override fun onSuccessfulAuthentication() {

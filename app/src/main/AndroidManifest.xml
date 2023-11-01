@@ -41,6 +41,12 @@
             android:noHistory="true"
             android:excludeFromRecents="true" /> <!-- noHistory and excludeFromRecents means the user cannot return to this activity using the back button -->
         <activity
+            android:name="com.izzdarki.wallet.ui.authentication.AutofillAuthenticationActivity"
+            android:exported="true"
+            android:windowSoftInputMode="stateVisible"
+            android:noHistory="true"
+            android:excludeFromRecents="true" /> <!-- noHistory and excludeFromRecents means the user cannot return to this activity using the back button -->
+        <activity
             android:name="com.izzdarki.wallet.ui.credentials.ShowCredentialActivity"
             android:configChanges="orientation"
             android:launchMode="singleTop"
