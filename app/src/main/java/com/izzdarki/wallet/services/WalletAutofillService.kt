@@ -82,27 +82,27 @@ class WalletAutofillService : AutofillService() {
         }
 
 
-        val fillResponse = if (isAuthenticationEnabled(this)) {
+        val fillResponseBuilder = FillResponse.Builder()
+        if (isAuthenticationEnabled(this)) {
             // Create fill response without any data, just for the authentication
             // Still, since an unauthenticated user can see what views can be auto-filled, this leaks some information about what data is stored to unauthenticated users
-            val fillResponseBuilder = FillResponse.Builder()
             addAuthenticationToFillResponse(
                 fillResponseBuilder,
                 suitableDataSources,
                 autofillViewsData,
                 fillableAutofillIds.toTypedArray()
             )
-            fillResponseBuilder.build()
         } else {
-            // Create fill response with all data
-            createFillResponse(suitableDataSources, autofillViewsData)
+            addDatasetsToFillResponse(fillResponseBuilder, suitableDataSources, autofillViewsData)
+            // Will always add at least one dataset, since fillableAutofillIds is not empty
         }
 
-        fillCallback.onSuccess(fillResponse)
+        fillCallback.onSuccess(fillResponseBuilder.build())
     }
 
-    override fun onSaveRequest(saveRequest: SaveRequest, saveCallback: SaveCallback) {
-        // TODO Implement this
+    override fun onSaveRequest(request: SaveRequest, callback: SaveCallback) {
+        // Save request are not supported by this service
+        callback.onFailure("Save requests are not supported by ${getString(R.string.wallet_autofill_service)}")
     }
 
     companion object {
@@ -112,17 +112,31 @@ class WalletAutofillService : AutofillService() {
         // Method to be called by AutofillAuthenticationActivity after the user authenticated
         fun Context.createFillResponse(dataSources: List<Credential>, autofillViewsData: List<AutofillViewData>): FillResponse? {
             val fillResponseBuilder = FillResponse.Builder()
+            val couldAddAnyDatasets = addDatasetsToFillResponse(fillResponseBuilder, dataSources, autofillViewsData)
+            if (!couldAddAnyDatasets)
+                return null // null means nothing can be filled
+            return fillResponseBuilder.build()
+        }
+
+        /**
+         * @return `true` if at least one dataset could be added to the fill response, `false` otherwise
+         */
+        private fun Context.addDatasetsToFillResponse(
+            fillResponseBuilder: FillResponse.Builder,
+            dataSources: List<Credential>,
+            autofillViewsData: List<AutofillViewData>
+        ): Boolean {
             val datasets = dataSources.mapNotNull { dataSource ->
                 val valuesForAutofill = extractValuesToFillViews(dataSource, autofillViewsData)
                 createDataset(dataSource, valuesForAutofill) // null if for all views no value could be found using this data source
             }
 
             if (datasets.isEmpty()) // No views can be filled
-                return null // null means nothing can be filled
+                return false // nothing can be filled
 
             for (dataset in datasets)
                 fillResponseBuilder.addDataset(dataset)
-            return fillResponseBuilder.build()
+            return true
         }
 
         /**

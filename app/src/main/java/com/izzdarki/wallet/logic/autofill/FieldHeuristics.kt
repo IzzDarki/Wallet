@@ -9,6 +9,7 @@ fun describesUsername(fieldName: String): Boolean {
 
 fun describesPassword(fieldName: String): Boolean {
     return fieldName.lowercase().withoutWhitespaceOrDashes() in listOf(
+        "pin", // general
         "password", // english specific
         "passwort", "kennwort", // german specific
     )
