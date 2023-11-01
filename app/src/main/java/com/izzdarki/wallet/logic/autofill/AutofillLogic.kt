@@ -20,6 +20,14 @@ fun findDataSourcesForRequest(allCredentials: List<Credential>, webDomain: Strin
     fun isWebDomainMatch(credential: Credential): Boolean {
         if (webDomain == null)
             return false
+
+        // Match based on credential name
+        if (credential.name
+            .split(Regex("\\s+"))
+            .any { word -> word.length >= 4 && webDomain.contains(word, ignoreCase = true) } // 4 letter minimum to avoid false positives
+        ) return true // e.g. "accounts.google.com" is matched by "Google", but also by "Google for work"
+
+        // Match based on credential fields
         val webDomainProperties = credential.fields.filter { isWebDomain(it.value) } + // value is a web domain (probably works better than name)
                 credential.fields.filter { describesWebDomain(it.name) } // name describes a web domain
         return webDomainProperties.any {
@@ -35,16 +43,7 @@ fun findDataSourcesForRequest(allCredentials: List<Credential>, webDomain: Strin
 
     return allCredentials.filter { credential ->
         // Only use package name if web domain is null (otherwise package name == browser)
-        ((webDomain != null && isWebDomainMatch(credential)) || (webDomain == null && isPackageNameMatch(credential)))
-            .also {
-                if (it)
-                    Log.d(
-                        "autofill",
-                        "Found data source $credential.name because of ${
-                            if (webDomain != null && isWebDomainMatch(credential)) "web domain match" else "package name match"
-                        }"
-                    )
-            } // TODO remove logging
+        (webDomain != null && isWebDomainMatch(credential)) || (webDomain == null && isPackageNameMatch(credential))
     }
 }
 
