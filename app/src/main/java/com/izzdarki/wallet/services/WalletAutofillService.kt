@@ -25,7 +25,9 @@ import androidx.annotation.RequiresApi
 import kotlinx.parcelize.Parcelize
 import com.izzdarki.wallet.data.Credential
 import com.izzdarki.wallet.data.CredentialField
+import com.izzdarki.wallet.logic.autofill.AutofillLogicalGroup
 import com.izzdarki.wallet.logic.autofill.findDataSourcesForRequest
+import com.izzdarki.wallet.logic.autofill.groupOf
 import com.izzdarki.wallet.logic.autofill.valueGivenAutofillHints
 import com.izzdarki.wallet.logic.autofill.valueGivenHintAndText
 import com.izzdarki.wallet.logic.isAuthenticationEnabled
@@ -43,6 +45,7 @@ data class AutofillViewData(
     val autofillHints: List<String>,
     val hint: String?,
     val text: String?,
+    val isFocused: Boolean = false,
 ) : Parcelable
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -110,7 +113,7 @@ class WalletAutofillService : AutofillService() {
         private const val AUTHENTICATION_REQUEST_CODE = 417023
 
         // Method to be called by AutofillAuthenticationActivity after the user authenticated
-        fun Context.createFillResponse(dataSources: List<Credential>, autofillViewsData: List<AutofillViewData>): FillResponse? {
+        fun Context.createFillResponseWithDatasets(dataSources: List<Credential>, autofillViewsData: List<AutofillViewData>): FillResponse? {
             val fillResponseBuilder = FillResponse.Builder()
             val couldAddAnyDatasets = addDatasetsToFillResponse(fillResponseBuilder, dataSources, autofillViewsData)
             if (!couldAddAnyDatasets)
@@ -200,15 +203,53 @@ class WalletAutofillService : AutofillService() {
 
         /**
          * Tries to find values to be filled for the given [AutofillViewData]s using the given [Credential].
+         * Finds out what logical group the request belongs to and only returns values for views that belong to that group.
+         *
+         * Using logical groups is very strongly recommended by the autofill framework and has the following benefits
+         *  - It's easier to predict what will be filled
+         *  - It's more secure, since it's harder to trick to user into filling a value (for ex. in an invisible input field) (is that an actual problem?)
+         *
          * @return A list of [AutofillId]s and the corresponding [CredentialField]s.
          *  Only includes [AutofillId]s of views that can be filled.
          */
         private fun extractValuesToFillViews(
             dataSource: Credential,
-            viewsData: List<AutofillViewData>
+            viewsData: List<AutofillViewData>,
         ): List<Pair<AutofillId, CredentialField>> {
-            return viewsData.mapNotNull { autofillValueForNode(dataSource, it) }
+            val focusedViewDataIndex = viewsData.indexOfFirst { it.isFocused }.let { if (it == -1) null else it }
+            val zipped = viewsData.map {
+                val autofillValue = autofillValueForNode(dataSource, it)
+                val logicalGroup = if (autofillValue == null) null else groupOf(it, autofillValue.second)
+                Triple(it, autofillValue, logicalGroup)
+            }
+
+            // Determine what logical group this request belongs to
+            val logicalGroup = if (focusedViewDataIndex != null) {
+                // If a view is focused => use the group of the focused view
+                val focusedAutofillValue = zipped[focusedViewDataIndex].second
+                    ?: return emptyList() // If focused view cannot be filled, the fill request is not answered
+                groupOf(viewsData[focusedViewDataIndex], focusedAutofillValue.second)
+            } else {
+                // If no view is focused => use the first group that could be found
+                zipped.firstNotNullOfOrNull { (_, _, group) -> group}
+                    ?: AutofillLogicalGroup.OTHER // no value found for any view => assume "other"
+            }
+
+            // Only return values for views that belong to the determined logical group
+            return zipped.mapNotNull { (_, autofillValue, group) ->
+                if (autofillValue == null || group == logicalGroup)
+                    null // exclude if no value could be found or group does not match
+                else
+                    autofillValue // include otherwise
+            }
+
         }
+
+        /**
+         * For a view with different logical groups according to autofillHints and hint/text,
+         * it is unclear what group is actually used => The group used to fill will be considered,
+         * if that is unclear (<=> field name and type are unknown) fallback to autofillHints, then hint/text then assume no group.
+         */
 
         /**
          * Traverses the structure to find all [AutofillViewData]s.
@@ -236,7 +277,8 @@ class WalletAutofillService : AutofillService() {
                     autofillId = currentNode.autofillId!!,
                     autofillHints = currentNode.autofillHints?.toList() ?: emptyList(),
                     hint = currentNode.hint,
-                    text = currentNode.text?.toString()
+                    text = currentNode.text?.toString(),
+                    isFocused = currentNode.isFocused,
                 )
             return listOfNotNull(autofillViewData) +
                     (0 until currentNode.childCount).flatMap {

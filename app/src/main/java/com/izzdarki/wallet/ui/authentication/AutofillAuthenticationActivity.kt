@@ -7,7 +7,7 @@ import android.util.Log
 import android.view.autofill.AutofillManager.EXTRA_AUTHENTICATION_RESULT
 import androidx.annotation.RequiresApi
 import com.izzdarki.wallet.services.AutofillViewData
-import com.izzdarki.wallet.services.WalletAutofillService.Companion.createFillResponse
+import com.izzdarki.wallet.services.WalletAutofillService.Companion.createFillResponseWithDatasets
 import com.izzdarki.wallet.storage.CredentialPreferenceStorage
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -35,7 +35,7 @@ class AutofillAuthenticationActivity : AuthenticationActivity() {
         } ?: return // If extra not passed, AuthenticationActivity should have been used instead of this one
 
         // Create fill response
-        val fillResponse = createFillResponse(dataSources, viewsData)
+        val fillResponse = createFillResponseWithDatasets(dataSources, viewsData)
 
         // Set result
         val replyIntent = Intent().apply {

@@ -6,6 +6,15 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import com.izzdarki.wallet.data.Credential
 import com.izzdarki.wallet.data.CredentialField
+import com.izzdarki.wallet.services.AutofillViewData
+
+enum class AutofillLogicalGroup {
+    LOGIN, CREDIT_CARD, ADDRESS, OTHER
+}
+
+fun groupOf(viewData: AutofillViewData, fillValue: CredentialField): AutofillLogicalGroup {
+    TODO("implement")
+}
 
 /**
  * Finds the data sources that match the given request.
