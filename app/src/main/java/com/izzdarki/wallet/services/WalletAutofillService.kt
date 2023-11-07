@@ -203,7 +203,7 @@ class WalletAutofillService : AutofillService() {
 
         /**
          * Tries to find values to be filled for the given [AutofillViewData]s using the given [Credential].
-         * Finds out what logical group the request belongs to and only returns values for views that belong to that group.
+         * Finds out what logical group the request belongs to and only returns values for views that belong to this group.
          *
          * Using logical groups is very strongly recommended by the autofill framework and has the following benefits
          *  - It's easier to predict what will be filled
@@ -216,28 +216,35 @@ class WalletAutofillService : AutofillService() {
             dataSource: Credential,
             viewsData: List<AutofillViewData>,
         ): List<Pair<AutofillId, CredentialField>> {
-            val focusedViewDataIndex = viewsData.indexOfFirst { it.isFocused }.let { if (it == -1) null else it }
+            val focusedIndices = viewsData
+                .withIndex()
+                .filter { (_, viewData) -> viewData.isFocused }
+                .map { (index, _) -> index }
+
+            // Determine fill value and logical group for each view
             val zipped = viewsData.map {
                 val autofillValue = autofillValueForNode(dataSource, it)
-                val logicalGroup = if (autofillValue == null) null else groupOf(it, autofillValue.second)
-                Triple(it, autofillValue, logicalGroup)
+                val logicalGroup = if (autofillValue == null) null else groupOf(autofillValue.second)
+                Pair(autofillValue, logicalGroup)
             }
 
             // Determine what logical group this request belongs to
-            val logicalGroup = if (focusedViewDataIndex != null) {
+            val groupOfRequest = if (focusedIndices.isNotEmpty()) {
                 // If a view is focused => use the group of the focused view
-                val focusedAutofillValue = zipped[focusedViewDataIndex].second
-                    ?: return emptyList() // If focused view cannot be filled, the fill request is not answered
-                groupOf(viewsData[focusedViewDataIndex], focusedAutofillValue.second)
+                focusedIndices.firstNotNullOfOrNull { index ->
+                    zipped[index].second.also { if (it != null) Log.d("autofill", "determined group (by focused view) ${it.name}") } // TODO Remove logging
+                } ?: return emptyList<Pair<AutofillId, CredentialField>>() // If no focused view cannot be filled (<=> group is null), the fill request is not answered
+                    .also { Log.d("autofill", "no values can be filled because focused view can't be filled") } // TODO Remove logging
             } else {
                 // If no view is focused => use the first group that could be found
-                zipped.firstNotNullOfOrNull { (_, _, group) -> group}
+                zipped.firstNotNullOfOrNull { (_, group) -> group }.also { if (it != null) Log.d("autofill", "determined group (by other view) ${it.name}") } // TODO Remove logging
                     ?: AutofillLogicalGroup.OTHER // no value found for any view => assume "other"
+                        .also { Log.d("autofill", "determined group (be default case) ${it.name}") } // TODO Remove logging
             }
 
             // Only return values for views that belong to the determined logical group
-            return zipped.mapNotNull { (_, autofillValue, group) ->
-                if (autofillValue == null || group == logicalGroup)
+            return zipped.mapNotNull { (autofillValue, group) ->
+                if (autofillValue == null || group != groupOfRequest)
                     null // exclude if no value could be found or group does not match
                 else
                     autofillValue // include otherwise
@@ -269,7 +276,9 @@ class WalletAutofillService : AutofillService() {
          * Traverses the structure to find all [AutofillViewData]s.
          * Starts at a given root node.
          */
-        private fun traverseStructureFromRootNodeToGetAutofillViewData(currentNode: AssistStructure.ViewNode): List<AutofillViewData> {
+        private fun traverseStructureFromRootNodeToGetAutofillViewData(
+            currentNode: AssistStructure.ViewNode,
+        ): List<AutofillViewData> {
             val autofillViewData =
                 if (currentNode.autofillId == null)
                     null
@@ -278,11 +287,13 @@ class WalletAutofillService : AutofillService() {
                     autofillHints = currentNode.autofillHints?.toList() ?: emptyList(),
                     hint = currentNode.hint,
                     text = currentNode.text?.toString(),
-                    isFocused = currentNode.isFocused,
+                    isFocused = currentNode.isFocused
                 )
             return listOfNotNull(autofillViewData) +
                     (0 until currentNode.childCount).flatMap {
-                        traverseStructureFromRootNodeToGetAutofillViewData(currentNode.getChildAt(it))
+                        traverseStructureFromRootNodeToGetAutofillViewData(
+                            currentNode = currentNode.getChildAt(it)
+                        )
                     }
         }
 
