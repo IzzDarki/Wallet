@@ -13,7 +13,6 @@ import izzdarki.wallet.R
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
-import org.junit.Assert.fail
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.File
@@ -26,12 +25,10 @@ class CardAndPasswordToCredentialUpdateTest {
     fun testCardsAndPasswordsAndSortingOrder() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
 
-        // Check if CardStorage contains anything
-        if (CardStorage.readAllIDs(context).isNotEmpty()) {
-            val foundCards = CardStorage.readAll(context)
-            fail("CardStorage should be empty in testing environment: found $foundCards")
-            return
-        }
+        // Clear all preferences first (images are left untouched, since this is just a test)
+        CardStorage.getPreferences(context).edit().clear().apply()
+        PasswordStorage.getPreferences(context).edit().clear().apply()
+        CredentialPreferenceStorage.getPreferences(context).edit().clear().apply()
 
         // Create some cards
         CardStorage.writeComplete(
@@ -164,7 +161,7 @@ class CardAndPasswordToCredentialUpdateTest {
         updateToCredentialPreferences(context)
 
         // Assert that enough cards and passwords were created
-        assertEquals(5, CredentialPreferenceStorage.readAllIds(context).size)
+        assertEquals(6, CredentialPreferenceStorage.readAllIds(context).size)
 
         // Find new ids
         val allCredentials = CredentialPreferenceStorage.readAllCredentials(context)
@@ -270,7 +267,7 @@ class CardAndPasswordToCredentialUpdateTest {
         val password2 = CredentialPreferenceStorage.readCredential(context, password2Id)
         assertNotNull(password2)
         if (password2 != null) {
-            assertEquals("Password 1", password2.name)
+            assertEquals("Password 2", password2.name)
             assertEquals(0, password2.color)
             assertEquals(Date(12345), password2.creationDate)
             assertEquals(Date(54321), password2.alterationDate)

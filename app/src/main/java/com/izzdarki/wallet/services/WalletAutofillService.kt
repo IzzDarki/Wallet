@@ -1,3 +1,4 @@
+@file:RequiresApi(Build.VERSION_CODES.O)
 package com.izzdarki.wallet.services
 
 import android.app.PendingIntent
@@ -35,10 +36,7 @@ import com.izzdarki.wallet.storage.CredentialPreferenceStorage
 import com.izzdarki.wallet.ui.authentication.AutofillAuthenticationActivity
 import izzdarki.wallet.R
 
-/**
- * Captures all information about a view that is eligible for autofill.
- */
-@RequiresApi(Build.VERSION_CODES.O)
+
 @Parcelize
 data class AutofillViewData(
     val autofillId: AutofillId,
@@ -212,7 +210,7 @@ class WalletAutofillService : AutofillService() {
          * @return A list of [AutofillId]s and the corresponding [CredentialField]s.
          *  Only includes [AutofillId]s of views that can be filled.
          */
-        private fun extractValuesToFillViews(
+        internal fun extractValuesToFillViews(
             dataSource: Credential,
             viewsData: List<AutofillViewData>,
         ): List<Pair<AutofillId, CredentialField>> {
@@ -232,14 +230,12 @@ class WalletAutofillService : AutofillService() {
             val groupOfRequest = if (focusedIndices.isNotEmpty()) {
                 // If a view is focused => use the group of the focused view
                 focusedIndices.firstNotNullOfOrNull { index ->
-                    zipped[index].second.also { if (it != null) Log.d("autofill", "determined group (by focused view) ${it.name}") } // TODO Remove logging
-                } ?: return emptyList<Pair<AutofillId, CredentialField>>() // If no focused view cannot be filled (<=> group is null), the fill request is not answered
-                    .also { Log.d("autofill", "no values can be filled because focused view can't be filled") } // TODO Remove logging
+                    zipped[index].second
+                } ?: return emptyList() // If no focused view cannot be filled (<=> group is null), the fill request is not answered
             } else {
                 // If no view is focused => use the first group that could be found
-                zipped.firstNotNullOfOrNull { (_, group) -> group }.also { if (it != null) Log.d("autofill", "determined group (by other view) ${it.name}") } // TODO Remove logging
+                zipped.firstNotNullOfOrNull { (_, group) -> group }
                     ?: AutofillLogicalGroup.OTHER // no value found for any view => assume "other"
-                        .also { Log.d("autofill", "determined group (be default case) ${it.name}") } // TODO Remove logging
             }
 
             // Only return values for views that belong to the determined logical group
