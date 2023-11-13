@@ -122,4 +122,4 @@ private fun getRandomSalt(): ByteArray {
     return salt
 }
 
-private const val AUTHENTICATION_TIMEOUT_MILLIS = 5000 // TODO use this value 1000 * 60 * 5 // 5 minutes
+private const val AUTHENTICATION_TIMEOUT_MILLIS = 1000 * 60 * 3 // 3 minutes
