@@ -3,4 +3,5 @@
     <string name="fileprovider_authority" translatable="false">izzdarki.wallpaper.debug.fileprovider</string>
     <string name="version_name" translatable="false">2.2.0-alpha.0 (Debug)</string> <!-- version name, keep up to date -->
     <string name="app_name">Wallet Debug</string>
+    <string name="wallet_autofill_service">Wallet Debug Autofill Service</string>
 </resources>

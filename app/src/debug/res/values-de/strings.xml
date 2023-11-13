@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Wallet Debug</string>
+    <string name="wallet_autofill_service">Wallet Debug Autofill Service</string>
 </resources>
