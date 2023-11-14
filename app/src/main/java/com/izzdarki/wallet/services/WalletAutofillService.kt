@@ -111,9 +111,9 @@ class WalletAutofillService : AutofillService() {
         private const val AUTHENTICATION_REQUEST_CODE = 417023
 
         // Method to be called by AutofillAuthenticationActivity after the user authenticated
-        fun Context.createFillResponseWithDatasets(dataSources: List<Credential>, autofillViewsData: List<AutofillViewData>): FillResponse? {
+        fun createFillResponseWithDatasets(context: Context, dataSources: List<Credential>, autofillViewsData: List<AutofillViewData>): FillResponse? {
             val fillResponseBuilder = FillResponse.Builder()
-            val couldAddAnyDatasets = addDatasetsToFillResponse(fillResponseBuilder, dataSources, autofillViewsData)
+            val couldAddAnyDatasets = context.addDatasetsToFillResponse(fillResponseBuilder, dataSources, autofillViewsData)
             if (!couldAddAnyDatasets)
                 return null // null means nothing can be filled
             return fillResponseBuilder.build()

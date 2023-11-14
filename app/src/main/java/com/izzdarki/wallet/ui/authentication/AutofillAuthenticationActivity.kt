@@ -35,7 +35,7 @@ class AutofillAuthenticationActivity : AuthenticationActivity() {
         } ?: return // If extra not passed, AuthenticationActivity should have been used instead of this one
 
         // Create fill response
-        val fillResponse = createFillResponseWithDatasets(dataSources, viewsData)
+        val fillResponse = createFillResponseWithDatasets(this, dataSources, viewsData)
 
         // Set result
         val replyIntent = Intent().apply {

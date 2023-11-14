@@ -4,7 +4,7 @@ package com.izzdarki.wallet.logic.autofill
  * Simple check to check if a credit card number is valid according to the Luhn algorithm.
  * Meant to find accidental typos, not to prevent attacks.
  */
-fun passesLuhnCheck(numberString: String): Boolean {
+internal fun passesLuhnCheck(numberString: String): Boolean {
     val parity = numberString.length % 2
     val checksum = numberString.toCharArray()
         .map { character -> character.digitToIntOrNull(10) ?: return false}

@@ -44,7 +44,7 @@ class FieldTypeHeuristic(
     }
 }
 
-val emailHeuristic = FieldTypeHeuristic(
+internal val emailHeuristic = FieldTypeHeuristic(
     isType = { value: String ->
         value.matches(EMAIL_REGEX)
     },
@@ -58,7 +58,7 @@ val emailHeuristic = FieldTypeHeuristic(
     autofillHints = listOf(View.AUTOFILL_HINT_EMAIL_ADDRESS, W3C_EMAIL_HINT)
 )
 
-val usernameHeuristic = FieldTypeHeuristic(
+internal val usernameHeuristic = FieldTypeHeuristic(
     isType = null,
     describesType = { name: String ->
         name.lowercase().withoutWhitespaceOrDashes() in listOf(
@@ -70,7 +70,7 @@ val usernameHeuristic = FieldTypeHeuristic(
     autofillHints = listOf(View.AUTOFILL_HINT_USERNAME, W3C_USERNAME_HINT)
 )
 
-val passwordHeuristic = FieldTypeHeuristic(
+internal val passwordHeuristic = FieldTypeHeuristic(
     isType = null,
     describesType = { name: String ->
         name.lowercase().withoutWhitespaceOrDashes() in listOf(
@@ -83,7 +83,7 @@ val passwordHeuristic = FieldTypeHeuristic(
     autofillHints = listOf(View.AUTOFILL_HINT_PASSWORD, W3C_CURRENT_PASSWORD_HINT)
 )
 
-val phoneHeuristic = FieldTypeHeuristic(
+internal val phoneHeuristic = FieldTypeHeuristic(
     isType = null,
     describesType = { name: String ->
         name.lowercase().withoutWhitespaceOrDashes() in listOf(
@@ -96,7 +96,7 @@ val phoneHeuristic = FieldTypeHeuristic(
     autofillHints = listOf(View.AUTOFILL_HINT_PHONE, W3C_TELEPHONE_HINT)
 )
 
-val creditCardNumberHeuristic = FieldTypeHeuristic(
+internal val creditCardNumberHeuristic = FieldTypeHeuristic(
     isType = { value: String ->
         val withoutSpaces = value.withoutWhitespace()
         if (withoutSpaces.length < 12 || withoutSpaces.length > 19)
@@ -113,7 +113,7 @@ val creditCardNumberHeuristic = FieldTypeHeuristic(
     autofillHints = listOf(View.AUTOFILL_HINT_CREDIT_CARD_NUMBER, W3C_CREDIT_CARD_NUMBER)
 )
 
-val creditCardSecurityCodeHeuristic = FieldTypeHeuristic(
+internal val creditCardSecurityCodeHeuristic = FieldTypeHeuristic(
     isType = null,
     describesType = { name: String ->
         // From https://www.sparkasse.de/pk/ratgeber/finanzglossar/kartenpruefnummer.html
@@ -126,7 +126,7 @@ val creditCardSecurityCodeHeuristic = FieldTypeHeuristic(
     autofillHints = listOf(View.AUTOFILL_HINT_CREDIT_CARD_SECURITY_CODE, W3C_CREDIT_CARD_CSC)
 )
 
-val ibanHeuristic = FieldTypeHeuristic(
+internal val ibanHeuristic = FieldTypeHeuristic(
     isType = { value: String ->
         // https://www.iban.com/glossary: 34 hard upper bound
         // https://en.wikipedia.org/wiki/International_Bank_Account_Number#Validating_the_IBAN: Heuristics
@@ -148,7 +148,7 @@ val ibanHeuristic = FieldTypeHeuristic(
     autofillHints = listOf()
 )
 
-val bicHeuristic = FieldTypeHeuristic(
+internal val bicHeuristic = FieldTypeHeuristic(
     isType = { value: String ->
         // https://www.iban.com/glossary: Length is 8 or 11
         val withoutSpaces = value.withoutWhitespace()
@@ -166,7 +166,7 @@ val bicHeuristic = FieldTypeHeuristic(
 )
 
 // Since this is traversed top to bottom, it should be ordered such that good working, specific heuristics are first
-val fieldTypeHeuristics = listOf(
+internal val fieldTypeHeuristics = listOf(
     emailHeuristic,
     usernameHeuristic,
     passwordHeuristic,
@@ -179,14 +179,14 @@ val fieldTypeHeuristics = listOf(
 
 
 /** Used to find out if a credential should be used to fill a request from a specific website */
-fun describesUrl(fieldName: String) = fieldName.lowercase().withoutWhitespaceOrDashes() in listOf(
+internal fun describesUrl(fieldName: String) = fieldName.lowercase().withoutWhitespaceOrDashes() in listOf(
     "url", "link", "homepage", // general
     "website", "webpage", "site", // english specific
     "webseite", "seite", "internetseite", // german specific
 )
 
 /** Used to find out if a credential should be used to fill a request from a specific app */
-fun describesApp(fieldName: String) = fieldName.lowercase().withoutWhitespaceOrDashes() in listOf(
+internal fun describesApp(fieldName: String) = fieldName.lowercase().withoutWhitespaceOrDashes() in listOf(
     "app", // general
     "application", // english specific
     "anwendung", // german specific
@@ -194,5 +194,5 @@ fun describesApp(fieldName: String) = fieldName.lowercase().withoutWhitespaceOrD
 
 internal val EMAIL_REGEX: Regex by lazy { Regex("^[\\w-.%+-]+@([\\w-]+\\.)+[\\w-]{2,6}$") }
 
-fun String.withoutWhitespaceOrDashes() = this.replace(Regex("[\\s-]+"), "")
-fun String.withoutWhitespace() = this.replace(Regex("\\s+"), "")
+internal fun String.withoutWhitespaceOrDashes() = this.replace(Regex("[\\s-]+"), "")
+internal fun String.withoutWhitespace() = this.replace(Regex("\\s+"), "")
