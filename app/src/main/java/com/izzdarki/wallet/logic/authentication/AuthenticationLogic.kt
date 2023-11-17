@@ -61,8 +61,7 @@ fun isAuthenticationEnabled(context: Context): Boolean {
     return isAppPasswordEnabled(context) || isFingerprintEnabled(context)
 }
 
-fun disableAuthentication(context: Context): Boolean {
-    removeLastAuthenticationTime(context) // sets to 0
+fun disableAppPassword(context: Context): Boolean {
     return authenticationStorage.removeEncodedAppPassword(context)
 }
 

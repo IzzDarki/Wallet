@@ -177,12 +177,13 @@
     <string name="no_biometric_hardware_available">Keine biometrische Hardware verfügbar</string>
     <string name="biometric_hardware_is_unavailable">Biometrische Hardware ist nicht verfügbar</string>
     <string name="biometrics_unavailable_for_unknown_reasons">Biometrische hardware aus unbekannten Gründen nicht verfügbar</string>
-    <string name="touch_the_sensor_to_authenticate">Berühre den Sensor zur Authentifizierung</string>
     <string name="fingerprint_authentication_failed">Authentifizierung per Fingerabdruck fehlgeschlagen</string>
     <string name="disable_authentication_completely">Authentifizierung komplett deaktivieren</string>
     <string name="fingerprint_needed_to_change_the_setting">Berühre den Sensor um die Einstellung zu ändern</string>
-    <string name="fingerprint_needed_to_open_the_app">Berühre den Sensor um die App zu öffnen</string>
     <string name="authenticate_using_fingerprint_and_app_password">Authentifizierung per Fingerabdruck und App-Passwort</string>
     <string name="setup_app_password_message">Lege ein App-Passwort fest, das beim Öffnen der App abgefragt wird.</string>
     <string name="authenticate_to_use_x_autofill">Authentifizieren für %s Autofill</string>
+    <string name="authenticate_to_disable_fingerprint_authentication">Authentifiziere dich um die Fingerabdruck Authentifizierung zu deaktivieren</string>
+    <string name="authenticate_to_disable_app_password_authentication">Authentifiziere dich um das App-Passwort zu deaktivieren</string>
+
 </resources>

@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.doOnTextChanged
 import androidx.navigation.Navigation
-import com.izzdarki.wallet.logic.authentication.disableAuthentication
+import com.izzdarki.wallet.logic.authentication.disableAppPassword
 import com.izzdarki.wallet.logic.authentication.setNewAppPassword
 import com.izzdarki.wallet.logic.authentication.updateAuthenticationTime
 import izzdarki.wallet.R
@@ -88,7 +88,7 @@ class SetupAppPasswordFragment : Fragment() {
                 }
                 else {
                     Toast.makeText(requireContext(), R.string.app_password_set_unknown_error, Toast.LENGTH_LONG).show() // Show error toast
-                    disableAuthentication(requireContext()) // To be sure that no password is set
+                    disableAppPassword(requireContext()) // To be sure that no password is set
                 }
                 dialog.dismiss()
             }

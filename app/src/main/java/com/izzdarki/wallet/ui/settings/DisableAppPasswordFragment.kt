@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.navigation.Navigation
-import com.izzdarki.wallet.logic.authentication.disableAuthentication
+import com.izzdarki.wallet.logic.authentication.disableAppPassword
 import com.izzdarki.wallet.logic.authentication.isFingerprintEnabled
 import com.izzdarki.wallet.logic.authentication.isPasswordCorrect
 import com.izzdarki.wallet.storage.authenticationStorage
@@ -56,7 +56,7 @@ class DisableAppPasswordFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            val success = disableAuthentication(requireContext())
+            val success = disableAppPassword(requireContext())
             if (success) {
                 Toast.makeText(requireContext(), R.string.app_password_disabled_successfully, Toast.LENGTH_SHORT).show() // Show success toast
                 navController.popBackStack() // Close fragment

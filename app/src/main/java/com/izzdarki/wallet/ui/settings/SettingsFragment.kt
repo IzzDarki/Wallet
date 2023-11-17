@@ -1,8 +1,11 @@
 package com.izzdarki.wallet.ui.settings
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import androidx.preference.PreferenceFragmentCompat
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import izzdarki.wallet.R
 import androidx.appcompat.app.AppCompatDelegate
@@ -10,16 +13,34 @@ import androidx.navigation.Navigation
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
+import com.izzdarki.wallet.logic.authentication.disableAppPassword
 import com.izzdarki.wallet.logic.authentication.isFingerprintEnabled
 import com.izzdarki.wallet.logic.authentication.isAppPasswordEnabled
 import com.izzdarki.wallet.logic.authentication.setFingerprintEnabled
+import com.izzdarki.wallet.ui.authentication.AuthenticationActivity
 import com.izzdarki.wallet.utils.FingerprintAuthenticationHelper
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
     private val navController get() = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main)
 
+    private lateinit var appPasswordPreference: SwitchPreferenceCompat
+    private lateinit var fingerprintPreference: SwitchPreferenceCompat
+
     private lateinit var fingerprintAuthenticationHelper: FingerprintAuthenticationHelper
+    private val authenticationLauncherToDisableFingerprint = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result != null && result.resultCode == Activity.RESULT_OK) {
+            // Authentication succeeded
+            changeFingerprintSetting(false)
+        }
+    }
+
+    private val authenticationLauncherToDisableAppPassword = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result != null && result.resultCode == Activity.RESULT_OK) {
+            // Authentication succeeded
+            changeAppPasswordSettingToDisabled()
+        }
+    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
@@ -65,67 +86,115 @@ class SettingsFragment : PreferenceFragmentCompat() {
         updateAuthenticationWarningVisibility()
 
         // App password authentication
-        val authenticationPreference: SwitchPreferenceCompat = findPreference(getString(R.string.preferences_enable_app_password_key))!!
-        authenticationPreference.setOnPreferenceChangeListener { _, newValue ->
+        appPasswordPreference = findPreference(getString(R.string.preferences_enable_app_password_key))!!
+        appPasswordPreference.setOnPreferenceChangeListener { _, newValue ->
             if (newValue == true)
                 navController.navigate(R.id.action_nav_settings_to_authentication_setup)
-            else
-                navController.navigate(R.id.action_nav_settings_to_authentication_disable)
-            true
+            else {
+                if (!isFingerprintEnabled(requireContext())) {
+                    showDisableAuthenticationCompletelyDialog {
+                        authenticateToDisableAppPasswordSetting()
+                    }
+                }
+                else {
+                    authenticateToDisableAppPasswordSetting()
+                }
+            }
+            true // Update switch state (will be reset if canceled)
         }
-        authenticationPreference.isChecked = isAppPasswordEnabled(requireContext()) // Causes no switch animation when set here
+        appPasswordPreference.isChecked = isAppPasswordEnabled(requireContext()) // Causes no switch animation when set here
 
         // Fingerprint authentication
-        val fingerprintAuthenticationPreference: SwitchPreferenceCompat = findPreference(getString(R.string.preferences_enable_fingerprint_authentication_key))!!
-        fingerprintAuthenticationPreference.isChecked = isFingerprintEnabled(requireContext()) // Causes no switch animation when set here
-        fingerprintAuthenticationPreference.setOnPreferenceChangeListener { _, newValue ->
+        fingerprintPreference = findPreference(getString(R.string.preferences_enable_fingerprint_authentication_key))!!
+        fingerprintPreference.isChecked = isFingerprintEnabled(requireContext()) // Causes no switch animation when set here
+        fingerprintPreference.setOnPreferenceChangeListener { _, newValue ->
             if (newValue !is Boolean) return@setOnPreferenceChangeListener false // cannot happen, but needed for type safety
 
             if (newValue == false && !isAppPasswordEnabled(requireContext())) {
-                // Warn user if he is about to completely disable authentication
-                AlertDialog.Builder(requireContext())
-                    .setTitle(R.string.disable_authentication_completely)
-                    .setMessage(R.string.disable_authentication_completely_warning)
-                    .setPositiveButton(R.string.disable_authentication_completely) { dialog, _ ->
-                        askForFingerprintAndChangeSetting(fingerprintAuthenticationPreference, newValue)
-                        dialog.dismiss()
-                    }
-                    .setNegativeButton(R.string.cancel) { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    .show()
+                showDisableAuthenticationCompletelyDialog {
+                    authenticateToDisableFingerprintSetting()
+                }
             }
-            else {
-                askForFingerprintAndChangeSetting(fingerprintAuthenticationPreference, newValue)
-            }
+            else if (!newValue)
+                authenticateToDisableFingerprintSetting()
+            else
+                askForFingerprintToEnableFingerprint()
 
-            false // Switch is only updated when authentication succeeds
+            true // Update switch state (will be reset if canceled)
         }
     }
 
     override fun onResume() {
         super.onResume()
         // App password authentication
-        val authenticationPreference: SwitchPreferenceCompat = findPreference(getString(R.string.preferences_enable_app_password_key))!!
-        authenticationPreference.isChecked = isAppPasswordEnabled(requireContext()) // Causes switch animation
+        appPasswordPreference.isChecked = isAppPasswordEnabled(requireContext()) // Causes switch animation
 
         // Fingerprint authentication
-        val fingerprintAuthenticationPreference: SwitchPreferenceCompat = findPreference(getString(R.string.preferences_enable_fingerprint_authentication_key))!!
-        fingerprintAuthenticationPreference.isChecked = isFingerprintEnabled(requireContext()) // Causes switch animation
+        fingerprintPreference.isChecked = isFingerprintEnabled(requireContext()) // Causes switch animation
 
         updateAuthenticationWarningVisibility()
     }
 
-    private fun askForFingerprintAndChangeSetting(fingerprintPreference: SwitchPreferenceCompat, newValue: Boolean) {
+    private fun showDisableAuthenticationCompletelyDialog(onDisableCompletely: () -> Unit) {
+        // Warn user if he is about to completely disable authentication
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.disable_authentication_completely)
+            .setMessage(R.string.disable_authentication_completely_warning)
+            .setPositiveButton(R.string.disable_authentication_completely) { dialog, _ ->
+                onDisableCompletely()
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.cancel) { dialog, _ ->
+                dialog.cancel()
+            }
+            .setOnCancelListener {
+                // Reset switches
+                appPasswordPreference.isChecked = isAppPasswordEnabled(requireContext()) // Causes switch animation
+                fingerprintPreference.isChecked = isFingerprintEnabled(requireContext()) // Causes switch animation
+            }
+            .show()
+    }
+
+    private fun askForFingerprintToEnableFingerprint() {
         // Require fingerprint to change this setting
         fingerprintAuthenticationHelper.doAuthentication(
             requireActivity(),
             promptSubtitle = getString(R.string.fingerprint_needed_to_change_the_setting),
-        ) {
-            fingerprintPreference.isChecked = newValue // update switch
-            setFingerprintEnabled(requireContext(), newValue)
-            updateAuthenticationWarningVisibility()
+            onSuccess = { changeFingerprintSetting(true) },
+            onFailure = { fingerprintPreference.isChecked = isFingerprintEnabled(requireContext()) }
+        )
+    }
+
+    private fun authenticateToDisableFingerprintSetting() {
+        val authenticationIntent = Intent(requireContext(), AuthenticationActivity::class.java).apply {
+            putExtra(
+                AuthenticationActivity.EXTRA_DETAILED_AUTHENTICATION_MESSAGE,
+                getString(R.string.authenticate_to_disable_fingerprint_authentication)
+            )
         }
+        authenticationLauncherToDisableFingerprint.launch(authenticationIntent)
+    }
+
+    private fun authenticateToDisableAppPasswordSetting() {
+        val authenticationIntent = Intent(requireContext(), AuthenticationActivity::class.java).apply {
+            putExtra(
+                AuthenticationActivity.EXTRA_DETAILED_AUTHENTICATION_MESSAGE,
+                getString(R.string.authenticate_to_disable_app_password_authentication)
+            )
+        }
+        authenticationLauncherToDisableAppPassword.launch(authenticationIntent)
+    }
+
+    private fun changeFingerprintSetting(newValue: Boolean) {
+        fingerprintPreference.isChecked = newValue // update switch
+        setFingerprintEnabled(requireContext(), newValue)
+        updateAuthenticationWarningVisibility()
+    }
+
+    private fun changeAppPasswordSettingToDisabled() {
+        appPasswordPreference.isChecked = false // update switch
+        disableAppPassword(requireContext())
+        updateAuthenticationWarningVisibility()
     }
 
     private fun updateAuthenticationWarningVisibility() {

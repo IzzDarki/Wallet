@@ -114,6 +114,7 @@ open class AuthenticationActivity : AppCompatActivity() {
      */
     protected open fun onSuccessfulAuthentication() {
         // can be overridden to do something else
+        setResult(RESULT_OK)
     }
 
     private fun authenticate() {
@@ -136,7 +137,7 @@ open class AuthenticationActivity : AppCompatActivity() {
     private fun promptFingerprint() {
         fingerprintAuthenticationHelper.doAuthentication(
             activity = this,
-            promptSubtitle = getString(R.string.fingerprint_needed_to_open_the_app),
+            promptSubtitle = "",
         ) {
             fingerprintDone = true
             finishIfAuthenticated()
