@@ -156,35 +156,3 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 }
-
-class DefaultValuesSettingsFragment : PreferenceFragmentCompat() {
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.default_values_preferences, rootKey)
-    }
-}
-
-class CreditsSettingsFragment : PreferenceFragmentCompat() {
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.credits_preferences, rootKey)
-    }
-}
-
-class AppInfoSettingsFragment : PreferenceFragmentCompat() {
-
-    private val navController get() = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main)
-
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.app_info_preferences, rootKey)
-
-        // Set text of version preference
-        val versionPreference = findPreference<Preference>(getString(R.string.preferences_version_key))
-        versionPreference?.summary = getString(R.string.version_name) + "\n" + getString(R.string.preferences_version_update_info)
-
-        // Update log
-        val updateLogPreference = findPreference<Preference>(getString(R.string.preferences_update_log_key))
-        updateLogPreference?.setOnPreferenceClickListener {
-            navController.navigate(R.id.action_nav_app_info_to_update_log)
-            true
-        }
-    }
-}
