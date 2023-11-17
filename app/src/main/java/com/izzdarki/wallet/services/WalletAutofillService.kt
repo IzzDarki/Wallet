@@ -31,7 +31,7 @@ import com.izzdarki.wallet.logic.autofill.findDataSourcesForRequest
 import com.izzdarki.wallet.logic.autofill.groupOf
 import com.izzdarki.wallet.logic.autofill.valueGivenAutofillHints
 import com.izzdarki.wallet.logic.autofill.valueGivenHintAndText
-import com.izzdarki.wallet.logic.isAuthenticationEnabled
+import com.izzdarki.wallet.logic.authentication.isAuthenticationEnabled
 import com.izzdarki.wallet.storage.CredentialPreferenceStorage
 import com.izzdarki.wallet.ui.authentication.AutofillAuthenticationActivity
 import izzdarki.wallet.R

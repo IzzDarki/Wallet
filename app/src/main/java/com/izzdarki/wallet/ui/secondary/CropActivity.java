@@ -10,7 +10,7 @@ import android.view.MenuItem;
 
 import androidx.appcompat.app.AlertDialog;
 
-import com.izzdarki.wallet.logic.AuthenticatedAppCompatActivity;
+import com.izzdarki.wallet.logic.authentication.AuthenticatedAppCompatActivity;
 import com.izzdarki.wallet.storage.AppPreferenceManager;
 import izzdarki.wallet.R;
 import com.izzdarki.wallet.ui.home.CardAdapter;

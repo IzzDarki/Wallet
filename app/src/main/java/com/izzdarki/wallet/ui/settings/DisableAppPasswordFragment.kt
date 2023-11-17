@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.navigation.Navigation
-import com.izzdarki.wallet.logic.disableAuthentication
-import com.izzdarki.wallet.logic.isFingerprintEnabled
-import com.izzdarki.wallet.logic.isPasswordCorrect
+import com.izzdarki.wallet.logic.authentication.disableAuthentication
+import com.izzdarki.wallet.logic.authentication.isFingerprintEnabled
+import com.izzdarki.wallet.logic.authentication.isPasswordCorrect
 import com.izzdarki.wallet.storage.authenticationStorage
 import izzdarki.wallet.R
 import izzdarki.wallet.databinding.FragmentDisableAuthenticationBinding

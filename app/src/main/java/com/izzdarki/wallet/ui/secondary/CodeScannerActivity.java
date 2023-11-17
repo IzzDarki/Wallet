@@ -14,7 +14,7 @@ import androidx.core.content.ContextCompat;
 
 import izzdarki.wallet.R;
 import com.google.zxing.Result;
-import com.izzdarki.wallet.logic.AuthenticatedAppCompatActivity;
+import com.izzdarki.wallet.logic.authentication.AuthenticatedAppCompatActivity;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -26,7 +26,7 @@ public class CodeScannerActivity extends AuthenticatedAppCompatActivity implemen
     private ZXingScannerView scannerView;
 
     // permission
-    private ActivityResultLauncher<String> requestCameraPermissionLauncher =
+    private final ActivityResultLauncher<String> requestCameraPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
                 @Override
                 public void onActivityResult(Boolean isGranted) {

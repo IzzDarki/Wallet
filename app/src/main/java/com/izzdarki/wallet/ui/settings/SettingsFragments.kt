@@ -10,9 +10,9 @@ import androidx.navigation.Navigation
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
-import com.izzdarki.wallet.logic.isFingerprintEnabled
-import com.izzdarki.wallet.logic.isAppPasswordEnabled
-import com.izzdarki.wallet.logic.setFingerprintEnabled
+import com.izzdarki.wallet.logic.authentication.isFingerprintEnabled
+import com.izzdarki.wallet.logic.authentication.isAppPasswordEnabled
+import com.izzdarki.wallet.logic.authentication.setFingerprintEnabled
 import com.izzdarki.wallet.utils.FingerprintAuthenticationHelper
 
 class SettingsFragment : PreferenceFragmentCompat() {

@@ -1,12 +1,10 @@
-package com.izzdarki.wallet.logic
+package com.izzdarki.wallet.logic.authentication
 
 import android.content.Intent
-import android.util.Log
+import android.content.IntentFilter
+import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.izzdarki.wallet.storage.authenticationStorage
 import com.izzdarki.wallet.ui.authentication.AuthenticationActivity
-import java.text.SimpleDateFormat
-import java.util.Date
 
 open class AuthenticatedAppCompatActivity : AppCompatActivity() {
 
@@ -19,9 +17,28 @@ open class AuthenticatedAppCompatActivity : AppCompatActivity() {
 
     protected var authenticationMessage: String? = null
     private var wasAuthenticatedOnActivityResume = false
+    private var screenOffReceiver: ScreenOffBroadcastReceiver? = null
+
+    companion object {
+        private var screenOffReceiverRegistered = false
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // Register screen off receiver
+        if (!screenOffReceiverRegistered) { // Prevents multiple instances of this activity base class from registering the receiver each on their own
+            screenOffReceiverRegistered = true
+            screenOffReceiver = ScreenOffBroadcastReceiver()
+            registerReceiver(
+                screenOffReceiver,
+                IntentFilter(ScreenOffBroadcastReceiver.INTENT_FILTER_ACTION)
+            )
+        }
+    }
 
     override fun onResume() {
-        if (!isAuthenticated(this)) {
+        if (!isAuthenticated(this)) { // also checks if authentication is enabled
             wasAuthenticatedOnActivityResume = false
             startActivity(
                 Intent(this, AuthenticationActivity::class.java).apply {
@@ -48,5 +65,19 @@ open class AuthenticatedAppCompatActivity : AppCompatActivity() {
 //            Log.d("asdf", "Activity ${this.javaClass.simpleName} updated authentication time to $authenticationTimeFormatted")
 //        }
         super.onPause()
+    }
+
+    override fun onDestroy() {
+        // Unregister screen off receiver
+        // When the app is closed this will unregister the receiver, therefore the user will stay authenticated even when the screen is turned off
+        // But there is no good way to keep the receiver active independently of the app's lifecycle
+        // Un-authenticating the user on activity destroy is also not a good option,
+        // because it's unclear when what activity is destroyed => possibly too many authentication requests
+        if (screenOffReceiver != null) { // This only ScreenOffReceiver is registered to this activity's context
+            screenOffReceiverRegistered = false
+            unregisterReceiver(screenOffReceiver)
+            screenOffReceiver = null
+        }
+        super.onDestroy()
     }
 }

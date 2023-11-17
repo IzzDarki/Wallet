@@ -10,7 +10,6 @@ import android.content.res.Configuration
 import android.os.Handler
 import android.os.Looper
 import android.os.ResultReceiver
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -62,14 +61,10 @@ class HomeCredentialsFragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true) // this fragment uses the action bar
-
-        Log.d("asdf", "onCreate in HomeCredentialsFragment")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        Log.d("asdf", "onViewCreated in HomeCredentialsFragment")
 
         // hooks
         cardGridRecyclerView = view.findViewById(R.id.fragment_home_cards_card_grid_recycler_view)

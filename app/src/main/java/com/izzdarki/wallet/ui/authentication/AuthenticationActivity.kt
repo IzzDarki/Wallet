@@ -5,12 +5,12 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
-import com.izzdarki.wallet.logic.isAppPasswordEnabled
-import com.izzdarki.wallet.logic.isPasswordCorrect
+import com.izzdarki.wallet.logic.authentication.isAppPasswordEnabled
+import com.izzdarki.wallet.logic.authentication.isPasswordCorrect
 
-import com.izzdarki.wallet.logic.isAuthenticationEnabled
-import com.izzdarki.wallet.logic.isFingerprintEnabled
-import com.izzdarki.wallet.logic.updateAuthenticationTime
+import com.izzdarki.wallet.logic.authentication.isAuthenticationEnabled
+import com.izzdarki.wallet.logic.authentication.isFingerprintEnabled
+import com.izzdarki.wallet.logic.authentication.updateAuthenticationTime
 import com.izzdarki.wallet.storage.authenticationStorage
 import com.izzdarki.wallet.utils.FingerprintAuthenticationHelper
 import izzdarki.wallet.R

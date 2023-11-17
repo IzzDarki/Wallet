@@ -1,7 +1,6 @@
-package com.izzdarki.wallet.logic
+package com.izzdarki.wallet.logic.authentication
 
 import android.content.Context
-import android.util.Log
 import com.izzdarki.wallet.storage.authenticationStorage
 import org.signal.argon2.Argon2
 import org.signal.argon2.MemoryCost
@@ -112,7 +111,7 @@ fun isPasswordCorrect(encodedPassword: String, password: String): Boolean =
 
 
 private fun isAuthenticationExpired(context: Context): Boolean {
-    Log.d("asdf", "isAuthenticationExpired: ${(System.currentTimeMillis() - authenticationStorage.readLastAuthenticationTime(context)).toFloat() / 1000f}")
+    // Log.d("asdf", "isAuthenticationExpired: ${(System.currentTimeMillis() - authenticationStorage.readLastAuthenticationTime(context)).toFloat() / 1000f}")
     return System.currentTimeMillis() - authenticationStorage.readLastAuthenticationTime(context) >= AUTHENTICATION_TIMEOUT_MILLIS
 }
 

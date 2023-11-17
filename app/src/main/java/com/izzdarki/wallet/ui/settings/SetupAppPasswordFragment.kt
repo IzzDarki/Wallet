@@ -9,9 +9,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.doOnTextChanged
 import androidx.navigation.Navigation
-import com.izzdarki.wallet.logic.disableAuthentication
-import com.izzdarki.wallet.logic.setNewAppPassword
-import com.izzdarki.wallet.logic.updateAuthenticationTime
+import com.izzdarki.wallet.logic.authentication.disableAuthentication
+import com.izzdarki.wallet.logic.authentication.setNewAppPassword
+import com.izzdarki.wallet.logic.authentication.updateAuthenticationTime
 import izzdarki.wallet.R
 import izzdarki.wallet.databinding.FragmentSetupAuthenticationBinding
 

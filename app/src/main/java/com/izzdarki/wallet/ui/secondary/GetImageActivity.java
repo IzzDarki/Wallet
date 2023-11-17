@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 
 import izzdarki.wallet.R;
 
-import com.izzdarki.wallet.logic.AuthenticatedAppCompatActivity;
+import com.izzdarki.wallet.logic.authentication.AuthenticatedAppCompatActivity;
 import com.izzdarki.wallet.utils.Utility;
 
 import java.io.File;

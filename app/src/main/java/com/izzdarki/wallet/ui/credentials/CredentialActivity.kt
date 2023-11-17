@@ -12,7 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import com.google.zxing.BarcodeFormat
 import com.izzdarki.wallet.data.Barcode
 import com.izzdarki.wallet.data.Credential
-import com.izzdarki.wallet.logic.AuthenticatedAppCompatActivity
+import com.izzdarki.wallet.logic.authentication.AuthenticatedAppCompatActivity
 import com.izzdarki.wallet.storage.AppPreferenceManager
 import com.izzdarki.wallet.storage.CredentialPreferenceStorage
 import com.izzdarki.wallet.storage.ImageDecodingException

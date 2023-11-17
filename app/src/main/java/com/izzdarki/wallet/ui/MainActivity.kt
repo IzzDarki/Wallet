@@ -8,7 +8,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
-import com.izzdarki.wallet.logic.AuthenticatedAppCompatActivity
+import com.izzdarki.wallet.logic.authentication.AuthenticatedAppCompatActivity
 import com.izzdarki.wallet.logic.updates.getUpdateToVersion10Log
 import com.izzdarki.wallet.logic.updates.showUpdateAlert
 import com.izzdarki.wallet.services.ClearDirectoryService

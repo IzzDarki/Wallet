@@ -20,6 +20,10 @@ class Application : Application() {
         }
     }
 
+    override fun onTerminate() {
+        super.onTerminate()
+    }
+
     private fun setThemeFromPreferences() {
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_UNSPECIFIED) {
             val valueString = AppPreferenceManager.getAppDarkMode(this)
