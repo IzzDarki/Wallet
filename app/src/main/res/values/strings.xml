@@ -65,7 +65,7 @@
 
     <string name="preferences_default_values_key" translatable="false">preferences.default_values</string>
     <string name="preferences_default_values_title">Default entry values</string>
-    <string name="preferences_default_values_summary">Edit the default values when creating a new entry</string>
+    <string name="preferences_default_values_summary">Edit the default values to be used when creating a new entry</string>
 
     <string name="preferences_default_values_barcode_key" translatable="false">default_values_preferences.barcode_key</string>
     <string name="preferences_default_values_barcode_default" translatable="false">@string/barcode_type_value_qr</string>
@@ -288,7 +288,7 @@
     <string name="example_password_username">gustav_mahler</string>
     <string name="example_password_value">Alma</string>
     <string name="the_image_will_be_removed_when_you_save_the_entry">The image will be removed if you save the entry.</string>
-    <string name="updated_to_x">Updated to %s</string>
+    <string name="updated_to_version_x">Updated to version %s</string>
     <string name="x_for_y">%s for %s</string>
     <string name="preferences_enable_fingerprint_authentication_summary">Use your fingerprint to open the app</string>
     <string name="fingerprint_authentication">Fingerprint authentication</string>

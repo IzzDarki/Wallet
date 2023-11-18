@@ -50,7 +50,7 @@
     <string name="preferences_back_confirm_entries_crop">Wenn du ein Bild zuschneidest</string>
     <string name="preferences_advanced_title">Erweitert</string>
     <string name="preferences_default_values_title">Standardwerte für neue Einträge</string>
-    <string name="preferences_default_values_summary">Bearbeite die Standardwerte beim Erstellen eines neuen Eintrags</string>
+    <string name="preferences_default_values_summary">Bearbeite die Standardwerte, die für neue Einträge verwendet werden</string>
     <string name="preferences_default_values_barcode_title">Barcode</string>
     <string name="preferences_default_values_code_text_title">Barcode als Text</string>
     <string name="preferences_default_values_code_text_summary">Wähle ob der Barcode standardmäßig zusätzlich als Text angezeigt werden soll oder nicht</string>
@@ -162,7 +162,7 @@
     <string name="example_password_username">gustav_mahler</string>
     <string name="example_password_value">Alma</string>
     <string name="the_image_will_be_removed_when_you_save_the_entry">Das Bild wird entfernt, falls du den Eintrag speicherst.</string>
-    <string name="updated_to_x">App wurde auf %s aktualisiert</string>
+    <string name="updated_to_version_x">Aktualisiert auf version %s</string>
     <string name="new_feature_authentication">Neue Funktion: Authentifizierung</string>
     <string name="new_feature_authentication_text">Du kannst nun Authentifizierung in den Einstellungen einrichten. Verfügbare Methoden sind ein App-Passwort und dein Fingerabdruck. Nach der Einrichtung wirst du jedes Mal, wenn du die App öffnest, aufgefordert, dich zu authentifizieren. Wenn du die App innerhalb von 3 Minuten erneut öffnest, musst du dich aber nicht erneut authentifizieren. Es wird dringend empfohlen, die Authentifizierung einzurichten.</string>
     <string name="cards_and_passwords_in_one_place">Karten und Passwörter am selben Ort</string>

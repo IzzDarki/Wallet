@@ -44,7 +44,7 @@ fun Context.createUpdateView(content: UpdateLog): LinearLayoutCompat {
     val titleView = MaterialTextView(this)
     titleView.setTextAppearance(R.style.TextAppearance_Material3_TitleLarge)
     titleView.setPaddingBottom(resources.getDimension(R.dimen.default_padding).toInt())
-    titleView.text = getString(R.string.updated_to_x).format(content.versionName)
+    titleView.text = getString(R.string.updated_to_version_x).format(content.versionName)
     linearLayout.addView(titleView, 0)
 
     // Sections
