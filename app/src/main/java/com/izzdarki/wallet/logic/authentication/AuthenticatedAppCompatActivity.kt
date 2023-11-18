@@ -3,8 +3,10 @@ package com.izzdarki.wallet.logic.authentication
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.izzdarki.wallet.storage.AppSettingsStorage
 import com.izzdarki.wallet.ui.authentication.AuthenticationActivity
 
 open class AuthenticatedAppCompatActivity : AppCompatActivity() {
@@ -45,6 +47,8 @@ open class AuthenticatedAppCompatActivity : AppCompatActivity() {
                 IntentFilter(ScreenOffBroadcastReceiver.INTENT_FILTER_ACTION)
             )
         }
+
+        updateSecureFlag()
     }
 
     override fun onResume() {
@@ -58,6 +62,7 @@ open class AuthenticatedAppCompatActivity : AppCompatActivity() {
         }
         else
             wasAuthenticatedOnActivityResume = true
+
         super.onResume()
     }
 
@@ -88,5 +93,17 @@ open class AuthenticatedAppCompatActivity : AppCompatActivity() {
             screenOffReceiver = null
         }
         super.onDestroy()
+    }
+
+    /**
+     * If enabled in settings, this will set the secure flag on the window
+     * to prevent screenshots and to hide the content of the app in recent apps
+     */
+    fun updateSecureFlag() {
+        //
+        if (AppSettingsStorage.isPreventScreenshots(this))
+            window?.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        else
+            window?.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
     }
 }

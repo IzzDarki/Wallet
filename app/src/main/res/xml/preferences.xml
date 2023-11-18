@@ -34,6 +34,12 @@
     <PreferenceCategory
         android:title="@string/preferences_advanced_title">
 
+        <SwitchPreferenceCompat
+            android:key="@string/preferences_prevent_screenshots_key"
+            android:title="@string/preferences_prevent_screenshots_title"
+            android:summary="@string/preferences_prevent_screenshots_summary"
+            app:defaultValue="@bool/preferences_prevent_screenshots_default" />
+
         <MultiSelectListPreference
             android:key="@string/preferences_back_confirm_key"
             android:title="@string/preferences_back_confirm_title"

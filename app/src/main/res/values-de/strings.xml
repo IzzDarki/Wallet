@@ -184,5 +184,6 @@
     <string name="authenticate_to_use_x_autofill">Authentifizieren für %s Autofill</string>
     <string name="authenticate_to_disable_fingerprint_authentication">Authentifiziere dich um die Fingerabdruck Authentifizierung zu deaktivieren</string>
     <string name="authenticate_to_disable_app_password_authentication">Authentifiziere dich um das App-Passwort zu deaktivieren</string>
-
+    <string name="preferences_prevent_screenshots_title">Verhindere Screenshots</string>
+    <string name="preferences_prevent_screenshots_summary">Verhindere Screenshots und verstecke den Inhalt der App in der App-Übersicht</string>
 </resources>

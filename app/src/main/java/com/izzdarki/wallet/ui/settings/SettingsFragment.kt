@@ -13,6 +13,7 @@ import androidx.navigation.Navigation
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
+import com.izzdarki.wallet.logic.authentication.AuthenticatedAppCompatActivity
 import com.izzdarki.wallet.logic.authentication.disableAppPassword
 import com.izzdarki.wallet.logic.authentication.isFingerprintEnabled
 import com.izzdarki.wallet.logic.authentication.isAppPasswordEnabled
@@ -121,6 +122,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 askForFingerprintToEnableFingerprint()
 
             true // Update switch state (will be reset if canceled)
+        }
+
+        // Prevent screenshot setting
+        val preventScreenshotPreference: SwitchPreferenceCompat? = findPreference(getString(R.string.preferences_prevent_screenshots_key))
+        preventScreenshotPreference?.setOnPreferenceClickListener {
+            // Called after the value has changed
+            (activity as? AuthenticatedAppCompatActivity)?.updateSecureFlag()
+            true
         }
     }
 

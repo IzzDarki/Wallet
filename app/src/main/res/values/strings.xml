@@ -38,6 +38,10 @@
 
     <string name="preferences_advanced_title">Advanced</string>
 
+    <string name="preferences_prevent_screenshots_key" translatable="false">preferences.prevent_screenshots_key</string>
+    <string name="preferences_prevent_screenshots_title">Prevent screenshots</string>
+    <string name="preferences_prevent_screenshots_summary">Prevent screenshots and hide the content of the app in the recent apps overview</string>
+
     <string name="preferences_back_confirm_key" translatable="false">preferences.confirm_back_key</string>
     <string name="preferences_back_confirm_entry_values_new_entry" translatable="false">1</string>
     <string name="preferences_back_confirm_entry_values_crop" translatable="false">2</string>
