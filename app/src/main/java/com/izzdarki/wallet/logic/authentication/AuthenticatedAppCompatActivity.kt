@@ -3,6 +3,7 @@ package com.izzdarki.wallet.logic.authentication
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.izzdarki.wallet.ui.authentication.AuthenticationActivity
 
@@ -18,6 +19,15 @@ open class AuthenticatedAppCompatActivity : AppCompatActivity() {
     protected var authenticationMessage: String? = null
     private var wasAuthenticatedOnActivityResume = false
     private var screenOffReceiver: ScreenOffBroadcastReceiver? = null
+    private val authenticationLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result?.resultCode != RESULT_OK) {
+            // If authentication failed (ex. user cancelled it), finish this activity
+            // Otherwise the user would be instantly redirected to AuthenticationActivity again
+            finish()
+        }
+    }
 
     companion object {
         private var screenOffReceiverRegistered = false
@@ -40,12 +50,11 @@ open class AuthenticatedAppCompatActivity : AppCompatActivity() {
     override fun onResume() {
         if (!isAuthenticated(this)) { // also checks if authentication is enabled
             wasAuthenticatedOnActivityResume = false
-            startActivity(
-                Intent(this, AuthenticationActivity::class.java).apply {
-                    if (authenticationMessage != null)
-                        putExtra(AuthenticationActivity.EXTRA_DETAILED_AUTHENTICATION_MESSAGE, authenticationMessage)
-                }
-            )
+            val authenticationIntent = Intent(this, AuthenticationActivity::class.java).apply {
+                if (authenticationMessage != null)
+                    putExtra(AuthenticationActivity.EXTRA_DETAILED_AUTHENTICATION_MESSAGE, authenticationMessage)
+            }
+            authenticationLauncher.launch(authenticationIntent)
         }
         else
             wasAuthenticatedOnActivityResume = true

@@ -296,7 +296,6 @@
     <string name="no_biometric_hardware_available">No biometric hardware available</string>
     <string name="biometric_hardware_is_unavailable">Biometric hardware is unavailable</string>
     <string name="biometrics_unavailable_for_unknown_reasons">Biometric hardware is not available for unknown reasons</string>
-    <string name="fingerprint_authentication_failed">Fingerprint authentication failed</string>
     <string name="fingerprint_needed_to_change_the_setting">Touch the sensor to change the setting</string>
     <string name="authenticate_using_fingerprint_and_app_password">Authenticate using fingerprint and app password</string>
     <string name="setup_app_password_message">Setup an app password that you will need to enter when opening the app.</string>

@@ -73,11 +73,6 @@ class FingerprintAuthenticationHelper(activity: FragmentActivity) {
 
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                     // Biometric authentication failed
-                    Toast.makeText(
-                        activity.applicationContext,
-                        activity.getString(R.string.fingerprint_authentication_failed),
-                        Toast.LENGTH_SHORT
-                    ).show()
                     onFailure.invoke()
                 }
 

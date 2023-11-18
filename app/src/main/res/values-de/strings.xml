@@ -177,7 +177,6 @@
     <string name="no_biometric_hardware_available">Keine biometrische Hardware verfügbar</string>
     <string name="biometric_hardware_is_unavailable">Biometrische Hardware ist nicht verfügbar</string>
     <string name="biometrics_unavailable_for_unknown_reasons">Biometrische hardware aus unbekannten Gründen nicht verfügbar</string>
-    <string name="fingerprint_authentication_failed">Authentifizierung per Fingerabdruck fehlgeschlagen</string>
     <string name="disable_authentication_completely">Authentifizierung komplett deaktivieren</string>
     <string name="fingerprint_needed_to_change_the_setting">Berühre den Sensor um die Einstellung zu ändern</string>
     <string name="authenticate_using_fingerprint_and_app_password">Authentifizierung per Fingerabdruck und App-Passwort</string>
