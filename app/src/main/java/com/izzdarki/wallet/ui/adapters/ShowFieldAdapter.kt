@@ -16,16 +16,15 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.divider.MaterialDivider
 import izzdarki.wallet.R
-import com.izzdarki.wallet.storage.AppPreferenceManager
+import com.izzdarki.wallet.storage.AppSettingsStorage
 import com.izzdarki.wallet.data.CredentialField
 import com.izzdarki.wallet.utils.Utility
 import com.google.android.material.textview.MaterialTextView
 
-class ShowFieldAdapter(properties: List<CredentialField>, onTextVisibilityChanged: (() -> Unit)?)
-    : RecyclerView.Adapter<ShowFieldAdapter.ViewHolder>() {
-
-    private var properties = properties
-    private var onTextVisibilityChanged = onTextVisibilityChanged
+class ShowFieldAdapter(
+    private val properties: List<CredentialField>,
+    private val onTextVisibilityChanged: (() -> Unit)?
+) : RecyclerView.Adapter<ShowFieldAdapter.ViewHolder>() {
 
     inner class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         var divider: MaterialDivider = v.findViewById(R.id.show_property_divider)
@@ -72,7 +71,7 @@ class ShowFieldAdapter(properties: List<CredentialField>, onTextVisibilityChange
         fun setValueHidden(textHidden: Boolean) {
             if (textHidden) {
                 valueView.typeface = Typeface.MONOSPACE
-                if (AppPreferenceManager.isLengthHiddenInSecretFields(context))
+                if (AppSettingsStorage.isLengthHiddenInSecretFields(context))
                     valueView.setText(R.string.hidden_password_dots)
                 else {
                     val valueLength: Int = properties[adapterPosition].value.length
@@ -96,10 +95,10 @@ class ShowFieldAdapter(properties: List<CredentialField>, onTextVisibilityChange
 
         /**
          * Changes the typeface.
-         * If preference [AppPreferenceManager.isMonospaceInSecretFields] is true, secret properties are monospace, others are 'default' (not monospace).
+         * If preference [AppSettingsStorage.isMonospaceInSecretFields] is true, secret properties are monospace, others are 'default' (not monospace).
          */
         fun setValueTypeface() {
-            if (properties[adapterPosition].secret && AppPreferenceManager.isMonospaceInSecretFields(context))
+            if (properties[adapterPosition].secret && AppSettingsStorage.isMonospaceInSecretFields(context))
                 valueView.typeface = Typeface.MONOSPACE
             else
                 valueView.typeface = Typeface.DEFAULT

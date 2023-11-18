@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
 import com.google.android.material.color.DynamicColors
 import com.izzdarki.wallet.ui.settings.SettingsFragment
-import com.izzdarki.wallet.storage.AppPreferenceManager
+import com.izzdarki.wallet.storage.AppSettingsStorage
 import com.izzdarki.wallet.logic.updates.updateToCredentialPreferences
 import com.izzdarki.wallet.ui.MainActivity
 import izzdarki.wallet.BuildConfig
@@ -23,7 +23,7 @@ class Application : Application() {
 
     private fun setThemeFromPreferences() {
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_UNSPECIFIED) {
-            val valueString = AppPreferenceManager.getAppDarkMode(this)
+            val valueString = AppSettingsStorage.getAppDarkMode(this)
 
             val value =
                 if (valueString == null)

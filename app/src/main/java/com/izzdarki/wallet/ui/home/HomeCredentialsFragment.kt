@@ -28,8 +28,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.izzdarki.wallet.data.Credential
 import com.izzdarki.wallet.data.CredentialStableIDKeyProvider
 import com.izzdarki.wallet.ui.credentials.CredentialActivity
-import com.izzdarki.wallet.storage.AppPreferenceManager
-import com.izzdarki.wallet.storage.AppPreferenceManager.SortingType
+import com.izzdarki.wallet.storage.AppSettingsStorage
+import com.izzdarki.wallet.storage.AppSettingsStorage.SortingType
 import com.izzdarki.wallet.services.CreateExampleCredentialService
 import com.izzdarki.wallet.storage.CredentialPreferenceStorage
 import com.izzdarki.wallet.utils.MultiSelectItemDetailsLookup
@@ -101,9 +101,9 @@ class HomeCredentialsFragment
             cardGridRecyclerView,
             cards
         ) {
-            AppPreferenceManager.setCredentialsSortingType(requireContext(), SortingType.CustomSorting) // change sorting type to custom
-            AppPreferenceManager.setCredentialsSortReverse(requireContext(), false) // the current sorting is not reverse (even if it was reverse before moving an item)
-            AppPreferenceManager.setCredentialsCustomSortingOrder(
+            AppSettingsStorage.setCredentialsSortingType(requireContext(), SortingType.CustomSorting) // change sorting type to custom
+            AppSettingsStorage.setCredentialsSortReverse(requireContext(), false) // the current sorting is not reverse (even if it was reverse before moving an item)
+            AppSettingsStorage.setCredentialsCustomSortingOrder(
                 requireContext(),
                 cards.map { it.id }
             ) // save the custom sorting to preferences
@@ -164,7 +164,7 @@ class HomeCredentialsFragment
      * Sorts the cards list, notifies the adapter and saves the new sorting type to preferences
      */
     private fun sortCards(sortingType: SortingType) {
-        AppPreferenceManager.setCredentialsSortingType(requireContext(), sortingType) // updates sorting type in preferences
+        AppSettingsStorage.setCredentialsSortingType(requireContext(), sortingType) // updates sorting type in preferences
         sortCardsArray(sortingType)
         cardGridRecyclerView.adapter?.notifyDataSetChanged()
     }
@@ -178,7 +178,7 @@ class HomeCredentialsFragment
         val oldCards = cards.toList()
         cards.clear()
         cards.addAll(CredentialPreferenceStorage.readAllCredentials(requireContext()).toMutableList())
-        sortCardsArray(AppPreferenceManager.getCredentialsSortingType(requireContext())) // sort the list according to saved sorting type
+        sortCardsArray(AppSettingsStorage.getCredentialsSortingType(requireContext())) // sort the list according to saved sorting type
         if (searchQuery != "") {
             cards.retainAll {
                 it.name.contains(searchQuery, ignoreCase = true)
@@ -252,13 +252,13 @@ class HomeCredentialsFragment
         })
 
         // Set checkboxes
-        when (AppPreferenceManager.getCredentialsSortingType(requireContext())) {
+        when (AppSettingsStorage.getCredentialsSortingType(requireContext())) {
             SortingType.ByName -> menu.findItem(R.id.home_action_bar_sort_by_name)?.isChecked = true
             SortingType.CustomSorting -> menu.findItem(R.id.home_action_bar_sort_custom_order)?.isChecked = true
             SortingType.ByCreationDate -> menu.findItem(R.id.home_action_bar_sort_by_creation_date)?.isChecked = true
             SortingType.ByAlterationDate -> menu.findItem(R.id.home_action_bar_sort_by_alteration_date)?.isChecked = true
         }
-        menu.findItem(R.id.home_action_bar_sort_reverse)?.isChecked = AppPreferenceManager.isCredentialsSortReverse(requireContext())
+        menu.findItem(R.id.home_action_bar_sort_reverse)?.isChecked = AppSettingsStorage.isCredentialsSortReverse(requireContext())
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -281,8 +281,8 @@ class HomeCredentialsFragment
             }
             R.id.home_action_bar_sort_reverse -> {
                 item.isChecked = !item.isChecked // toggle checkbox
-                AppPreferenceManager.setCredentialsSortReverse(requireContext(), item.isChecked)
-                sortCards(AppPreferenceManager.getCredentialsSortingType(requireContext())) // sort again
+                AppSettingsStorage.setCredentialsSortReverse(requireContext(), item.isChecked)
+                sortCards(AppSettingsStorage.getCredentialsSortingType(requireContext())) // sort again
             }
             R.id.home_action_bar_edit_selected_item -> {
                 editCard(id = selectionTracker.selection.first())
@@ -335,14 +335,14 @@ class HomeCredentialsFragment
         when (sortingType) {
             SortingType.ByName -> cards.sortBy { it.name }
             SortingType.CustomSorting -> {
-                val savedCustomSortingIDs = AppPreferenceManager.getCredentialsCustomSortingOrder(requireContext())
+                val savedCustomSortingIDs = AppSettingsStorage.getCredentialsCustomSortingOrder(requireContext())
                 cards.sortBy { savedCustomSortingIDs.indexOf(it.id) }
             }
             SortingType.ByCreationDate -> cards.sortBy { it.creationDate }
             SortingType.ByAlterationDate -> cards.sortBy { it.alterationDate }
         }
 
-        if (AppPreferenceManager.isCredentialsSortReverse(requireContext()))
+        if (AppSettingsStorage.isCredentialsSortReverse(requireContext()))
             cards.reverse()
     }
 

@@ -4,7 +4,7 @@ package com.izzdarki.wallet.logic.updates
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.izzdarki.wallet.data.CredentialField
-import com.izzdarki.wallet.storage.AppPreferenceManager
+import com.izzdarki.wallet.storage.AppSettingsStorage
 import com.izzdarki.wallet.storage.CardStorage
 import com.izzdarki.wallet.storage.CredentialPreferenceStorage
 import com.izzdarki.wallet.storage.PasswordStorage
@@ -174,7 +174,7 @@ class CardAndPasswordToCredentialUpdateTest {
 
         // Assert that sorting order is now in CredentialStorage
         val expectedSortingOrder = listOf(card4Id, card1Id, card3Id, card2Id, password2Id, password1Id)
-        assertEquals(expectedSortingOrder, AppPreferenceManager.getCredentialsCustomSortingOrder(context))
+        assertEquals(expectedSortingOrder, AppSettingsStorage.getCredentialsCustomSortingOrder(context))
 
         // Assert that cards are now in CredentialStorage
         val card1 = CredentialPreferenceStorage.readCredential(context, card1Id)

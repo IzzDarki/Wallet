@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.*
 import android.view.View.OnFocusChangeListener
 import android.view.inputmethod.EditorInfo
@@ -29,7 +28,7 @@ import androidx.security.crypto.MasterKey
 import com.izzdarki.colorpickerview.dialog.ColorPickerDialogFragment
 import izzdarki.wallet.R
 import com.izzdarki.wallet.ui.adapters.EditFieldAdapter
-import com.izzdarki.wallet.storage.AppPreferenceManager
+import com.izzdarki.wallet.storage.AppSettingsStorage
 import com.izzdarki.wallet.services.CreateExampleCredentialService
 import com.izzdarki.wallet.ui.*
 import com.izzdarki.wallet.ui.secondary.CodeScannerActivity
@@ -193,8 +192,8 @@ class EditCredentialActivity
             if (!hasFocus) {
                 credential.barcode = Barcode(
                     code = barcodeInputEditText.text.toString().trim(),
-                    type = credential.barcode?.type ?: AppPreferenceManager.getDefaultBarcodeType(this),
-                    showText = credential.barcode?.showText ?: AppPreferenceManager.getDefaultWithText(this)
+                    type = credential.barcode?.type ?: AppSettingsStorage.getDefaultBarcodeType(this),
+                    showText = credential.barcode?.showText ?: AppSettingsStorage.getDefaultWithText(this)
                 )
                 barcodeInputEditText.setText(credential.barcode!!.code) // removes leading and trailing spaces
             }
@@ -216,7 +215,7 @@ class EditCredentialActivity
         if (credential.barcode == null || credential.barcode?.code == "")
             hideBarcodeDetailsLayout()
         barcodeTypeInput.setText(codeTypeIntToString(this,
-            credential.barcode?.type ?: AppPreferenceManager.getDefaultBarcodeType(this)
+            credential.barcode?.type ?: AppSettingsStorage.getDefaultBarcodeType(this)
         ))
         barcodeTypeInput.setAdapter<ArrayAdapter<String>>(getNewBarcodeTypeAdapter())
         barcodeTypeInput.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
@@ -226,7 +225,7 @@ class EditCredentialActivity
         barcodeTypeInput.width = ((calculatedLayoutWidth - resources.getDimension(R.dimen.text_input_padding_bottom)) / 2).toInt()
 
         // barcode show text
-        barcodeShowTextInput.setText(barcodeShowTextBoolToString(credential.barcode?.showText ?: AppPreferenceManager.getDefaultWithText(this)))
+        barcodeShowTextInput.setText(barcodeShowTextBoolToString(credential.barcode?.showText ?: AppSettingsStorage.getDefaultWithText(this)))
         barcodeShowTextInput.setAdapter(
             ArrayAdapter(
                 this,
@@ -399,8 +398,8 @@ class EditCredentialActivity
 
         readAndCheckAllInput() // Read input
 
-        if (AppPreferenceManager.isBackConfirmNewCredential(this) && isCreateNewCredentialIntent
-            || AppPreferenceManager.isBackConfirmEditCredential(this) && !isCreateNewCredentialIntent
+        if (AppSettingsStorage.isBackConfirmNewCredential(this) && isCreateNewCredentialIntent
+            || AppSettingsStorage.isBackConfirmEditCredential(this) && !isCreateNewCredentialIntent
                 && CredentialPreferenceStorage.readCredential(this, credential.id) != credential
         ) // Check if credential has been modified
         {
@@ -497,7 +496,7 @@ class EditCredentialActivity
             credential.barcode = Barcode(
                 code,
                 codeType,
-                credential.barcode?.showText ?: AppPreferenceManager.getDefaultWithText(this)
+                credential.barcode?.showText ?: AppSettingsStorage.getDefaultWithText(this)
             )
             barcodeInputEditText.setText(code)
             barcodeTypeInput.setText(codeTypeIntToString(this, codeType))
@@ -676,7 +675,7 @@ class EditCredentialActivity
         ) {
             // draw outline
             credentialColorButton.strokeWidth = resources.getDimension(R.dimen.outline_for_similar_colors_stroke_width).toInt()
-            credentialColorButton.strokeColor = ColorStateList.valueOf(resources.getColor(R.color.card_view_outline_color))
+            credentialColorButton.strokeColor = ColorStateList.valueOf(getColor(R.color.card_view_outline_color))
         } else {
             // remove outline
             credentialColorButton.strokeWidth = 0

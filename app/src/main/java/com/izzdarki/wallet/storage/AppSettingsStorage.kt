@@ -9,7 +9,7 @@ import java.util.*
 /**
  * This static class is used for reading the app preferences
  */
-object AppPreferenceManager {
+object AppSettingsStorage {
 
     private const val PREFERENCE_SORTING_TYPE_KEY = "cards.sorting_type" // Int
     private const val PREFERENCE_SORT_REVERSE_KEY = "cards.sort_reverse" // Boolean
@@ -23,8 +23,28 @@ object AppPreferenceManager {
     }
 
     @JvmStatic
-    fun getCredentialsSortingType(context: Context): SortingType
-        = getSortingType(context, PREFERENCE_SORTING_TYPE_KEY)
+    fun getCredentialsSortingType(context: Context): SortingType {
+        val sortingTypeInt = PreferenceManager.getDefaultSharedPreferences(context)
+            .getInt(PREFERENCE_SORTING_TYPE_KEY, 0)
+
+        return when (sortingTypeInt) {
+            3 -> SortingType.ByAlterationDate
+            2 -> SortingType.ByCreationDate
+            1 -> SortingType.CustomSorting
+            else -> SortingType.ByName
+        }
+    }
+
+    fun setCredentialsSortingType(context: Context, sortingType: SortingType) {
+        val sortingTypeInt = when (sortingType) {
+            SortingType.ByName -> 0
+            SortingType.CustomSorting -> 1
+            SortingType.ByCreationDate -> 2
+            SortingType.ByAlterationDate -> 3
+        }
+        PreferenceManager.getDefaultSharedPreferences(context).edit()
+            .putInt(PREFERENCE_SORTING_TYPE_KEY, sortingTypeInt).apply()
+    }
 
     @JvmStatic
     fun isCredentialsSortReverse(context: Context): Boolean {
@@ -39,12 +59,6 @@ object AppPreferenceManager {
             .split(",")
             .filter { it.isNotEmpty() }
             .mapNotNull { it.toLongOrNull() }
-    }
-
-
-    @JvmStatic
-    fun setCredentialsSortingType(context: Context, sortingType: SortingType) {
-        setSortingType(context, PREFERENCE_SORTING_TYPE_KEY, sortingType)
     }
 
     @JvmStatic
@@ -69,6 +83,14 @@ object AppPreferenceManager {
     fun getAppDarkMode(context: Context): String? {
         return PreferenceManager.getDefaultSharedPreferences(context)
             .getString(context.getString(R.string.preferences_theme_key), null)
+    }
+
+    @JvmStatic
+    fun isPreventScreenshots(context: Context): Boolean {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
+            context.getString(R.string.preferences_prevent_screenshots_key),
+            context.resources.getBoolean(R.bool.preferences_prevent_screenshots_default)
+        )
     }
 
     @JvmStatic
@@ -143,27 +165,5 @@ object AppPreferenceManager {
         val defaultValue: Set<String> = HashSet(listOf(*defaultValueArray))
         return PreferenceManager.getDefaultSharedPreferences(context)
             .getStringSet(context.getString(R.string.preferences_back_confirm_key), defaultValue)
-    }
-
-    private fun getSortingType(context: Context, preferenceKey: String): SortingType {
-        val sortingTypeInt = PreferenceManager.getDefaultSharedPreferences(context)
-            .getInt(preferenceKey, 0)
-
-        return when (sortingTypeInt) {
-            3 -> SortingType.ByAlterationDate
-            2 -> SortingType.ByCreationDate
-            1 -> SortingType.CustomSorting
-            else -> SortingType.ByName
-        }
-    }
-
-    private fun setSortingType(context: Context, preferenceKey: String, sortingType: SortingType) {
-        val sortingTypeInt = when (sortingType) {
-            SortingType.ByName -> 0
-            SortingType.CustomSorting -> 1
-            SortingType.ByCreationDate -> 2
-            SortingType.ByAlterationDate -> 3
-        }
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putInt(preferenceKey, sortingTypeInt).apply()
     }
 }

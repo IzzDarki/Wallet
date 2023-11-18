@@ -13,7 +13,7 @@ import com.google.zxing.BarcodeFormat
 import com.izzdarki.wallet.data.Barcode
 import com.izzdarki.wallet.data.Credential
 import com.izzdarki.wallet.logic.authentication.AuthenticatedAppCompatActivity
-import com.izzdarki.wallet.storage.AppPreferenceManager
+import com.izzdarki.wallet.storage.AppSettingsStorage
 import com.izzdarki.wallet.storage.CredentialPreferenceStorage
 import com.izzdarki.wallet.storage.ImageDecodingException
 import com.izzdarki.wallet.storage.ImageStorage
@@ -115,7 +115,7 @@ open class CredentialActivity : AuthenticatedAppCompatActivity() {
             }
         )
         val detailedErrorMessage =
-            if (AppPreferenceManager.isDetailedErrors(this@CredentialActivity))
+            if (AppSettingsStorage.isDetailedErrors(this@CredentialActivity))
                 throwable?.localizedMessage ?: ""
             else ""
         val beforeAdditionalMessage = if (additionalMessage.isNotEmpty()) ". " else ""

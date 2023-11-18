@@ -6,7 +6,7 @@ import com.izzdarki.wallet.data.Barcode
 import com.izzdarki.wallet.data.Credential
 import com.izzdarki.wallet.data.CredentialField
 import com.izzdarki.wallet.logic.generateNewId
-import com.izzdarki.wallet.storage.AppPreferenceManager
+import com.izzdarki.wallet.storage.AppSettingsStorage
 import com.izzdarki.wallet.storage.CardStorage
 import com.izzdarki.wallet.storage.CredentialPreferenceStorage
 import com.izzdarki.wallet.storage.PasswordStorage
@@ -29,7 +29,7 @@ fun getUpdateToVersion10Log(context: Context) = UpdateLog(
  * Writes the password as the first property, because it is not
  * contained as a special component of [Credential]
  *
- * Also moves custom sorting orders (just without group by labels) to [AppPreferenceManager].
+ * Also moves custom sorting orders (just without group by labels) to [AppSettingsStorage].
  * The new sorting order will reflect the new ids and will
  * contain first the cards and then the passwords.
  */
@@ -58,7 +58,7 @@ fun updateToCredentialPreferences(context: Context) {
     val passwordsCustomSortingOrder = PasswordStorage.readCustomSortingNoGrouping(context)
         .mapNotNull { id -> idMap[id.toLong()] }
     val combinedSortingOrder = (cardsCustomSortingOrder + passwordsCustomSortingOrder).distinct()
-    AppPreferenceManager.setCredentialsCustomSortingOrder(context, combinedSortingOrder)
+    AppSettingsStorage.setCredentialsCustomSortingOrder(context, combinedSortingOrder)
 }
 
 

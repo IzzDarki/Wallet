@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import izzdarki.wallet.R
 import com.izzdarki.wallet.ui.adapters.ShowFieldAdapter
-import com.izzdarki.wallet.storage.AppPreferenceManager
+import com.izzdarki.wallet.storage.AppSettingsStorage
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -75,8 +75,8 @@ class ShowCredentialActivity : CredentialActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         // variables
-        codeForegroundColor = resources.getColor(R.color.barcode_foreground_color)
-        codeBackgroundColor = resources.getColor(R.color.barcode_background_color)
+        codeForegroundColor = getColor(R.color.barcode_foreground_color)
+        codeBackgroundColor = getColor(R.color.barcode_background_color)
 
         // credential properties recyclerview
         credentialPropertiesRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -179,7 +179,7 @@ class ShowCredentialActivity : CredentialActivity() {
             // function to handle exceptions
             val catchExceptionFunc = { e: Exception ->
                 val detailedErrorMessage =
-                    if (AppPreferenceManager.isDetailedErrors(this))
+                    if (AppSettingsStorage.isDetailedErrors(this))
                         System.getProperty("line.separator")!! + e.localizedMessage
                     else
                         ""
@@ -302,11 +302,6 @@ class ShowCredentialActivity : CredentialActivity() {
 
         enum class StdFormats {
             Square, Horizontal
-        }
-
-        constructor(width: Float, height: Float) {
-            this.width = width.toInt()
-            this.height = height.toInt()
         }
 
         constructor(layoutWidth: Float, format: StdFormats) {

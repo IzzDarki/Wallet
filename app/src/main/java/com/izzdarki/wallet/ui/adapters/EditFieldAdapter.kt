@@ -16,19 +16,18 @@ import androidx.core.util.Pair
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.materialswitch.MaterialSwitch
 import izzdarki.wallet.R
-import com.izzdarki.wallet.storage.AppPreferenceManager
+import com.izzdarki.wallet.storage.AppSettingsStorage
 import com.izzdarki.wallet.data.CredentialField
 import com.izzdarki.wallet.utils.Utility
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
-class EditFieldAdapter(properties: MutableList<CredentialField>, onPropertyRemovalListener: (() -> Unit)?)
-    : RecyclerView.Adapter<EditFieldAdapter.ViewHolder>() {
+class EditFieldAdapter(
+    private val properties: MutableList<CredentialField>,
+    private val onPropertyRemovalListener: (() -> Unit)?
+) : RecyclerView.Adapter<EditFieldAdapter.ViewHolder>() {
 
     // properties
-    private var properties: MutableList<CredentialField> = properties
-
-    private var onPropertyRemovalListener: (() -> Unit)? = onPropertyRemovalListener
     private var cursorToReset = Pair(-1, -1) // first: position in adapter (-1 = none), second: cursor position
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -152,7 +151,7 @@ class EditFieldAdapter(properties: MutableList<CredentialField>, onPropertyRemov
             val cursor = textInputEditText.selectionStart
             if (!isTextHidden)
                 textInputEditText.inputType = Utility.inputTypeTextHiddenPassword
-            else if (AppPreferenceManager.isMonospaceInSecretFields(context))
+            else if (AppSettingsStorage.isMonospaceInSecretFields(context))
                 textInputEditText.inputType = Utility.inputTypeTextVisiblePassword
             else
                 textInputEditText.inputType = Utility.inputTypeTextNormal

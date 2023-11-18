@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import androidx.appcompat.app.AlertDialog;
 
 import com.izzdarki.wallet.logic.authentication.AuthenticatedAppCompatActivity;
-import com.izzdarki.wallet.storage.AppPreferenceManager;
+import com.izzdarki.wallet.storage.AppSettingsStorage;
 import izzdarki.wallet.R;
 import com.izzdarki.wallet.ui.home.CardAdapter;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -134,7 +134,7 @@ public class CropActivity extends AuthenticatedAppCompatActivity implements Crop
      * @return true if the activity has been finished, false otherwise
      */
     protected boolean requestCancel() {
-        if (AppPreferenceManager.isBackConfirmCrop(this)) {
+        if (AppSettingsStorage.isBackConfirmCrop(this)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.cancel_image_selection_title);
             builder.setMessage(R.string.cancel_image_selection_message);
