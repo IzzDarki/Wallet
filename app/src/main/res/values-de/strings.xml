@@ -164,7 +164,7 @@
     <string name="the_image_will_be_removed_when_you_save_the_entry">Das Bild wird entfernt, falls du den Eintrag speicherst.</string>
     <string name="updated_to_x">App wurde auf %s aktualisiert</string>
     <string name="new_feature_authentication">Neue Funktion: Authentifizierung</string>
-    <string name="new_feature_authentication_text"></string> <!-- TODO -->
+    <string name="new_feature_authentication_text">Du kannst nun Authentifizierung in den Einstellungen einrichten. Verfügbare Methoden sind ein App-Passwort und dein Fingerabdruck. Nach der Einrichtung wirst du jedes Mal, wenn du die App öffnest, aufgefordert, dich zu authentifizieren. Wenn du die App innerhalb von 3 Minuten erneut öffnest, musst du dich aber nicht erneut authentifizieren. Es wird dringend empfohlen, die Authentifizierung einzurichten.</string>
     <string name="cards_and_passwords_in_one_place">Karten und Passwörter am selben Ort</string>
     <string name="cards_and_passwords_in_one_place_text">Karten und Passwörter sind jetzt am selben Ort.</string>
     <string name="preferences_version_update_info">Klicke hier um eine Liste aller Versionen auf GitHub zu sehen. Dort kannst du immer die neuste Version herunterladen und installieren.</string>

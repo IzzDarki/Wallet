@@ -12,7 +12,6 @@ import com.izzdarki.wallet.logic.authentication.AuthenticatedAppCompatActivity
 import com.izzdarki.wallet.logic.updates.getUpdateToVersion10Log
 import com.izzdarki.wallet.logic.updates.showUpdateAlert
 import com.izzdarki.wallet.services.ClearDirectoryService
-import izzdarki.wallet.BuildConfig
 import izzdarki.wallet.R
 import izzdarki.wallet.databinding.ActivityMainBinding
 
@@ -73,23 +72,29 @@ class MainActivity : AuthenticatedAppCompatActivity() {
      */
     private fun showUpdateAlerts() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val lastVersionNumber = sharedPreferences.getInt(LAST_VERSION_UPDATE_DIALOG_SHOWN, -1) // -1 means fresh install
 
-        if (lastVersionNumber == -1) {
-            // Fresh install
+        // This number is written to preferences by Application only once on the first run after an update (or fresh installation)
+        val lastVersionNumber = sharedPreferences.getInt(LAST_VERSION_TO_SHOW_UPDATE_DIALOG, Int.MAX_VALUE)
+
+        if (lastVersionNumber == Int.MAX_VALUE) { // Updates have already been shown
+            return
+        }
+        else if (lastVersionNumber == -1) { // App was freshly installed
             // TODO show dialog about authentication, then autofill service
-        } else {
-            // Update to 2.2.0-alpha.0 (version code 10)
+        }
+        else { // App was updated
+
+            // Alert for update to 2.2.0-alpha.0 (version code 10)
             if (lastVersionNumber < 10)
                 showUpdateAlert(getUpdateToVersion10Log(this))
         }
 
-        // Write new version code for future update dialog
-        sharedPreferences.edit().putInt(LAST_VERSION_UPDATE_DIALOG_SHOWN, BuildConfig.VERSION_CODE).apply()
+        // Remove from preferences => Don't show update dialog again
+        sharedPreferences.edit().remove(LAST_VERSION_TO_SHOW_UPDATE_DIALOG).apply()
     }
 
     companion object {
-        const val LAST_VERSION_UPDATE_DIALOG_SHOWN = "last_version_dialog_shown"
+        const val LAST_VERSION_TO_SHOW_UPDATE_DIALOG = "main_activity.last_version_to_show_update_dialog"
     }
 
 }

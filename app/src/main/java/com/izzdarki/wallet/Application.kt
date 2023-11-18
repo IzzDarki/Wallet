@@ -8,6 +8,7 @@ import com.google.android.material.color.DynamicColors
 import com.izzdarki.wallet.ui.settings.SettingsFragment
 import com.izzdarki.wallet.storage.AppPreferenceManager
 import com.izzdarki.wallet.logic.updates.updateToCredentialPreferences
+import com.izzdarki.wallet.ui.MainActivity
 import izzdarki.wallet.BuildConfig
 
 class Application : Application() {
@@ -18,10 +19,6 @@ class Application : Application() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             DynamicColors.applyToActivitiesIfAvailable(this)
         }
-    }
-
-    override fun onTerminate() {
-        super.onTerminate()
     }
 
     private fun setThemeFromPreferences() {
@@ -69,6 +66,9 @@ class Application : Application() {
             // Well-tested update, however issues can always arise => Keeping old data
             // In a future update the old preferences should be deleted (removeOldPreferences function does that (manually tested))
         }
+
+        // Write last version number to preferences for MainActivity to show appropriate update dialogs
+        sharedPreferences.edit().putInt(MainActivity.LAST_VERSION_TO_SHOW_UPDATE_DIALOG, lastVersionNumber).apply()
 
         // Write new version code for future updates
         sharedPreferences.edit().putInt(APPLICATION_LAST_VERSION_NUMBER, BuildConfig.VERSION_CODE).apply()

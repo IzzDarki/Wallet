@@ -138,7 +138,7 @@
     <!-- update dialogs -->
     <string name="version_name_2_2_0" translatable="false">2.2.0</string>
     <string name="new_feature_authentication">New feature: Authentication</string>
-    <string name="new_feature_authentication_text"></string> <!-- TODO -->
+    <string name="new_feature_authentication_text">You can now set up authentication in the settings. Available methods are an app password and your fingerprint. Once set up, you will be prompted to authenticate every time you open the app. However, if you open the app again within 3 minutes, you will not have to authenticate again. It is strongly recommended that you set up authentication.</string>
     <string name="cards_and_passwords_in_one_place">Cards and passwords in one place</string>
     <string name="cards_and_passwords_in_one_place_text">Cards and passwords are in one place now.</string>
 
