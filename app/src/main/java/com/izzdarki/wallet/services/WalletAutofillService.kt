@@ -21,7 +21,9 @@ import android.service.autofill.SaveRequest
 import android.util.Log
 import android.view.autofill.AutofillId
 import android.view.autofill.AutofillValue
+import android.view.inputmethod.InlineSuggestionsRequest
 import android.widget.RemoteViews
+import android.widget.inline.InlinePresentationSpec
 import androidx.annotation.RequiresApi
 import kotlinx.parcelize.Parcelize
 import com.izzdarki.wallet.data.Credential
@@ -50,7 +52,6 @@ data class AutofillViewData(
 class WalletAutofillService : AutofillService() {
 
     override fun onFillRequest(fillRequest: FillRequest, cancellationSignal: CancellationSignal, fillCallback: FillCallback) {
-
         // Find out where the user is trying to fill
         val fillContexts = fillRequest.fillContexts
         val latestStructure = fillContexts[fillContexts.size - 1].structure
@@ -147,7 +148,8 @@ class WalletAutofillService : AutofillService() {
          */
         private fun Context.createDataset(
             dataSource: Credential,
-            autofillValues: List<Pair<AutofillId, CredentialField>>
+            autofillValues: List<Pair<AutofillId, CredentialField>>,
+            inlineSuggestionsRequest: InlineSuggestionsRequest? = null
         ): Dataset? {
             if (autofillValues.isEmpty())
                 return null // nothing to fill
@@ -157,17 +159,24 @@ class WalletAutofillService : AutofillService() {
             // At the moment the user has to authenticate before seeing any datasets (fill request has authentication), which is sufficient
 
             val datasetBuilder = Dataset.Builder()
-            for ((autofillId, credentialField) in autofillValues) {
+            val numberOfFields =
+                if (Build.VERSION.SDK_INT >= 30 && inlineSuggestionsRequest != null) inlineSuggestionsRequest.maxSuggestionCount
+                else autofillValues.size
+
+            for ((index, pair) in autofillValues.take(numberOfFields).withIndex()) {
+                val (autofillId, credentialField) = pair
                 if (Build.VERSION.SDK_INT >= 33) {
                     // Create presentations
                     val presentationsBuilder = Presentations.Builder()
                     createInlinePresentation(
                         dataSource,
-                        credentialField
+                        credentialField,
+                        inlineSuggestionsRequest?.inlinePresentationSpecs?.get(index)
                     )?.let { presentationsBuilder.setInlinePresentation(it) }
                     createInlineTooltipPresentation(
                         dataSource,
-                        credentialField
+                        credentialField,
+                        inlineSuggestionsRequest?.inlineTooltipPresentationSpec
                     )?.let { presentationsBuilder.setInlineTooltipPresentation(it) }
                     createDialogPresentation(
                         dataSource,
@@ -380,18 +389,21 @@ class WalletAutofillService : AutofillService() {
             return recursivelyFindFirstWebDomain(viewRootNode)
         }
 
+        @RequiresApi(Build.VERSION_CODES.P)
         private fun Context.createInlinePresentation(
             dataSource: Credential,
-            credentialField: CredentialField
+            credentialField: CredentialField,
+            presentationSpec: InlinePresentationSpec?
         ): InlinePresentation? {
-            return null // TODO Not needed but would be nice
+            return null // Implement to support inline suggestions
         }
 
         private fun Context.createInlineTooltipPresentation(
             dataSource: Credential,
-            credentialField: CredentialField
+            credentialField: CredentialField,
+            presentationSpec: InlinePresentationSpec?
         ): InlinePresentation? {
-            return null // TODO Not needed but would be nice
+            return null // Implement to support inline suggestions
         }
 
         private fun Context.createDialogPresentation(
