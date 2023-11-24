@@ -50,7 +50,7 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.preference:preference-ktx:1.2.1'
-    implementation 'androidx.activity:activity-ktx:1.8.0'
+    implementation 'androidx.activity:activity-ktx:1.8.1'
     implementation 'androidx.security:security-crypto-ktx:1.1.0-alpha06'
     implementation 'androidx.fragment:fragment-ktx:1.6.2'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
