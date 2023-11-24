@@ -138,6 +138,8 @@
     <string name="preferences_update_log_key" translatable="false">preferences.update_log_key</string>
     <string name="preferences_update_log_title">Update log</string>
     <string name="preferences_update_log_summary">See what changed in recent versions</string>
+    <string name="preferences_warranty_notice_title">Important note</string>
+    <string name="preferences_warranty_notice_content">Don\'t rely on this app as the only place to store your passwords. If you lose your phone or the app data gets corrupted, your data is lost. The app is designed to store your data securely, but no software is perfect. Be aware that there can always be unknown bugs or security risks. See the license in the source code for legal information.</string>
 
     <!-- update dialogs -->
     <string name="version_name_2_2_0" translatable="false">2.2.0</string>

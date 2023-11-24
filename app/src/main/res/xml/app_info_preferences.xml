@@ -38,4 +38,8 @@
         android:summary="@string/preferences_update_log_summary"
         android:icon="@drawable/icon_update_24dp"/>
 
+    <Preference
+        android:title="@string/preferences_warranty_notice_title"
+        android:summary="@string/preferences_warranty_notice_content"/>
+
 </PreferenceScreen>
