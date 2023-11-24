@@ -77,7 +77,8 @@ fun findDataSourcesForRequest(allCredentials: List<Credential>, webDomain: Strin
 
     return allCredentials.filter { credential ->
         // Only use package name if web domain is null (otherwise package name == browser)
-        (webDomain != null && isWebDomainMatch(credential)) || (webDomain == null && isPackageNameMatch(credential))
+        ((webDomain != null && isWebDomainMatch(credential)) || (webDomain == null && isPackageNameMatch(credential)))
+                && "no-autofill" !in credential.labels
     }
 }
 
