@@ -9,7 +9,7 @@ import com.izzdarki.wallet.data.CredentialField
 import com.izzdarki.wallet.services.AutofillViewData
 
 enum class AutofillLogicalGroup {
-    LOGIN, PAYMENT, OTHER
+    LOGIN, PAYMENT, ADDRESS, OTHER
 }
 
 /**
@@ -18,8 +18,12 @@ enum class AutofillLogicalGroup {
  * and then later to determine the correct [CredentialField] of a [Credential] to be used for filling
  */
 class FieldTypeHeuristic(
-    /** If not null, this function is used to determine if a value is of this type */
-    val isType: ((value: String) -> Boolean)? = null,
+    /**
+     * If not null, this function is used to determine if a value is of this type.
+     * The function can return `null` if it is unclear if the given value is of this type
+     * A function that always returns `null` is equivalent to not setting this property, but slightly less efficient
+     */
+    val isType: ((value: String) -> Boolean?)? = null,
 
     /** If not null, this function is used to determine if a name describes this type */
     val describesType: (name: String) -> Boolean,
@@ -39,7 +43,7 @@ class FieldTypeHeuristic(
      */
     fun findMatchingField(dataSource: Credential): CredentialField? {
         val matchedByValue = if (isType == null) null
-            else dataSource.fields.find { isType.invoke(it.value) }
+            else dataSource.fields.find { isType.invoke(it.value) ?: false }
         return matchedByValue ?: dataSource.fields.find { describesType(it.name) }
     }
 }
@@ -84,7 +88,13 @@ internal val passwordHeuristic = FieldTypeHeuristic(
 )
 
 internal val phoneHeuristic = FieldTypeHeuristic(
-    isType = null,
+    isType = { value: String ->
+        val containsIllegalCharacter = value.withoutWhitespace()
+            .any { !it.isDigit() || it !in listOf('+', '-', '(', ')', '.') }
+        if (containsIllegalCharacter) return@FieldTypeHeuristic false
+
+        null // Cannot confidently determine if this is a phone number
+    },
     describesType = { name: String ->
         name.lowercase().withoutWhitespaceOrDashes() in listOf(
             "tel", // general
@@ -101,6 +111,8 @@ internal val creditCardNumberHeuristic = FieldTypeHeuristic(
         val withoutSpaces = value.withoutWhitespace()
         if (withoutSpaces.length < 12 || withoutSpaces.length > 19)
             return@FieldTypeHeuristic false
+
+        // Assume it is a credit card number if it passes the Luhn check (also checks if every character is a digit)
         return@FieldTypeHeuristic passesLuhnCheck(withoutSpaces)
     },
     describesType = { name: String ->
@@ -133,9 +145,13 @@ internal val ibanHeuristic = FieldTypeHeuristic(
         val withoutSpaces = value.withoutWhitespace()
         if (withoutSpaces.length < 10 || withoutSpaces.length > 34)
             return@FieldTypeHeuristic false
-        return@FieldTypeHeuristic withoutSpaces[0].isLetter() && withoutSpaces[1].isLetter()
-                && withoutSpaces[2].isDigit() && withoutSpaces[3].isDigit()
-                && withoutSpaces.subSequence(4, withoutSpaces.length).all { it.isLetterOrDigit() }
+
+        val containsIllegalCharacter = !withoutSpaces[0].isLetter() || !withoutSpaces[1].isLetter()
+                || !withoutSpaces[2].isDigit() || !withoutSpaces[3].isDigit()
+                || withoutSpaces.subSequence(4, withoutSpaces.length).any { !it.isLetterOrDigit() }
+        if (containsIllegalCharacter) return@FieldTypeHeuristic false
+
+        null // Cannot confidently determine if this is an IBAN
     },
     describesType = { name: String ->
         name.lowercase().withoutWhitespaceOrDashes() in listOf(
@@ -154,7 +170,11 @@ internal val bicHeuristic = FieldTypeHeuristic(
         val withoutSpaces = value.withoutWhitespace()
         if (withoutSpaces.length !in listOf(8, 11))
             return@FieldTypeHeuristic false
-        return@FieldTypeHeuristic withoutSpaces.toCharArray().all { it.isLetterOrDigit() }
+
+        val containsIllegalCharacter = withoutSpaces.toCharArray().any { !it.isLetterOrDigit() }
+        if (containsIllegalCharacter) return@FieldTypeHeuristic false
+
+        null // Cannot confidently determine if this is a BIC
     },
     describesType = { name: String ->
         name.lowercase().withoutWhitespaceOrDashes() in listOf(
@@ -165,16 +185,29 @@ internal val bicHeuristic = FieldTypeHeuristic(
     autofillHints = listOf()
 )
 
+internal val addressHeuristic = FieldTypeHeuristic(
+    isType = null,
+    describesType = { name: String ->
+        name.lowercase().withoutWhitespaceOrDashes() in listOf(
+            "address", "postaladdress", "residence", "receiver", "recipient", "addressee", // english specific
+            "adresse", "wohnort", "sender", "empfänger", "adressat"  // german specific
+        )
+    },
+    logicalGroup = AutofillLogicalGroup.ADDRESS,
+    autofillHints = listOf(View.AUTOFILL_HINT_POSTAL_ADDRESS, W3C_STREET_ADDRESS)
+)
+
 // Since this is traversed top to bottom, it should be ordered such that good working, specific heuristics are first
 internal val fieldTypeHeuristics = listOf(
     emailHeuristic,
     usernameHeuristic,
     passwordHeuristic,
     phoneHeuristic,
+    addressHeuristic,
     creditCardNumberHeuristic,
     creditCardSecurityCodeHeuristic,
-    ibanHeuristic, // isType might have a significant false positive rate
-    bicHeuristic, // isType might have a significant false positive rate
+    ibanHeuristic,
+    bicHeuristic,
 )
 
 

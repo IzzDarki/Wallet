@@ -15,8 +15,12 @@ fun groupOf(fillValue: CredentialField): AutofillLogicalGroup {
 
     // Find matching field type heuristic and return its logical group
     return fieldTypeHeuristics.firstOrNull { heuristic ->
-        heuristic.isType?.invoke(fillValue.value) ?: heuristic.describesType(fillValue.name)
-    }?.logicalGroup ?: AutofillLogicalGroup.OTHER
+                heuristic.isType?.invoke(fillValue.value) ?: false
+            }?.logicalGroup
+        ?: fieldTypeHeuristics.firstOrNull { heuristic ->
+                heuristic.describesType(fillValue.name)
+            }?.logicalGroup
+        ?: AutofillLogicalGroup.OTHER
 }
 
 /**
@@ -115,7 +119,7 @@ fun valueGivenHintAndText(dataSource: Credential, hint: String?, text: String?):
     val matchingHeuristic = fieldTypeHeuristics.firstOrNull { heuristic ->
         // Find matching value
         if (heuristic.isType != null)
-            textWords.any { heuristic.isType.invoke(it) }
+            textWords.any { heuristic.isType.invoke(it) ?: false }
         else
             false
     } ?: fieldTypeHeuristics.firstOrNull { heuristic ->
