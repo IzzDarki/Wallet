@@ -19,6 +19,8 @@ Securely store passwords and cards
 ### Screenshots
 <img src="example-images/home-cards.jpg" alt="Home" width="300px"> <img src="example-images/home-passwords.jpg" alt="Home" width="300px"> <img src="example-images/home-passwords.jpg" alt="Home" width="300px">
 
+### User manual
+The app is designed to be self-explanatory. For specific features, see the [user manual](user-manual.md).
 
 ### Technical notes
 #### App authentication
