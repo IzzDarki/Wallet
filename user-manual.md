@@ -4,7 +4,7 @@ Currently only containing documentation about advanced features. The app is desi
 ### Autofill
 You can choose this app as autofill service in the android settings.
 
-The app tries to find entries that match the request. This is done by
+The app then tries to find entries that match an incoming autofill request. This is done by
 - Comparing the entry name with the url from which the autofill request is coming from (e.g. when logging in to a website `somewebsite.com` and the entry name is `Somewebsite`, the entry is used for the autofill request)
 - Comparing the url with the entries fields (e.g. when there is a field with the value `example.com`, the entry is used for requests coming from `.../example.com`)
 - Comparing the entry name with the app, that sent the autofill request (e.g. when there is a field with value `example.app`, the entry is used for requests coming from the app with package name `example.app`)
