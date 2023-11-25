@@ -9,7 +9,7 @@ object PasswordGeneration {
     const val DIGITS = "0123456789"
     const val EASY_SPECIAL_CHARACTERS = "!?@#%&*+-=_/\\.,;:\"'{}()[]<>"
     const val DIFFICULT_SPECIAL_CHARACTERS = "$€¥§¢^`~|"
-    const val CRAZY_CHARACTERS = "ℓ¡¢£¤¥¦§¨©ª«¬®¯ °±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ" // not for typing manually
+    const val CRAZY_CHARACTERS = "ℓ¡¢£¤¥¦§¨©ª«¬®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ" // not for typing manually
     const val AMBIGUOUS_CHARACTERS = "Il|1o0O"
 }
 
