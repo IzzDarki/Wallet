@@ -143,14 +143,6 @@ object AppSettingsStorage {
     }
 
     @JvmStatic
-    fun isLengthHiddenInSecretFields(context: Context): Boolean {
-        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
-            context.getString(R.string.preferences_hide_length_secret_field_key),
-            context.resources.getBoolean(R.bool.preferences_hide_length_secret_field_default)
-        )
-    }
-
-    @JvmStatic
     fun isMonospaceInSecretFields(context: Context): Boolean {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
             context.getString(R.string.preferences_secret_field_monospace_key),

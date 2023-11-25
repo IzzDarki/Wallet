@@ -97,8 +97,6 @@
     <string name="edit_entry">Eintrag bearbeiten</string>
     <string name="no">Nein</string>
     <string name="keep_field_secret">Feld geheim halten</string>
-    <string name="preferences_hide_length_secret_field_title">Textlänge verbergen</string>
-    <string name="preferences_hide_length_secret_field_summary">Die Textlänge in geheimen Feldern verbergen</string>
     <string name="nothing_will_be_saved">Es wird nichts gespeichert</string>
     <string name="changes_are_not_saved">Änderungen werden nicht gespeichert</string>
     <string name="discard_changes">Änderungen verwerfen</string>

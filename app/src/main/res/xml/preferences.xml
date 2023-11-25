@@ -60,12 +60,6 @@
             app:defaultValue="@bool/preferences_detailed_errors_default" />
 
         <SwitchPreferenceCompat
-            android:key="@string/preferences_hide_length_secret_field_key"
-            android:title="@string/preferences_hide_length_secret_field_title"
-            android:summary="@string/preferences_hide_length_secret_field_summary"
-            app:defaultValue="@bool/preferences_hide_length_secret_field_default" />
-
-        <SwitchPreferenceCompat
             android:key="@string/preferences_secret_field_monospace_key"
             android:title="@string/preferences_secret_field_monospace_title"
             android:summary="@string/preferences_secret_field_monospace_summary"

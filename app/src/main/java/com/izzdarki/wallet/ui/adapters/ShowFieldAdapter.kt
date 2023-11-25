@@ -18,7 +18,6 @@ import com.google.android.material.divider.MaterialDivider
 import izzdarki.wallet.R
 import com.izzdarki.wallet.storage.AppSettingsStorage
 import com.izzdarki.wallet.data.CredentialField
-import com.izzdarki.wallet.utils.Utility
 import com.google.android.material.textview.MaterialTextView
 
 class ShowFieldAdapter(
@@ -70,27 +69,20 @@ class ShowFieldAdapter(
          */
         fun setValueHidden(textHidden: Boolean) {
             if (textHidden) {
-                valueView.typeface = Typeface.MONOSPACE
-                if (AppSettingsStorage.isLengthHiddenInSecretFields(context))
-                    valueView.setText(R.string.hidden_password_dots)
-                else {
-                    val valueLength: Int = properties[adapterPosition].value.length
-                    val hiddenValue = Utility.createStringNCopies(valueLength, "\u2022")
-                    valueView.text = hiddenValue
-                }
+                valueView.setText(R.string.hidden_password_dots)
                 valueView.setTextIsSelectable(false)
                 visibilityToggleButton.setImageDrawable(
                     AppCompatResources.getDrawable(context, R.drawable.icon_visibility_off_24dp)
                 )
             }
             else {
-                setValueTypeface()
                 valueView.text = properties[adapterPosition].value
                 valueView.setTextIsSelectable(true)
                 visibilityToggleButton.setImageDrawable(
                     AppCompatResources.getDrawable(context, R.drawable.icon_visibility_24dp)
                 )
             }
+            setValueTypeface()
         }
 
         /**

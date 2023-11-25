@@ -110,10 +110,6 @@
     <string name="preferences_detailed_errors_title">Detailed error messages</string>
     <string name="preferences_detailed_errors_summary">Display detailed but sometimes cryptic error messages</string>
 
-    <string name="preferences_hide_length_secret_field_key" translatable="false">preferences.hide_length_secret_field</string>
-    <string name="preferences_hide_length_secret_field_title">Hide length</string>
-    <string name="preferences_hide_length_secret_field_summary">Hide the text length of secret fields</string>
-
     <string name="preferences_secret_field_monospace_key" translatable="false">preferences.secret_field_monospace</string>
     <string name="preferences_secret_field_monospace_title">Monospaced font</string>
     <string name="preferences_secret_field_monospace_summary">Display secret fields with a monospaced font</string>
