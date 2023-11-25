@@ -2,6 +2,7 @@
 <androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -11,11 +12,20 @@
     android:background="@drawable/popup_window_background">
 
     <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/edit_property_end_icon_popup_window_dice_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        app:srcCompat="@drawable/icon_dice_30dp"
+        android:background="@android:color/transparent" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/edit_property_end_icon_popup_window_visibility_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:background="@android:color/transparent" />
+        android:background="@android:color/transparent"
+        tools:srcCompat="@drawable/icon_visibility_30dp"/>
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/edit_property_end_icon_popup_window_delete_button"

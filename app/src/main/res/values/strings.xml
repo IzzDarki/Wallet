@@ -308,4 +308,15 @@
     <string name="authenticate_to_use_x_autofill">Authenticate to use %s Autofill</string>
     <string name="authenticate_to_disable_fingerprint_authentication">Authenticate to disable fingerprint authentication</string>
     <string name="authenticate_to_disable_app_password_authentication">Authenticate to disable the app password</string>
+    <string name="generate_a_random_password">Generate a random password</string>
+    <string name="one_from_each_set">At least one from each set</string>
+    <string name="no_ambiguous_characters">No ambiguous characters</string>
+    <string name="generate">Generate</string>
+    <string name="lowercase">Lowercase</string>
+    <string name="uppercase">Uppercase</string>
+    <string name="digits">Digits</string>
+    <string name="easy_symbols">Easy symbols</string>
+    <string name="hard_symbols">Hard symbols</string>
+    <string name="crazy_symbols">Crazy symbols</string>
+    <string name="password_length">Password length</string>
 </resources>

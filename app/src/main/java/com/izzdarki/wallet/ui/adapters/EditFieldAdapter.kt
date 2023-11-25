@@ -21,6 +21,9 @@ import com.izzdarki.wallet.data.CredentialField
 import com.izzdarki.wallet.utils.Utility
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.izzdarki.wallet.logic.passwordgeneration.PasswordGeneration
+import com.izzdarki.wallet.ui.credentials.CharacterSet
+import com.izzdarki.wallet.ui.credentials.PasswordGenerationDialog
 
 class EditFieldAdapter(
     private val properties: MutableList<CredentialField>,
@@ -98,37 +101,88 @@ class EditFieldAdapter(
 
         private fun onEndIconClick(view: View) {
             if (properties[layoutPosition].secret) {
-                val popupView: View =
-                    LayoutInflater.from(view.context).inflate(R.layout.edit_property_end_icon_popup_window_layout,null)
-                val visibilityButton =
-                    popupView.findViewById<ImageButton>(R.id.edit_property_end_icon_popup_window_visibility_button)
-                val deleteButton =
-                    popupView.findViewById<ImageButton>(R.id.edit_property_end_icon_popup_window_delete_button)
-                setVisibilityImageButton(visibilityButton)
                 Utility.hideKeyboard(itemView) // hide keyboard, because otherwise it closes and reopens when popup window appears (idk why)
                 textInputEditText.requestFocus()
                 textInputLayout.setEndIconDrawable(R.drawable.icon_expand_less_30dp)
+
+
+                // Inflate popup window
+                val popupView: View =
+                    LayoutInflater.from(view.context).inflate(R.layout.edit_property_end_icon_popup_window_layout,null)
+                val diceButton = popupView.findViewById<ImageButton>(R.id.edit_property_end_icon_popup_window_dice_button)
+                val visibilityButton = popupView.findViewById<ImageButton>(R.id.edit_property_end_icon_popup_window_visibility_button)
+                val deleteButton = popupView.findViewById<ImageButton>(R.id.edit_property_end_icon_popup_window_delete_button)
+
+
+                // Create popup window
                 val popupWindow = PopupWindow(
                     popupView,
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     true
                 )
-                popupWindow.showAsDropDown(view)
+                popupWindow.setOnDismissListener {
+                    textInputLayout.setEndIconDrawable(R.drawable.icon_expand_more_30dp)
+                }
+
+                // Password generation button
+                diceButton.setOnClickListener {
+                    val passwordGenerationDialog = PasswordGenerationDialog(
+                        context,
+                        listOf(
+                            CharacterSet(
+                                name = context.getString(R.string.lowercase),
+                                characters = PasswordGeneration.LOWERCASE,
+                            ),
+                            CharacterSet(
+                                name = context.getString(R.string.uppercase),
+                                characters = PasswordGeneration.UPPERCASE,
+                            ),
+                            CharacterSet(
+                                name = context.getString(R.string.digits),
+                                characters = PasswordGeneration.DIGITS,
+                            ),
+                            CharacterSet(
+                                name = context.getString(R.string.easy_symbols),
+                                characters = PasswordGeneration.EASY_SPECIAL_CHARACTERS,
+                            ),
+                            CharacterSet(
+                                name = context.getString(R.string.hard_symbols),
+                                characters = PasswordGeneration.DIFFICULT_SPECIAL_CHARACTERS,
+                            ),
+                            CharacterSet(
+                                name = context.getString(R.string.crazy_symbols),
+                                characters = PasswordGeneration.CRAZY_CHARACTERS,
+                            ),
+                        ),
+                        onPasswordGenerated = { password ->
+                            toggleTextVisibility()
+                            textInputEditText.setText(password)
+                            textInputEditText.selectAll()
+                        },
+                    )
+                    passwordGenerationDialog.setOnDismissListener { popupWindow.dismiss() }
+                    passwordGenerationDialog.show()
+                }
+
+                // Visibility button
+                setVisibilityImageButton(visibilityButton)
                 visibilityButton.setOnClickListener {
                     toggleTextVisibility()
-                    setVisibilityImageButton(visibilityButton)
                     popupWindow.dismiss()
                 }
+
+                // Delete button
                 deleteButton.setOnClickListener {
                     deleteProperty()
                     popupWindow.dismiss()
                 }
-                popupWindow.setOnDismissListener {
-                    textInputLayout.setEndIconDrawable(R.drawable.icon_expand_more_30dp)
-                }
+
+                // Show popup window
+                popupWindow.showAsDropDown(view)
             }
-            else deleteProperty()
+            else
+                deleteProperty()
         }
 
         private fun deleteProperty() {

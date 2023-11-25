@@ -48,6 +48,8 @@ import com.google.zxing.BarcodeFormat
 import com.izzdarki.wallet.data.Barcode
 import com.izzdarki.wallet.data.Credential
 import com.izzdarki.wallet.logic.generateNewId
+import com.izzdarki.wallet.logic.passwordgeneration.PasswordGeneration
+import com.izzdarki.wallet.logic.passwordgeneration.generatePassword
 import com.izzdarki.wallet.services.ClearDirectoryService
 import com.izzdarki.wallet.storage.CredentialPreferenceStorage
 import com.izzdarki.wallet.storage.CredentialReadStorage
@@ -321,7 +323,18 @@ class EditCredentialActivity
                 ),
                 CredentialField(
                     name = getString(R.string.password),
-                    value = "",
+                    value = generatePassword(
+                        characterSets = listOf(
+                            PasswordGeneration.LOWERCASE,
+                            PasswordGeneration.UPPERCASE,
+                            PasswordGeneration.DIGITS,
+                            PasswordGeneration.EASY_SPECIAL_CHARACTERS,
+                            PasswordGeneration.DIFFICULT_SPECIAL_CHARACTERS,
+                        ),
+                        length = 25,
+                        oneFromEach = false,
+                        noAmbiguousCharacters = true,
+                    ),
                     secret = true,
                 ),
                 CredentialField(

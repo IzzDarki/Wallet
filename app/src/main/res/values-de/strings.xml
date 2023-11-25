@@ -188,4 +188,15 @@
     <string name="preferences_prevent_screenshots_summary">Verhindere Screenshots und verstecke den Inhalt der App in der App-Übersicht</string>
     <string name="preferences_warranty_notice_title">Wichtiger Hinweis</string>
     <string name="preferences_warranty_notice_content">Verlass dich nicht auf diese App als einzigen Ort zum Speichern deiner Passwörter. Wenn du dein Gerät verlierst oder die App-Daten beschädigt werden, sind deine Daten verloren. Die App ist darauf ausgelegt, deine Daten sicher zu speichern, aber keine Software ist perfekt. Sei dir bewusst, dass es immer unbekannte Bugs oder Sicherheitsrisiken geben kann. Rechtliche Informationen findest du in der Lizenz im Quellcode.</string>
+    <string name="generate_a_random_password">Generiere ein zufälliges Passwort</string>
+    <string name="one_from_each_set">Ein Zeichen von jeder Menge</string>
+    <string name="no_ambiguous_characters">Keine mehrdeutigen Zeichen</string>
+    <string name="generate">Generieren</string>
+    <string name="lowercase">Kleine Buchstaben</string>
+    <string name="uppercase">Große Buchstaben</string>
+    <string name="digits">Ziffern</string>
+    <string name="easy_symbols">Einfache Symbole</string>
+    <string name="hard_symbols">Komplizierte Symbole</string>
+    <string name="crazy_symbols">Crazy Symbole</string>
+    <string name="password_length">Passwort Länge</string>
 </resources>
