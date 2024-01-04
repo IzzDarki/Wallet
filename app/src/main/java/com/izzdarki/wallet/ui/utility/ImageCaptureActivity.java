@@ -1,4 +1,4 @@
-package com.izzdarki.wallet.ui.secondary;
+package com.izzdarki.wallet.ui.utility;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;

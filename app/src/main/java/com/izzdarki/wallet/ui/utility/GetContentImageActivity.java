@@ -1,4 +1,4 @@
-package com.izzdarki.wallet.ui.secondary;
+package com.izzdarki.wallet.ui.utility;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
