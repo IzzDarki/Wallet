@@ -39,7 +39,16 @@
         android:icon="@drawable/icon_update_24dp"/>
 
     <Preference
+        android:title="@string/preferences_user_manual_title"
+        android:summary="@string/preferences_user_manual_summary"
+        android:icon="@drawable/icon_book_24dp">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="@string/preferences_user_manual_link" />
+    </Preference>
+
+    <Preference
         android:title="@string/preferences_warranty_notice_title"
-        android:summary="@string/preferences_warranty_notice_content"/>
+        android:summary="@string/preferences_warranty_notice_content"
+        android:icon="@drawable/icon_info_24dp"/>
 
 </PreferenceScreen>

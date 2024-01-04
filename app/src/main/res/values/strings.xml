@@ -130,10 +130,13 @@
     <string name="preferences_releases_link" translatable="false">https://github.com/IzzDarki/Wallet/releases</string>
     <string name="preferences_source_code_title">Source code</string>
     <string name="preferences_source_code_summary">Click here to see the app\'s source code on GitHub.</string>
-    <string name="preferences_source_code_link" translatable="false">https://github.com/IzzDarki/Wallet/tree/2.2.0</string> <!-- includes version name, keep up to date -->
+    <string name="preferences_source_code_link" translatable="false">https://github.com/IzzDarki/Wallet</string>
     <string name="preferences_update_log_key" translatable="false">preferences.update_log_key</string>
     <string name="preferences_update_log_title">Update log</string>
     <string name="preferences_update_log_summary">See what changed in recent versions</string>
+    <string name="preferences_user_manual_title">User manual</string>
+    <string name="preferences_user_manual_summary">The app is designed to be self-explanatory. The user manual only contains information about advanced features.</string>
+    <string name="preferences_user_manual_link" translatable="false">https://github.com/IzzDarki/Wallet/blob/master/user-manual.md</string>
     <string name="preferences_warranty_notice_title">Important note</string>
     <string name="preferences_warranty_notice_content">Don\'t rely on this app as the only place to store your passwords. If you lose your phone or the app data gets corrupted, your data is lost. The app is designed to store your data securely, but no software is perfect. Be aware that there can always be unknown bugs or security risks. See the license in the source code for legal information.</string>
 

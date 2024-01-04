@@ -1,5 +1,12 @@
 ## User manual
-Currently only containing documentation about advanced features. The app is designed to be self-explanatory.
+Only contains documentation about advanced features. The app is designed to be self-explanatory.
+
+### Authentication
+It is strongly recommended to setup authentication.
+Once set up, you will be prompted to authenticate every time you open the app.
+However, if you open the app again within 3 minutes, you will not have to authenticate again.
+An exception is when the screen is turned off (while the app is opened).
+In that case you will be prompted to authenticate again the next time you open the app.
 
 ### Autofill
 You can choose this app as autofill service in the android settings.

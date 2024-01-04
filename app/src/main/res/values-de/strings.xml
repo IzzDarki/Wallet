@@ -197,4 +197,6 @@
     <string name="hard_symbols">Komplizierte Symbole</string>
     <string name="crazy_symbols">Crazy Symbole</string>
     <string name="password_length">Passwort Länge</string>
+    <string name="preferences_user_manual_title">Benutzerhandbuch</string>
+    <string name="preferences_user_manual_summary">Die app soll selbsterklärend sein. Das Benutzerhandbuch enthält nur Infos über kompliziertere Funktionen. Es ist nur auf Englisch verfügbar.</string>
 </resources>
