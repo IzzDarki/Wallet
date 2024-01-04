@@ -38,7 +38,7 @@ class ShowFieldAdapter(
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed(
                     { context.clearClipboard() },
-                    2000
+                    20000
                 )
             }
             visibilityToggleButton.setOnClickListener {
