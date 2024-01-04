@@ -199,4 +199,5 @@
     <string name="password_length">Passwort Länge</string>
     <string name="preferences_user_manual_title">Benutzerhandbuch</string>
     <string name="preferences_user_manual_summary">Die app soll selbsterklärend sein. Das Benutzerhandbuch enthält nur Infos über kompliziertere Funktionen. Es ist nur auf Englisch verfügbar.</string>
+    <string name="unable_to_clean_clipboard">Die Zwischenablage kann nicht automatisch geleert werden. Du solltest sie jetzt selbst leeren.</string>
 </resources>

@@ -1,16 +1,11 @@
 package com.izzdarki.wallet.ui.adapters
 
-import android.content.ClipData
-import android.content.ClipDescription
-import android.content.ClipboardManager
-import android.content.Context
 import android.graphics.Typeface
-import android.os.Build
-import android.os.PersistableBundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +14,8 @@ import izzdarki.wallet.R
 import com.izzdarki.wallet.storage.AppSettingsStorage
 import com.izzdarki.wallet.data.CredentialField
 import com.google.android.material.textview.MaterialTextView
+import com.izzdarki.wallet.logic.clearClipboard
+import com.izzdarki.wallet.logic.copyToClipboard
 
 class ShowFieldAdapter(
     private val properties: List<CredentialField>,
@@ -37,23 +34,12 @@ class ShowFieldAdapter(
 
         init {
             copyToClipboardButton.setOnClickListener {
-                val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clipData = ClipData.newPlainText(context.getString(R.string.secret_text), properties[adapterPosition].value)
-
-                // Set sensitive flag
-                if (properties[adapterPosition].secret && Build.VERSION.SDK_INT >= 24) { // extras are only available in API 24+
-                    val sensitiveFlagName =
-                        if (Build.VERSION.SDK_INT >= 33) ClipDescription.EXTRA_IS_SENSITIVE
-                        else "android.content.extra.IS_SENSITIVE"
-                    clipData.description.extras = PersistableBundle().apply {
-                        putBoolean(sensitiveFlagName, true)
-                    }
-                }
-                clipboardManager.setPrimaryClip(clipData)
-
-                // Only show a toast for Android 12 and lower, according to https://developer.android.com/develop/ui/views/touch-and-input/copy-paste#duplicate-notifications
-                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2)
-                    Toast.makeText(context, context.getString(R.string.copied_to_clipboard), Toast.LENGTH_SHORT).show()
+                context.copyToClipboard(properties[adapterPosition].value, properties[adapterPosition].secret)
+                val handler = Handler(Looper.getMainLooper())
+                handler.postDelayed(
+                    { context.clearClipboard() },
+                    2000
+                )
             }
             visibilityToggleButton.setOnClickListener {
                 val isCurrentlyHidden: Boolean = isTextHidden
