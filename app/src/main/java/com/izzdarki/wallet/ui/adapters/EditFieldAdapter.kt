@@ -2,6 +2,7 @@ package com.izzdarki.wallet.ui.adapters
 
 import android.content.Context
 import android.content.DialogInterface
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
@@ -26,7 +27,7 @@ import com.izzdarki.wallet.ui.credentials.CharacterSet
 import com.izzdarki.wallet.ui.credentials.PasswordGenerationDialog
 
 class EditFieldAdapter(
-    private val properties: MutableList<CredentialField>,
+    private val fields: MutableList<CredentialField>,
     private val onPropertyRemovalListener: (() -> Unit)?
 ) : RecyclerView.Adapter<EditFieldAdapter.ViewHolder>() {
 
@@ -52,7 +53,7 @@ class EditFieldAdapter(
 
                     if (!hasFocus) {
                         readPropertyValue()
-                        if (properties[adapterPosition].secret)
+                        if (fields[adapterPosition].secret)
                             textInputEditText.inputType = Utility.inputTypeTextHiddenPassword
                     }
                 }
@@ -61,7 +62,7 @@ class EditFieldAdapter(
         /** Reads the user input for the property value  */
         fun readPropertyValue() {
             val newValue = textInputEditText.text.toString().trim { it <= ' ' }
-            properties[adapterPosition].value = newValue
+            fields[adapterPosition].value = newValue
         }
 
         private fun onStartIconClick() {
@@ -74,19 +75,19 @@ class EditFieldAdapter(
             val editText: TextInputEditText = dialogView.findViewById(R.id.edit_property_input_dialog_name_input_edit_text)
             val visibilitySwitch: MaterialSwitch = dialogView.findViewById(R.id.edit_property_input_dialog_visibility_switch)
 
-            editText.setText(properties[adapterPosition].name)
+            editText.setText(fields[adapterPosition].name)
             editText.requestFocus()
-            visibilitySwitch.isChecked = properties[adapterPosition].secret
+            visibilitySwitch.isChecked = fields[adapterPosition].secret
             builder.setView(dialogView)
                 .setCancelable(true)
                 .setPositiveButton(android.R.string.ok) { _: DialogInterface?, _: Int ->
                     // read name input
                     val newPropertyName = editText.text.toString().trim { it <= ' ' }
-                    properties[adapterPosition].name = newPropertyName
+                    fields[adapterPosition].name = newPropertyName
                     textInputLayout.hint = newPropertyName
 
                     // read visibility input
-                    properties[adapterPosition].secret = visibilitySwitch.isChecked
+                    fields[adapterPosition].secret = visibilitySwitch.isChecked
                     cursorToReset = Pair(adapterPosition, textInputEditText.selectionStart) // onBindViewHolder uses this to reset the cursor
                     notifyItemChanged(adapterPosition)
                 }
@@ -100,7 +101,7 @@ class EditFieldAdapter(
         }
 
         private fun onEndIconClick(view: View) {
-            if (properties[layoutPosition].secret) {
+            if (fields[layoutPosition].secret) {
                 Utility.hideKeyboard(itemView) // hide keyboard, because otherwise it closes and reopens when popup window appears (idk why)
                 textInputEditText.requestFocus()
                 textInputLayout.setEndIconDrawable(R.drawable.icon_expand_less_30dp)
@@ -108,7 +109,7 @@ class EditFieldAdapter(
 
                 // Inflate popup window
                 val popupView: View =
-                    LayoutInflater.from(view.context).inflate(R.layout.edit_property_end_icon_popup_window_layout,null)
+                    LayoutInflater.from(view.context).inflate(R.layout.edit_field_end_icon_popup_window_layout,null)
                 val diceButton = popupView.findViewById<ImageButton>(R.id.edit_property_end_icon_popup_window_dice_button)
                 val visibilityButton = popupView.findViewById<ImageButton>(R.id.edit_property_end_icon_popup_window_visibility_button)
                 val deleteButton = popupView.findViewById<ImageButton>(R.id.edit_property_end_icon_popup_window_delete_button)
@@ -188,9 +189,9 @@ class EditFieldAdapter(
         private fun deleteProperty() {
             val position = adapterPosition
             onPropertyRemovalListener?.invoke()
-            properties.removeAt(position)
+            fields.removeAt(position)
             notifyItemRemoved(position)
-            notifyItemRangeChanged(position, properties.size - position)
+            notifyItemRangeChanged(position, fields.size - position)
         }
 
         // helpers
@@ -205,10 +206,11 @@ class EditFieldAdapter(
             val cursor = textInputEditText.selectionStart
             if (!isTextHidden)
                 textInputEditText.inputType = Utility.inputTypeTextHiddenPassword
-            else if (AppSettingsStorage.isMonospaceInSecretFields(context))
+            else {
                 textInputEditText.inputType = Utility.inputTypeTextVisiblePassword
-            else
-                textInputEditText.inputType = Utility.inputTypeTextNormal
+                if (AppSettingsStorage.isMonospaceInSecretFields(context))
+                    textInputEditText.typeface = Typeface.MONOSPACE
+            }
             textInputEditText.setSelection(cursor) // Otherwise cursor will be reset to start
         }
 
@@ -241,7 +243,7 @@ class EditFieldAdapter(
          */
 
         // text hidden mode, end icon expand (dropdown) for both visibility and delete icons
-        if (properties[position].secret) {
+        if (fields[position].secret) {
             holder.textInputEditText.inputType = Utility.inputTypeTextHiddenPassword
             holder.textInputLayout.setEndIconDrawable(R.drawable.icon_expand_more_30dp)
         }
@@ -249,19 +251,19 @@ class EditFieldAdapter(
             holder.textInputEditText.inputType = Utility.inputTypeTextNormal
             holder.textInputLayout.setEndIconDrawable(R.drawable.icon_delete_30dp)
         }
-        holder.textInputLayout.hint = properties[position].name
-        holder.textInputEditText.setText(properties[position].value)
+        holder.textInputLayout.hint = fields[position].name
+        holder.textInputEditText.setText(fields[position].value)
         if (position == cursorToReset.first) {
             holder.textInputEditText.setSelection(cursorToReset.second)
             cursorToReset = Pair(-1, -1) // reset to default state
         }
-        if (position == properties.size - 1)
+        if (position == fields.size - 1)
             holder.setImeOptions(EditorInfo.IME_ACTION_DONE)
         else
             holder.setImeOptions(EditorInfo.IME_ACTION_NEXT)
     }
 
     override fun getItemCount(): Int {
-        return properties.size
+        return fields.size
     }
 }
