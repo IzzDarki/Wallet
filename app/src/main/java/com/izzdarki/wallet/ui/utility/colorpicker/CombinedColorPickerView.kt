@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.FrameLayout
-import androidx.core.content.res.ResourcesCompat
 import com.github.antonpopoff.colorwheel.gradientseekbar.setBlackToColor
 import com.izzdarki.wallet.utils.Utility
 import izzdarki.wallet.R

@@ -1,4 +1,3 @@
-include ':colorpickerview'
 include ':app'
 include ':editlabelscomponent'
 rootProject.name = "Wallet"

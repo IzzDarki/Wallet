@@ -1,6 +1,0 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-</manifest>
-
-<!-- this library is copied from https://github.com/danielnilsson9/color-picker-view/tree/master/color-picker-view/src/main -->
-<!-- Apache License 2.0 http://www.apache.org/licenses/LICENSE-2.0.txt -->
-<!-- modification in ColorPickerDialogFragment.java and corresponding layout file for an extra custom button in the view -->
