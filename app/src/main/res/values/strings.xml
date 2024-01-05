@@ -319,8 +319,9 @@
     <string name="crazy_symbols">Crazy symbols</string>
     <string name="password_length">Password length</string>
     <string name="unable_to_clean_clipboard">Unable to clear clipboard automatically. You should clean it manually now.</string>
-    <string name="used_colors_recency">Used colors by recency</string>
-    <string name="used_colors_frequency">Used colors by frequency</string>
-    <string name="used_colors_hue">Used colors by color</string>
+    <string name="used_colors_recency">Recently used colors</string>
+    <string name="used_colors_frequency">Most frequently used colors</string>
+    <string name="used_colors_hue">Used colors by color value</string>
     <string name="color_palette">Color palette</string>
+    <string name="auto_color_button_explanation">Automatically calculate a color based on the images of this entry</string>
 </resources>

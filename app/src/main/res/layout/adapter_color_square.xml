@@ -16,4 +16,16 @@
 
     tools:cardBackgroundColor="@color/md_theme_tertiary">
 
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/color_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:textIsSelectable="true"
+        android:singleLine="true"
+        android:background="@android:color/transparent"
+        android:imeOptions="actionDone"
+        android:visibility="gone"/>
+
 </com.google.android.material.card.MaterialCardView>

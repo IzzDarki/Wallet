@@ -4,8 +4,12 @@ import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.FrameLayout
+import androidx.core.content.res.ResourcesCompat
 import com.github.antonpopoff.colorwheel.gradientseekbar.setBlackToColor
+import com.izzdarki.wallet.utils.Utility
 import izzdarki.wallet.R
 import izzdarki.wallet.databinding.ViewCombinedColorPickerBinding
 import kotlin.math.absoluteValue
@@ -29,9 +33,31 @@ class CombinedColorPickerView : FrameLayout {
         initialColor: Int,
         colorPalettes: List<NamedColorPalette>, // can be used to for different schemes, but also for different sortings of the same colors
         initialPaletteIndex: Int = 0,
+        showColorText: Boolean = true,
         onColorChange: (color: Int) -> Unit = { }
     ) : super(context) {
         this.onColorChange = onColorChange
+
+        // Current color box
+        if (showColorText) {
+            binding.currentColorBox.colorTextView.visibility = View.VISIBLE // By default gone
+            binding.currentColorBox.colorTextView.setOnEditorActionListener { textView, imeCode, _ ->
+                if (imeCode == EditorInfo.IME_ACTION_DONE) {
+                    val color = readColorString(textView.text.toString())?.withAlpha(255)
+                    if (color != null) {
+                        setCurrentColor(color)
+                        this.onColorChange(color)
+                    } else {
+                        setCurrentColor(currentColor) // Reset to previous color
+                    }
+                    // Hide keyboard
+                    textView.clearFocus()
+                    Utility.hideKeyboard(textView)
+                    true
+                } else
+                    false
+            }
+        }
 
         // Color wheel and brightness slider
         setCurrentColor(initialColor)
@@ -40,21 +66,13 @@ class CombinedColorPickerView : FrameLayout {
             binding.brightnessSlider.setBlackToColor(binding.colorWheel.rgb)
             val actualColor = binding.brightnessSlider.argb
 
-            // Update internal color
-            currentColor = actualColor
-
-            // Current color box
-            binding.currentColorBox.colorBox.setCardBackgroundColor(actualColor)
+            internalSetCurrentColor(actualColor)
 
             // Callback
             this.onColorChange(color)
         }
         binding.brightnessSlider.colorChangeListener = { _: Float, argb: Int ->
-            // Update internal color
-            currentColor = argb
-
-            // Current color box
-            binding.currentColorBox.colorBox.setCardBackgroundColor(argb)
+            internalSetCurrentColor(argb)
 
             // No need to update color wheel (because it didn't change)
 
@@ -80,12 +98,8 @@ class CombinedColorPickerView : FrameLayout {
 
     fun getCurrentColor(): Int = currentColor
 
-    private fun setCurrentColor(rgb: Int) {
-        // Update internal color
-        currentColor = rgb
-
-        // Current color box
-        binding.currentColorBox.colorBox.setCardBackgroundColor(rgb)
+    fun setCurrentColor(rgb: Int) {
+        internalSetCurrentColor(rgb)
 
         // Color wheel
         binding.colorWheel.rgb = rgb
@@ -93,6 +107,21 @@ class CombinedColorPickerView : FrameLayout {
         // Brightness slider
         binding.brightnessSlider.setBlackToColor(binding.colorWheel.rgb)
         binding.brightnessSlider.offset = calculateOffset(rgb)
+    }
+
+    private fun internalSetCurrentColor(rgb: Int) {
+        // Update internal color
+        currentColor = rgb
+
+        // Current color box
+        binding.currentColorBox.colorBox.setCardBackgroundColor(rgb)
+        binding.currentColorBox.colorTextView.setText("#${Integer.toHexString(rgb).substring(2).uppercase()}")
+        binding.currentColorBox.colorTextView.setTextColor(
+            if (Utility.isColorDark(rgb))
+                context.getColor(R.color.on_dark_text_color)
+            else
+                context.getColor(R.color.on_light_text_color)
+        )
     }
 
     /**
@@ -122,7 +151,17 @@ class CombinedColorPickerView : FrameLayout {
             } ?: 0f // If start and end colors are the same in all channels, return 0 (any value would be correct)
     }
 
+    private fun readColorString(colorString: String): Int? {
+        return try {
+            Color.parseColor(colorString)
+        } catch (e: IllegalArgumentException) {
+            null
+        }
+    }
+
     private fun Int.sRGBToLinearRGB(): Float = (this.toFloat() / 255f).pow(2.2f)
+
+    private fun Int.withAlpha(alpha: Int): Int = Color.argb(alpha, Color.red(this), Color.green(this), Color.blue(this))
 
 }
 

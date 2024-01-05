@@ -709,35 +709,23 @@ class EditCredentialActivity : CredentialActivity() {
             .setNegativeButton(android.R.string.cancel) { dialog, _ ->
                 dialog.cancel()
             }
+            .setNeutralButton(R.string.auto_color_button_text, null)
             .create()
 
-        dialog.show()
-// ISSUE Only a subset of all colors are possible (no dark ones)
-//        ColorPickerDialog
-//            .Builder(this)
-//            .setTitle(getString(R.string.select_color))
-//            .setColorShape(ColorShape.SQAURE)
-//            .setDefaultColor(credential.color)
-//            .setColorListener { color, _ ->
-//                credential.color = color
-//                updateColorButtonColor()
-//            }
-//            .setPositiveButton(android.R.string.ok)
-//            .show()
+        // Workaround to prevent dialog from closing when neutral button is clicked
+        // Buttons don't close the dialog when at the time the dialog is shown their listener is null, so we add it after the dialog is shown
+        dialog.setOnShowListener { _ ->
+            val neutralButton = dialog.getButton(AlertDialog.BUTTON_NEUTRAL)
+            neutralButton.setOnClickListener {
+                autoSelectColor()?.let { colorPickerView.setCurrentColor(it) }
+            }
+            neutralButton.setOnLongClickListener {
+                Toast.makeText(this, R.string.auto_color_button_explanation, Toast.LENGTH_SHORT).show()
+                true
+            }
+        }
 
-//        val dialogFragment = ColorPickerDialogFragment.newInstance(
-//            PICK_COLOR_DIALOG_ID,
-//            getString(R.string.select_color),
-//            null,
-//            credential.color,
-//            false
-//        )
-//        dialogFragment.setCustomButton(resources.getString(R.string.auto_color_button_text)) {
-//            autoSelectColor()
-//            dialogFragment.setColor(credential.color)
-//        }
-//        dialogFragment.setStyle(DialogFragment.STYLE_NORMAL, 0)
-//        dialogFragment.show(supportFragmentManager, "d")
+        dialog.show()
     }
 
     private fun colorsSortedByFrequency(colors: List<Int>): List<Int> {
@@ -769,19 +757,20 @@ class EditCredentialActivity : CredentialActivity() {
         }
     }
 
-    // TODO Auto color!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    private fun autoSelectColor() {
-        if (cardView.frontImage != null && cardView.backImage != null) {
+    private fun autoSelectColor(): Int? {
+        return if (cardView.frontImage != null && cardView.backImage != null) {
             @ColorInt val color1 = Utility.getAverageColorRGB(cardView.frontImage)
             @ColorInt val color2 = Utility.getAverageColorRGB(cardView.backImage)
-            credential.color = Utility.getAverageColorARGB(color1, color2)
+            Utility.getAverageColorARGB(color1, color2)
         }
         else if (cardView.frontImage != null)
-            credential.color = Utility.getAverageColorRGB(cardView.frontImage)
+            Utility.getAverageColorRGB(cardView.frontImage)
         else if (cardView.backImage != null)
-            credential.color = Utility.getAverageColorRGB(cardView.backImage)
-        else
+            Utility.getAverageColorRGB(cardView.backImage)
+        else {
             Toast.makeText(this, R.string.no_images_to_calc_color, Toast.LENGTH_SHORT).show()
+            null
+        }
     }
     // endregion
 

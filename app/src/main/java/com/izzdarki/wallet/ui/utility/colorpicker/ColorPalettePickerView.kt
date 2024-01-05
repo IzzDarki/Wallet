@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.FrameLayout
-import android.widget.ListView
 import com.izzdarki.wallet.ui.adapters.ColorSquareAdapter
 import izzdarki.wallet.databinding.ViewColorPalettePickerBinding
 

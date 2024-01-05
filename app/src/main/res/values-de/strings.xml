@@ -200,8 +200,9 @@
     <string name="preferences_user_manual_title">Benutzerhandbuch</string>
     <string name="preferences_user_manual_summary">Die app soll selbsterklärend sein. Das Benutzerhandbuch enthält nur Infos über kompliziertere Funktionen. Es ist nur auf Englisch verfügbar.</string>
     <string name="unable_to_clean_clipboard">Die Zwischenablage kann nicht automatisch geleert werden. Du solltest sie jetzt selbst leeren.</string>
-    <string name="used_colors_recency">Benutze Farben (zuletzt benutzt)</string>
-    <string name="used_colors_frequency">Benutze Farben (meisten benutzt)</string>
-    <string name="used_colors_hue">Benutze Farben (nach Farbe)</string>
+    <string name="used_colors_recency">Zuletzt genutzte Farben</string>
+    <string name="used_colors_frequency">Am meisten genutzte Farben</string>
+    <string name="used_colors_hue">Genutze Farben nach Farbwert</string>
     <string name="color_palette">Farbauswahl</string>
+    <string name="auto_color_button_explanation">Berechne Farbe auf Basis der Bilder dieses Eintrags</string>
 </resources>
