@@ -70,8 +70,10 @@ dependencies {
     implementation 'org.signal:argon2:13.1@aar' // Argon2 password hashing library, wrapper for native c library
     // implementation 'org.springframework.security:spring-security-crypto:5.5.0' // library containing Argon2 password hashing, java implementation
 
+    implementation 'com.github.antonpopoff:colorwheel:1.1.13' // Color picker library
+
     // TODO replace these dependencies (from jcenter)
-    implementation 'me.dm7.barcodescanner:zxing:1.9.13' // TODO maybe replace with https://github.com/journeyapps/zxing-android-embedded, why?
+    implementation 'me.dm7.barcodescanner:zxing:1.9.13'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
 
 

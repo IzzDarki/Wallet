@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.izzdarki.wallet.ui.secondary.CropActivity">
+    tools:context="com.izzdarki.wallet.ui.utility.CropActivity">
 
     <include layout="@layout/toolbar" />
 

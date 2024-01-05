@@ -19,22 +19,24 @@ import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.fragment.app.DialogFragment
+import androidx.core.graphics.blue
+import androidx.core.graphics.green
+import androidx.core.graphics.red
+import androidx.core.view.setPadding
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.security.crypto.EncryptedFile
 import androidx.security.crypto.MasterKey
-import com.izzdarki.colorpickerview.dialog.ColorPickerDialogFragment
 import izzdarki.wallet.R
 import com.izzdarki.wallet.ui.adapters.EditFieldAdapter
 import com.izzdarki.wallet.storage.AppSettingsStorage
 import com.izzdarki.wallet.services.CreateExampleCredentialService
 import com.izzdarki.wallet.ui.*
-import com.izzdarki.wallet.ui.secondary.CodeScannerActivity
-import com.izzdarki.wallet.ui.secondary.GetContentImageActivity
-import com.izzdarki.wallet.ui.secondary.GetImageActivity
-import com.izzdarki.wallet.ui.secondary.ImageCaptureActivity
+import com.izzdarki.wallet.ui.utility.CodeScannerActivity
+import com.izzdarki.wallet.ui.utility.GetContentImageActivity
+import com.izzdarki.wallet.ui.utility.GetImageActivity
+import com.izzdarki.wallet.ui.utility.ImageCaptureActivity
 import com.izzdarki.wallet.data.CredentialField
 import com.izzdarki.wallet.utils.Utility
 import com.izzdarki.wallet.utils.Utility.hideKeyboard
@@ -55,6 +57,9 @@ import com.izzdarki.wallet.storage.CredentialPreferenceStorage
 import com.izzdarki.wallet.storage.CredentialReadStorage
 import com.izzdarki.wallet.storage.ImageStorage
 import com.izzdarki.wallet.storage.ImageStorage.isInFilesDir
+import com.izzdarki.wallet.ui.utility.colorpicker.CombinedColorPickerView
+import com.izzdarki.wallet.ui.utility.colorpicker.NamedColorPalette
+import com.izzdarki.wallet.ui.utility.colorpicker.PredefinedColorPalettes
 import com.izzdarki.wallet.utils.Utility.getAttributeColor
 import com.izzdarki.wallet.utils.insertBitmapAt
 import com.izzdarki.wallet.utils.updateBitmapAt
@@ -69,8 +74,7 @@ import java.security.GeneralSecurityException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class EditCredentialActivity
-    : CredentialActivity(), ColorPickerDialogFragment.ColorPickerDialogListener {
+class EditCredentialActivity : CredentialActivity() {
 
     // UI
     private lateinit var credentialNameInputLayout: TextInputLayout
@@ -281,10 +285,10 @@ class EditCredentialActivity
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         // Every touch event goes through this function
-        if (editLabelsComponent.dispatchTouchEvent(ev))
-            return true
+        return if (editLabelsComponent.dispatchTouchEvent(ev))
+            true
         else
-            return super.dispatchTouchEvent(ev)
+            super.dispatchTouchEvent(ev)
     }
 
     override fun finish() {
@@ -650,29 +654,99 @@ class EditCredentialActivity
 
     // region color and color picker
     private fun pickColor() {
-        val dialogFragment = ColorPickerDialogFragment.newInstance(
-            PICK_COLOR_DIALOG_ID,
-            getString(R.string.select_color),
-            null,
-            credential.color,
-            false
+        val allCredentials = CredentialPreferenceStorage.readAllCredentials(this)
+
+        val colorPalettes = listOf(
+            NamedColorPalette(
+                name = getString(R.string.used_colors_recency),
+                colors = lazy {
+                    allCredentials
+                        .sortedByDescending { it.creationDate }
+                        .map { it.color }
+                        .distinct() // preserves order
+                }
+            ),
+            NamedColorPalette(
+                name = getString(R.string.used_colors_frequency),
+                colors = lazy {
+                    colorsSortedByFrequency(allCredentials.map { it.color })
+                        .distinct()
+                }
+            ),
+            NamedColorPalette(
+                name = getString(R.string.used_colors_hue),
+                colors = lazy {
+                    allCredentials
+                        .map { it.color }
+                        .sortedBy {
+                            val hsv = FloatArray(3)
+                            Color.RGBToHSV(it.red, it.green, it.blue, hsv)
+                            hsv[0]
+                        }
+                        .distinct()
+                }
+            ),
+            NamedColorPalette(
+                name = getString(R.string.color_palette),
+                colors = lazy { PredefinedColorPalettes.generateHSVColorPalette(36, 0.6f, 0.95f) }
+            )
         )
-        dialogFragment.setCustomButton(resources.getString(R.string.auto_color_button_text)) {
-            autoSelectColor()
-            dialogFragment.setColor(credential.color)
+        val colorPickerView = CombinedColorPickerView(
+            this,
+            initialColor = credential.color,
+            colorPalettes = colorPalettes
+        ).apply {
+            setPadding(resources.getDimensionPixelSize(R.dimen.default_padding))
         }
-        dialogFragment.setStyle(DialogFragment.STYLE_NORMAL, 0)
-        dialogFragment.show(supportFragmentManager, "d")
+        val dialog = AlertDialog.Builder(this)
+            .setView(colorPickerView)
+            .setTitle(R.string.select_color)
+            .setPositiveButton(android.R.string.ok) { dialog, _ ->
+                credential.color = colorPickerView.getCurrentColor()
+                updateColorButtonColor()
+                dialog.dismiss()
+            }
+            .setNegativeButton(android.R.string.cancel) { dialog, _ ->
+                dialog.cancel()
+            }
+            .create()
+
+        dialog.show()
+// ISSUE Only a subset of all colors are possible (no dark ones)
+//        ColorPickerDialog
+//            .Builder(this)
+//            .setTitle(getString(R.string.select_color))
+//            .setColorShape(ColorShape.SQAURE)
+//            .setDefaultColor(credential.color)
+//            .setColorListener { color, _ ->
+//                credential.color = color
+//                updateColorButtonColor()
+//            }
+//            .setPositiveButton(android.R.string.ok)
+//            .show()
+
+//        val dialogFragment = ColorPickerDialogFragment.newInstance(
+//            PICK_COLOR_DIALOG_ID,
+//            getString(R.string.select_color),
+//            null,
+//            credential.color,
+//            false
+//        )
+//        dialogFragment.setCustomButton(resources.getString(R.string.auto_color_button_text)) {
+//            autoSelectColor()
+//            dialogFragment.setColor(credential.color)
+//        }
+//        dialogFragment.setStyle(DialogFragment.STYLE_NORMAL, 0)
+//        dialogFragment.show(supportFragmentManager, "d")
     }
 
-    override fun onColorSelected(dialogId: Int, @ColorInt color: Int) {
-        if (dialogId == PICK_COLOR_DIALOG_ID) {
-            credential.color = color
-            updateColorButtonColor()
+    private fun colorsSortedByFrequency(colors: List<Int>): List<Int> {
+        val colorFrequencyMap = colors.fold(mutableMapOf<Int, Int>()) { map, color ->
+            map[color] = (map[color] ?: 0) + 1
+            map
         }
+        return colors.sortedByDescending { colorFrequencyMap[it] }
     }
-
-    override fun onDialogDismissed(dialogId: Int) {}
 
     private fun updateColorButtonColor() {
         credentialColorButton.setBackgroundColor(credential.color)
@@ -695,6 +769,7 @@ class EditCredentialActivity
         }
     }
 
+    // TODO Auto color!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     private fun autoSelectColor() {
         if (cardView.frontImage != null && cardView.backImage != null) {
             @ColorInt val color1 = Utility.getAverageColorRGB(cardView.frontImage)
@@ -1000,6 +1075,5 @@ class EditCredentialActivity
 
     companion object {
         const val EXTRA_CREATE_NEW_CREDENTIAL = "com.izzdarki.wallet.edit_card_activity.create_new_card"
-        const val PICK_COLOR_DIALOG_ID = 0
     }
 }

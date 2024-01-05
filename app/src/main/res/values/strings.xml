@@ -227,11 +227,11 @@
     <string name="mahler_image_summary">Emil Orlik, 1902</string>
     <string name="components_title">Components</string>
     <string name="color_picker_library_title">Color picker</string>
-    <string name="color_picker_library_summary">Library made by danielnilsson9\nCopied from Github under Apache License 2.0\nModification in ColorPickerDialogFragment.java and corresponding layout file</string>
+    <string name="color_picker_library_summary">Library made by Anton Popov\nFrom Github under MIT License</string>
     <string name="image_crop_library_title">Image Cropping</string>
     <string name="image_crop_library_summary">Library made by ArthurHub\nFrom Github under Apache License 2.0</string>
     <string name="barcode_library_title">Barcode</string>
-    <string name="barcode_library_summary">ZXing ("Zebra Crossing")\nFrom Github under Apache License 2.0</string>
+    <string name="barcode_library_summary">Library by dm77, based on ZXing ("Zebra Crossing")\nFrom Github under Apache License 2.0</string>
     <string name="no_images_to_calc_color">No images available to calculate the color</string>
     <string name="crop_image_menu_rotate_right">Rotate right</string>
     <string name="crop_image_menu_flip">Flip</string>
@@ -319,4 +319,8 @@
     <string name="crazy_symbols">Crazy symbols</string>
     <string name="password_length">Password length</string>
     <string name="unable_to_clean_clipboard">Unable to clear clipboard automatically. You should clean it manually now.</string>
+    <string name="used_colors_recency">Used colors by recency</string>
+    <string name="used_colors_frequency">Used colors by frequency</string>
+    <string name="used_colors_hue">Used colors by color</string>
+    <string name="color_palette">Color palette</string>
 </resources>

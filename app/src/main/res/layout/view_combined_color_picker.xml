@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/adapter_color_square"
+        android:id="@+id/current_color_box"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="16dp"/>
+
+    <com.github.antonpopoff.colorwheel.ColorWheel
+        android:id="@+id/color_wheel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginBottom="16dp"/>
+
+    <com.github.antonpopoff.colorwheel.gradientseekbar.GradientSeekBar
+        android:id="@+id/brightness_slider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:gsb_orientation="horizontal"/>
+
+    <!-- Color Palette Picker is added programmatically -->
+
+</androidx.appcompat.widget.LinearLayoutCompat>

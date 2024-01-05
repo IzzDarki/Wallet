@@ -30,7 +30,8 @@
 
         <Preference
             android:title="@string/barcode_library_title"
-            android:summary="@string/barcode_library_summary">
+            android:summary="@string/barcode_library_summary"
+            android:icon="@drawable/icon_code_24dp">
 
             <intent android:action="android.intent.action.VIEW"
             android:data="https://github.com/dm77/barcodescanner" />
@@ -39,7 +40,8 @@
 
         <Preference
             android:title="@string/image_crop_library_title"
-            android:summary="@string/image_crop_library_summary">
+            android:summary="@string/image_crop_library_summary"
+            android:icon="@drawable/icon_code_24dp">
 
             <intent android:action="android.intent.action.VIEW"
                 android:data="https://github.com/ArthurHub/Android-Image-Cropper" />
@@ -48,10 +50,11 @@
 
         <Preference
             android:title="@string/color_picker_library_title"
-            android:summary="@string/color_picker_library_summary">
+            android:summary="@string/color_picker_library_summary"
+            android:icon="@drawable/icon_code_24dp">
 
             <intent android:action="android.intent.action.VIEW"
-                android:data="https://github.com/danielnilsson9/color-picker-view/tree/master/color-picker-view/src/main" />
+                android:data="https://github.com/AntonPopoff/android-color-wheel" />
 
         </Preference>
 

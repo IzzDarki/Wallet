@@ -63,10 +63,10 @@
         </activity>
 
         <!-- other activities -->
-        <activity android:name="com.izzdarki.wallet.ui.secondary.GetContentImageActivity" />
-        <activity android:name="com.izzdarki.wallet.ui.secondary.ImageCaptureActivity" />
-        <activity android:name="com.izzdarki.wallet.ui.secondary.CodeScannerActivity" />
-        <activity android:name="com.izzdarki.wallet.ui.secondary.CropActivity" />
+        <activity android:name="com.izzdarki.wallet.ui.utility.GetContentImageActivity" />
+        <activity android:name="com.izzdarki.wallet.ui.utility.ImageCaptureActivity" />
+        <activity android:name="com.izzdarki.wallet.ui.utility.CodeScannerActivity" />
+        <activity android:name="com.izzdarki.wallet.ui.utility.CropActivity" />
 
         <!-- services -->
         <service

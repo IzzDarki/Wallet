@@ -69,7 +69,7 @@
     <string name="mahler_image_title">Bild von Gustav Mahler</string>
     <string name="mahler_image_summary">Radierung von Emil Orlik, 1902</string>
     <string name="components_title">Komponenten</string>
-    <string name="color_picker_library_summary">Library von danielnilsson9\nKopiert von Github unter Apache License 2.0\nModifikation in ColorPickerDialogFragment.java und dem zugehörigen Layout</string>
+    <string name="color_picker_library_summary">Library von Anton Popov\nVon Github unter MIT License</string>
     <string name="image_crop_library_title">Zuschneiden von Bildern</string>
     <string name="color_picker_library_title">Farbauswahl</string>
     <string name="image_crop_library_summary">Library von ArthurHub\nVon Github unter Apache License 2.0</string>
@@ -77,7 +77,7 @@
     <string name="preferences_default_values_barcode_summary">Wähle welcher Barcode-Typ standardmäßig verwendet werden soll</string>
     <string name="no_images_to_calc_color">Keine Bilder vorhanden um die Farbe zu berechnen</string>
     <string name="barcode_library_title">Barcode</string>
-    <string name="barcode_library_summary">ZXing ("Zebra Crossing")\nVon Github unter Apache License 2.0</string>
+    <string name="barcode_library_summary">Library von dm77, basierend auf ZXing ("Zebra Crossing")\nVon Github unter Apache License 2.0</string>
     <string name="crop_image_menu_rotate_right">Nach rechts drehen</string>
     <string name="crop_image_menu_flip">Spiegeln</string>
     <string name="crop_image_menu_flip_horizontally">Horizontal spiegeln</string>
@@ -200,4 +200,8 @@
     <string name="preferences_user_manual_title">Benutzerhandbuch</string>
     <string name="preferences_user_manual_summary">Die app soll selbsterklärend sein. Das Benutzerhandbuch enthält nur Infos über kompliziertere Funktionen. Es ist nur auf Englisch verfügbar.</string>
     <string name="unable_to_clean_clipboard">Die Zwischenablage kann nicht automatisch geleert werden. Du solltest sie jetzt selbst leeren.</string>
+    <string name="used_colors_recency">Benutze Farben (zuletzt benutzt)</string>
+    <string name="used_colors_frequency">Benutze Farben (meisten benutzt)</string>
+    <string name="used_colors_hue">Benutze Farben (nach Farbe)</string>
+    <string name="color_palette">Farbauswahl</string>
 </resources>
